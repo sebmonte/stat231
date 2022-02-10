@@ -155,6 +155,7 @@ Note: By default, the table is left-justified. You can pipe to an additional fun
 LaTeX is responsible for setting up our document formatting. Kniting/compiling actually creates a .tex document first that is converted into a .pdf. Learning some LaTeX can be very useful for trying to deal with issues as well as getting equations and symbols in the document in the format you want. 
 
 Solution: (How many observations are in each data set? Write a sentence!)
+There are a total of 142 observations in each data set.
 
 <!-- 
 TIME TO COMMIT! After you've added your responses to the parts above for the first problem, knit to make sure things are still working and the pdf looks the way you want, and commit your changes to the Rmd file with the commit message "Add answers to problem 1"
@@ -183,7 +184,7 @@ dino_data %>%
 
 What does this correlation coefficient tell us about the relationship between `x` and `y` in the `dino` dataset?
 
-Solution: x and y are negatively correlated, increases in y are associated with decreases in x.
+Solution: x and y are negatively correlated, increases in x are associated with decreases in y. However, the correlation is very weak and so there is not much of a relationship.
 
 
 
@@ -204,7 +205,8 @@ ggplot(data = dino_data, mapping = aes(x = x, y = y)) +
 
 What do you notice now about the relationship between x and y? Is using correlation as a summary measure appropriate?
 
-Solution: The relationship between x and y appears to be in a unique pattern, a drawing of a dinosaur, and so correlation is not appropriate.
+Solution: 
+The relationship between x and y appears to be in a unique pattern, a drawing of a dinosaur, and the data points do not seem related beyond that, and so correlation is not appropriate.
 
 
 
@@ -218,13 +220,14 @@ Now calculate the correlation coefficient between `x` and `y` for the `star` dat
 
 Solution: 
 ```{r star-cor}
-star_data <- dinosaurus_dozen %>%
+star_data <- datasaurus_dozen %>%
   filter(dataset == "star")
 star_data %>%
   summarize(r = cor(x, y))
 ```
 
-
+Unlike the strong correlation found in the dino dataset,  the star dataset
+had a very weak correlation of just -.06, meaning there was barely an association between x and y.
 
 
 > part d - Another plot 
@@ -233,6 +236,15 @@ Plot `y` versus `x` for the `star` dataset.  Does the plot look the same as the 
 
 Solution: 
 
+```{r star-plot, eval = TRUE, fig.width = 2.5, fig.height = 2}
+ggplot(data = star_data, mapping = aes(x = x, y = y)) +
+  geom_point()
+```
+
+Unlike the plot for the dino set, the plot for the star data set is 
+in the pattern of a star. Like the dino set, correlation is not an
+appropriate measure since there is no clear correlation between the data
+and rather it is intentionally selected to draw a pattern.
 
 <!-- 
 TIME TO KNIT & COMMIT: "Add answers to middle parts of problem 2"
@@ -244,8 +256,15 @@ TIME TO KNIT & COMMIT: "Add answers to middle parts of problem 2"
 Now calculate the correlation coefficient between `x` and `y` for the `circle` dataset. You can (and should) reuse code we introduced above, after pasting it below, just replace the dataset name with the desired dataset. How does this value compare to the correlation coefficients from the other two datasets?
 
 Solution:
+```{r circ-cor}
+circle_data <- datasaurus_dozen %>%
+  filter(dataset == "circle")
+circle_data %>%
+  summarize(r = cor(x, y))
+```
 
-
+The correlation coefficient for this dataset is again very similar,
+representing a very weak negative association between x and y.
 
 > part f - A final plot
 
@@ -253,6 +272,13 @@ Plot `y` versus `x` for the `circle` dataset.  Does the plot look the same as ei
 
 Solution:
 
+```{r circ-plot, eval = TRUE, fig.width = 2.5, fig.height = 2}
+ggplot(data = circle_data, mapping = aes(x = x, y = y)) +
+  geom_point()
+```
+
+This third plot is in a pattern like the dino and star dataset, but this
+time it is in the shape of a circle.
 
 <!-- 
 TIME TO KNIT & COMMIT: "Add answers to final parts of problem 2"
@@ -270,7 +296,7 @@ The previous problem had a lot of repetition. To make things more efficient, we 
 Solution:
 
 <!-- set `eval = TRUE` and adjust the figure dimensions so things don't look smushed in the pdf -->
-```{r plots-cors, eval = FALSE}
+```{r plots-cors, eval = TRUE}
 # Scatterplots by dataset
 ggplot(datasaurus_dozen, aes(x = x, y = y, color = dataset))+
   geom_point()+
@@ -286,13 +312,17 @@ datasaurus_dozen %>%
 
 > part b - What do you notice?  Is the correlation coefficient an appropriate summary for any of these datasets?  Why or why not?
 
-Solution:
+Solution: All of these data sets are intended to fit certain patterns
+or shapes. Since most of them do not have any clearly strong association
+between the x and y coordinates, correlation is not appropriate. However, slant_down and slant_up do show a general negative and positive
+association between the x and y variables respectively, and so a correlation coefficient could be an effective summary.
 
 
 
 > part c - What do you think `ncol = 3` does in the code above? What about `digits = 3`?
 
-Solution:
+Solution: I think ncol sets the number of columns that all the graphs
+will be displayed in. I think digits sets the amount of digits you can have in your columns.
 
 
 <!-- 
