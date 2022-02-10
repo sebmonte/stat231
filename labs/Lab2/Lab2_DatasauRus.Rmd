@@ -107,12 +107,12 @@ It is tempting to jump into visualization and analysis (like we did a little on 
 
 > part a - Based on the help file, how many rows and how many columns are in the data frame?
 
-Solution: 
+Solution: 1846 rows and 3 variables
 
 
 > part b - Based on the help file, what variables are included in the data frame? 
 
-Solution: 
+Solution: dataset, x, and y
 
 
 Markdown allows you to do a lot in terms of formatting that you may not have seen before. For example, you can enter bulleted lists by using the following pattern:
@@ -127,6 +127,9 @@ For more on Markdown formatting, you can check out the RMarkdown formatting `che
 
 Solution:
 
++ dataset
++ x
++ y
 
 
 <!--
@@ -143,7 +146,8 @@ Try knitting the document without piping the frequency table to `kable()`, with 
 ```{r dataset-freq}
 datasaurus_dozen %>% 
   count(dataset) %>% 
-  kable(booktabs = TRUE) 
+  kable(booktabs = TRUE) %>%
+  kable_styling(latex_options = "hold_position")
 ```
 
 Note: By default, the table is left-justified. You can pipe to an additional function called `kable_styling()` which allows further customization of pdf tables. By default, this function will center the table. It may also do a weird LaTeX thing where the table ends up somewhere else in the document other than where you want it. To prevent that from happening, we can add the argument `latex_options = "hold_position"` (or `"HOLD_position"` if you're *really* serious).
@@ -179,7 +183,7 @@ dino_data %>%
 
 What does this correlation coefficient tell us about the relationship between `x` and `y` in the `dino` dataset?
 
-Solution: 
+Solution: x and y are negatively correlated, increases in y are associated with decreases in x.
 
 
 
@@ -193,14 +197,14 @@ We want to plot `y` vs. `x` for the `dino` dataset using the `ggplot()` function
 You will learn about the philosophy of building data visualizations in detail next week. For now, follow along with the code that is provided.
 
 <!-- set `eval = TRUE` to make sure the plot is displayed in the knitted pdf -->
-```{r dino-plot, eval = FALSE, fig.width = 2.5, fig.height = 2}
+```{r dino-plot, eval = TRUE, fig.width = 2.5, fig.height = 2}
 ggplot(data = dino_data, mapping = aes(x = x, y = y)) +
   geom_point()
 ```
 
 What do you notice now about the relationship between x and y? Is using correlation as a summary measure appropriate?
 
-Solution: 
+Solution: The relationship between x and y appears to be in a unique pattern, a drawing of a dinosaur, and so correlation is not appropriate.
 
 
 
@@ -212,7 +216,13 @@ TIME TO KNIT & COMMIT: "Add answers to first parts of problem 2"
 
 Now calculate the correlation coefficient between `x` and `y` for the `star` dataset. You can (and should) reuse code we introduced above, after pasting it below, just replace the dataset name with the desired dataset. How does this value compare to the correlation coefficient from the `dino` dataset?
 
-Solution:
+Solution: 
+```{r star-cor}
+star_data <- dinosaurus_dozen %>%
+  filter(dataset == "star")
+star_data %>%
+  summarize(r = cor(x, y))
+```
 
 
 
