@@ -1,0 +1,225 @@
+---
+title: "Prep1"
+author: "Sebastian Montesinos"
+date: "Due by midnight, Monday Feb. 14"
+output: 
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r, setup, include=FALSE}
+library(tidyverse)
+library(mdsr)
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+```
+
+Reminder: Prep assignments are to be completed individually. 
+
+# Reading
+
+The associated reading for the week is Chapter 2, Chapter 3, and Section 8.2. This reading explores key aspects of visualizations, how to build them, and ethical issues around visualizations. 
+
+In addition to reading, I recommend you code along with the book examples. You'll see some of the problems below use data from the text. You can try out the code yourself - just be sure to load the mdsr package and any other packages referenced. You can get the code in R script files (basically, files of just R code, not like a .Rmd) from the book website. 
+
+# Git Workflow Review
+
+1. Before editing this file, verify you are working on the copy saved in *your* repo for the course (check the filepath and the project name in the top right corner). 
+
+2. Before editing this file, make an initial commit of the file to your repo to add your copy of the assignment. 
+
+3. Change your name at the top of the file and get started! 
+
+4. You should *save, knit, and commit* the .Rmd file each time you've finished a question, if not more often. 
+
+5. You should occasionally *push* the updated version of the .Rmd file back onto GitHub. When you are ready to push, you can click on the Git pane and then click **Push**. You can also do this after each commit in RStudio by clicking **Push** in the top right of the *Commit* pop-up window. 
+
+6. When you think you are done with the assignment, save the pdf as "*YourFirstInitialYourLastName*\_*thisfilename*.pdf" before committing and pushing (this is generally good practice but also helps me in those times where I need to download all student homework files). For example, I would save this file as AWagaman_Prep1.pdf.
+
+\newpage
+
+# 1 - Some basics
+
+<!-- PROBLEM 1 ---------------------------------------------------------------->
+
+Chapter 2 describes Yao's taxonomy for graphics (which is very similar to what ggplot2 uses). The four basic elements are visual cues, coordinate systems, scale, and context. 
+
+> part a 
+
+Solution: Two of the best visual cues are position and length.
+
+> part b 
+
+Solution: The polar coordinate system, a radial analog with a point identified by radius and angle, is a non-cartesian coordinate system.
+
+> part c - Name a numeric scale other than the usual linear scale. 
+
+Solution: A logarithmic scale.
+
+> part d - Consider the following plot made based on the iris data. What aspects of the plot contribute to its context?
+
+```{r}
+data(iris)
+ggplot(iris, aes(x = Petal.Length, y = Sepal.Length, color = Species))+
+  geom_point()+
+  geom_smooth(method = 'lm', se = FALSE)+
+  labs(y = "Sepal Length (mm)",
+       x = "Petal Length (mm)",
+       title = "Scatterplot of Sepal and Petal Lengths",
+       subtitle = "For all 3 iris Species")
+```
+
+Solution: The axis labels that specify sepal length and petal length both contribute to context. The title and subtitle both also contribute since they let the viewer know basic information about the graph. Finally, the key on the right indicating what species is associated with what color contributes to context.
+
+
+\newpage
+
+<!-- PROBLEM 2 ---------------------------------------------------------------->
+
+# 2 - GDP and education 
+
+> part a - Figure 3.3 in Section 3.1.1 shows a scatterplot that uses both location and label as aesthetics.  Reproduce this figure.
+
+*Hint: you'll need to define 'g' based on code from earlier in Section 3.1.1. Also, make sure you load the packages in the `setup` chunk!*
+
+Solution:
+
+
+<!-- You may adjust figure size as needed in the .pdf. Defaults are specified above but you should always check what your finished product looks like. Turn eval to TRUE so this shows in your solution. -->
+
+```{r, eval = TRUE}
+data(CIACountries)
+
+# define the plot object
+g <- ggplot(data = CIACountries, aes(y = gdp, x = educ))
+
+# print the plot
+g + geom_text(aes(label = country, color = net_users), size = 3)
+```
+
+
+> part b - Now, update the plot with more informative labels.  Label the x-axis "% of GDP spent on education" and the y-axis "Gross Domestic Product (GDP)".
+
+*Hint: see Section 3.2.1 for an example of one way to label the axes.*
+
+Solution:
+
+```{r}
+
+g + geom_text(aes(label = country, color = net_users), size = 3) + labs(x = "% of GDP spent on education", y = "Gross Domestic Product (GDP)")
+
+```
+
+
+> part c - Next, move the legend so that it's located on the top of the plot as opposed to the right of the plot. 
+
+*Hint: see Section 3.1.4 for an example on how to change the legend position.*
+
+Solution:
+
+```{r}
+g + geom_text(aes(label = country, color = net_users), size = 3) + labs(x = "% of GDP spent on education", y = "Gross Domestic Product (GDP)") + theme(legend.position = "top")
+```
+
+
+> part d - Lastly, Section 3.1.2 discusses *scale*, and demonstrates how to display GDP on a logarithmic scale to better discern differences in GDP.  Update the figure so GDP is on a log10 scale.
+
+Solution:
+
+```{r}
+g + geom_text(aes(label = country, color = net_users), size = 3) + labs(x = "% of GDP spent on education", y = "Gross Domestic Product (GDP)") + theme(legend.position = "top") + coord_trans(y = "log10")
+
+```
+
+
+<!-- 
+Knit and commit, and probably push. If you haven't committed or pushed by now, you should have! Remember this is recommended for at the end of every problem, if not more often. 
+-->
+
+
+\newpage
+
+<!-- PROBLEM 3 ---------------------------------------------------------------->
+
+# 3 - Demos with Iris
+
+The *iris* data set contains 5 variables on 3 species of iris. There are 4 measurement variables and the Species variable. We can look at a data set to get a sense of its structure with *glimpse*, *str* or *summary* - all provide a quick overview of the data set. We can look at the first few observations with *head*. To make plots, one must know what plots are appropriate for the variables involved. 
+
+Note: for this problem, you aren't actually making any of the plots. 
+
+> part a - Use one of data set overview commands to look at iris. List whether each variable is numeric or categorical (quantitative vs. qualitative).
+
+Solution:
+
+```{r}
+data(iris) 
+```
+
+> part b - Suppose we want to examine the distribution of Petal.Width. What plot would you recommend for this?
+
+Solution:
+
+> part c - Suppose we want to examine the distribution of Species. What plot would you recommend for this?
+
+Solution:
+
+> part d - We want to examine the relationship between Petal.Width and Petal.Length across Species. However, our client insists the graphic be printed in black and white. What plot would you recommend for this? Be sure to name the plot and describe how all three variables are represented/included. 
+
+Solution:
+
+
+
+
+
+\newpage
+
+<!-- PROBLEM 4 ---------------------------------------------------------------->
+
+# 4 - Learning about R functions
+
+> part a - Consider Figure 3.8 in Section 3.1.5.  What does `reorder(drg, mean_charge)` do?  To figure this out, recreate the plot, but use `x = drg` instead of `x = reorder(drg, mean_charge)`.  What happens?
+
+Solution:
+
+<!--Turn eval to TRUE so this shows in your solution.-->
+
+```{r, eval = FALSE}
+data(MedicareCharges)
+ChargesNJ <- MedicareCharges %>% 
+  ungroup() %>%
+  filter(stateProvider == "NJ")
+
+# create the plot object
+p <- 
+  
+  
+# print the plot
+p
+```
+
+
+> part b - Another way to learn about a function is via the help menu. You can search directly (search window in the Help pane) or type ?functionname in the console. Try this with *reorder*. From the help results, report the package that *reorder* is from and the name of the data set used in the help menu example. 
+
+*Hint: The package is in curly brackets after the name of the function in the help menu.*
+
+Solution:
+
+
+
+Note: Normally, you'd look through the help information to learn about the function, it's arguments, outputs, etc. This problem is designed so you learn about the help menu, not to really focus on this function. That said, you should know what *reorder* does at the end of the problem. You can also access R documentation via the internet, rather than through R. 
+
+> part c - Sometimes different packages have functions with shared names that don't do the same thing. We don't have a lot of packages loaded here, but we can demo this with *filter*. Try looking up *filter*. What two packages are listed as having results for a *filter* function?
+
+*Hint: You can also find this where the packages are loaded in above. If there are conflicts, the most recently loaded package's function masks the function from previously loaded packages. You should see a notice of masking here in regards to filter (and lag).*
+
+Solution:
+
+
+
+Note: If you are ever worried about a function conflict between packages, or want to use just one function (or data set) from a package without loading the entire rest of the package, you can reference the function this way - package::function. You will see this occasionally in our work this semester. 
+
+<!--
+Knit, commit, and push, including the final renamed pdf, to your repo. Then, upload the .pdf to Gradescope before the deadline. 
+-->
