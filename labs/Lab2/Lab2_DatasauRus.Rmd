@@ -184,7 +184,8 @@ dino_data %>%
 
 What does this correlation coefficient tell us about the relationship between `x` and `y` in the `dino` dataset?
 
-Solution: x and y are negatively correlated, increases in x are associated with decreases in y. However, the correlation is very weak and so there is not much of a relationship.
+Solution: x and y are negatively correlated, but the correlation is so weak that we can conclude that there is not much an association between the x and y variables.
+
 
 
 
@@ -226,7 +227,7 @@ star_data %>%
   summarize(r = cor(x, y))
 ```
 
-Unlike the strong correlation found in the dino dataset,  the star dataset
+Like the weak correlation found in the dino dataset, the star dataset
 had a very weak correlation of just -.06, meaning there was barely an association between x and y.
 
 
@@ -243,8 +244,8 @@ ggplot(data = star_data, mapping = aes(x = x, y = y)) +
 
 Unlike the plot for the dino set, the plot for the star data set is 
 in the pattern of a star. Like the dino set, correlation is not an
-appropriate measure since there is no clear correlation between the data
-and rather it is intentionally selected to draw a pattern.
+appropriate measure since there is no clear association between the variables
+and rather they look intentionally selected to draw a pattern.
 
 <!-- 
 TIME TO KNIT & COMMIT: "Add answers to middle parts of problem 2"
@@ -313,9 +314,7 @@ datasaurus_dozen %>%
 > part b - What do you notice?  Is the correlation coefficient an appropriate summary for any of these datasets?  Why or why not?
 
 Solution: All of these data sets are intended to fit certain patterns
-or shapes. Since most of them do not have any clearly strong association
-between the x and y coordinates, correlation is not appropriate. However, slant_down and slant_up do show a general negative and positive
-association between the x and y variables respectively, and so a correlation coefficient could be an effective summary.
+or shapes. All of them have similar, extremely weak correlation coefficients, which indicate that there is a very little association between the x and y variables in these datasets, making correlation an inappropriate measure here.
 
 
 
@@ -349,7 +348,7 @@ After trying out the options, to complete this part, use appropriate options to 
 
 Solution:
 
-```{r test-chunk-options}
+```{r test-chunk-options, echo = FALSE, collapse = TRUE, eval = TRUE, include = TRUE}
 # Correlations by dataset (plain R output)
 datasaurus_dozen %>%
   group_by(dataset) %>%
@@ -368,7 +367,7 @@ You can use the `round` command to get a sensible number of digits: The mean $x$
 
 Use inline R coding to write a sentence about the standard deviation of $x$ in the dino dataset reported to 1 decimal place. 
 
-Solution:
+Solution:The $x$ value in the dino dataset has a standard deviation of `r sd(dino_data$x) %>% round(1)`.
 
 
 
@@ -392,9 +391,13 @@ Fix the code chunk below so that neither the comment (which you can rewrite) nor
 Solution:
 
 ```{r}
-# want to get the correlation between Sepal.Length and Sepal.Width for all three iris species in the data set
+# We want the correlation between Sepal.Length and Sepal.Width 
+# Get this correlation for all three iris species in the data set
 data(iris)
-iris %>% select(Species, Sepal.Length, Sepal.Width) %>% group_by(Species) %>% summarize(correlation = cor(Sepal.Length, Sepal.Width)) 
+iris %>% 
+  select(Species, Sepal.Length, Sepal.Width) %>% 
+  group_by(Species) %>% 
+  summarize(correlation = cor(Sepal.Length, Sepal.Width)) 
 ```
 
 
