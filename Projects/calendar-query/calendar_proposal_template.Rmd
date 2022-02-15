@@ -35,7 +35,7 @@ Note: You are not bound to the ideas you record here.  The visualizations and ta
 
 What course do I spend the most time on (including both homework and in-class time)?
 
-How much time do I spend on work during the week vs. during the weekends?
+How much time do I spend on work on an average weekday vs. on an average weekend?
 
 Is there a significant relationship between the amount of personal time I take per day and the amount of time I spend on schoolwork per day?
 
@@ -43,15 +43,17 @@ Is there a significant relationship between the amount of personal time I take p
 
 ## Describe two visualizations (type of plot, coordinates, visual cues, etc.) you imagine creating that help address your questions of interest.
 
-To investigate how much time I spend on different courses, I could calculate the average time I spend per week on each course and then plot this using a bar chart, with my various courses on the x axis and the time spend per week on the y axis. The relative size of each bar would be the cue that would represent these differences.
+To investigate how much time I spend on different courses, I could calculate the average time I spend per week on each course and then plot this using a bar chart, with my various courses on the x axis and the average time spent per week (or per day) on the y axis. The relative size of each bar would be the cue that would represent these differences.
 
 In order to look at the relationship between personal time and schoolwork time, I could use a scatterplot that looks at the amount of time I spent on personal work in a day vs the amount of  time I spent on schoolwork in a day. I'd use a Cartesian coordinate system and line of best fit if one was appropriate.
 
 
 ## Describe one table you imagine creating that helps address your questions of interest  (what summary statistics will you present? what will the rows be? what will the columns be?).
 
-
+In order to investigate which part of the week I spend the most time doing homework on, I could create a table with rows representing the weekdays vs weekend and columns with information about the amount of time I spend on schoolwork: mean amount of time spent on work in each category, the standard deviation of this value, the median, quartiles, and the results of a one sample t-test comparing the average amount of time spent on weekdays vs weekends on work. This would include a t value and p value.
 
 
 ## Do you have any questions for me as we get started with this project?
+
+Does it make sense to start on the analysis as I collect the data if I have to add to that data? In other words is it easy to add in more data or would I need to rewrite the analysis portions and so would it be better to wait?
 
