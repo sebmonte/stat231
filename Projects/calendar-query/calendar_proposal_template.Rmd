@@ -1,0 +1,57 @@
+---
+title: "Project 1: Calendar Query - Proposal Template"
+author: "Sebastian Montesinos"
+date: "Due by midnight Thursday February 17th"
+output: 
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r include = FALSE}
+library(kableExtra)
+```
+
+# Calendar Query Proposal
+
+<!--
+Identify 2-4 primary questions of interest to you about how you spend your time. Your questions should address something meaningful to you, but **be sure you identify questions you feel comfortable sharing with me** (your reports will not be shared with the class) and that they are feasible for the 14-day data collection period. 
+
+Feel free to expand upon the basic question of "Where does my time go?" or "How do I spend my time?" or explore a variation of it. Some other ideas include but are not limited to:
+
+* Document *intended time* doing things (e.g. studying, sleeping) versus *actual time* doing those things, and compare results
+
+* Document time spent on each course, and/or time spent on different parts of a course (e.g. in class, reading, homework, etc.)
+
+* Document time spent on school vs. work vs. leisure vs. rest, etc.
+
+* If you already use a calendar app as a way to keep track of your schedule, you could compare how your time was spent last year at this time versus how your time is being spent this semester.
+
+Note: You are not bound to the ideas you record here.  The visualizations and table can change before your final submission.  However, I want to make sure your plan aligns with your questions, that your project is manageable, and that you're on the right track (i.e. that you'll end up with data that lets you do something meaningful).
+-->
+
+
+## What questions are you planning to focus on? 
+
+What course do I spend the most time on (including both homework and in-class time)?
+
+How much time do I spend on work during the week vs. during the weekends?
+
+Is there a significant relationship between the amount of personal time I take per day and the amount of time I spend on schoolwork per day?
+
+
+
+## Describe two visualizations (type of plot, coordinates, visual cues, etc.) you imagine creating that help address your questions of interest.
+
+To investigate how much time I spend on different courses, I could calculate the average time I spend per week on each course and then plot this using a bar chart, with my various courses on the x axis and the time spend per week on the y axis. The relative size of each bar would be the cue that would represent these differences.
+
+In order to look at the relationship between personal time and schoolwork time, I could use a scatterplot that looks at the amount of time I spent on personal work in a day vs the amount of  time I spent on schoolwork in a day. I'd use a Cartesian coordinate system and line of best fit if one was appropriate.
+
+
+## Describe one table you imagine creating that helps address your questions of interest  (what summary statistics will you present? what will the rows be? what will the columns be?).
+
+
+
+
+## Do you have any questions for me as we get started with this project?
+

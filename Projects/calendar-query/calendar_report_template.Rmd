@@ -1,0 +1,184 @@
+---
+title: "YOUR TITLE HERE"
+subtitle: "STAT 231: Calendar Query"
+author: "YOUR NAME HERE"
+date: "Last updated \\today"
+output: pdf_document
+---
+
+```{r setup, include = FALSE}
+# load packages
+library(tidyverse)
+library(lubridate)
+library(ical)
+
+# set code chunk defaults
+knitr::opts_chunk$set(tidy = F, # display code as typed
+                      size = "small", # slightly smaller code font
+                      message = FALSE,
+                      warning = FALSE,
+                      comment = "\t") 
+
+# set black & white default plot theme 
+# theme_set(theme_classic()) # uncomment this line if desired
+
+# improve digit and NA display 
+options(scipen = 1, knitr.kable.NA = '')
+```
+
+<!--
+HOW TO USE THIS TEMPLATE:
+
+The template is designed to help you structure your report. All work herein should be your own. Thus, you should write your own code comments, set your own chunk options, etc. You should clean up code comments that I've left so they are useful for you. 
+
+You can leave the markdown comments for guidance in writing your report since they will not appear in the knitted pdf. If you like, you can remove them. 
+
+Please rename/remove the headings as you see fit. 
+You may add subheadings as desired to break up the report. Practice your Markdown formatting to make a professional looking report. 
+
+REMINDERS ABOUT FILE ORGANIZATION AND GITHUB:
+You should commit and push all relevant files to GitHub. Someone else (me, in particular) should be able to download the *calendar-query* folder from GitHub and run your .Rmd file without changing anything (meaning file paths are not specific to your computer and all files that are read in are provided.)
+
+Your final *calendar-query* project folder should be organized such that file names and any subfolder names are informative, making relevant content easy to find for someone with little or no context of the project (i.e., if someone saw a file called "calendar_report_template" they would likely assume it was a template and *not* and not a finalized report). 
+-->
+
+# Introduction 
+
+<!--
+Describe the questions of interest: what are they and why are they important or useful to you?
+-->
+
+# Data collection 
+
+<!--
+Briefly describe your data collection process, including how you defined variables of interest (include the levels/categories of categorical variables and the units for quantitative variables).
+--> 
+
+
+<!--
+The code below is provided as a starting point for importing an `ics` file into R as a dataframe, doing some initial wrangling, and adding up the time spent on each activity. You are not required to use this code, but I hope it is useful as you get started. Feel free to delete or modify it as you see fit. 
+
+If you are using the code, be sure to update the capitalized parts with the relevant path to where your `ics` file is located *relative to where this Rmd file is located in the repo*, and set `eval = TRUE`.
+
+NOTE: All of your wrangling should be in this file - preferably well-organized and in one place if possible. You may use multiple chunks if it makes it easier to tell your narrative. This is demo-ed below, where the data is wrangled first for one visualization, then could be used for the second, etc. 
+-->
+
+```{r import-wrangle, eval = FALSE}
+# Data import and preliminary wrangling
+calendar_data <- "SUBFOLDER-IF-NEEDED/CALENDAR_FILENAME.ics" %>% 
+  ## Use ical package to import into R
+  ical_parse_df() %>% 
+  ## Convert to "tibble" data frame format
+  as_tibble() %>% 
+  ## calendar event descriptions are in a variable called "summary"
+  ## "activity" is a more relevant/informative variable name
+  rename(activity = summary) %>% 
+  mutate(
+    ## Specify time zone (defaults to UTC otherwise)
+    start_datetime = with_tz(start, tzone = "America/New_York"),
+    end_datetime = with_tz(end, tzone = "America/New_York"),
+    ## Compute duration of each activity in hours
+    ## Feel free to use minutes instead
+    duration = interval(start_datetime, end_datetime) / hours(1),
+    ## Convert text to lower case and trim spaces to help clean up
+    ## potential inconsistencies in formatting
+    activity = str_to_lower(activity),
+    ## separate date from time
+    date = floor_date(start_datetime, unit = "day"),
+    ## Examples of ways to parse dates, times (keep only what you need!)
+    year = year(date),
+    month = month(date, label = FALSE),
+    day = day(date),
+    day_of_week = wday(date, label = TRUE),
+    day_of_year = yday(date)) %>% 
+  ## remove spurious year (added to every Google calendar)
+  filter(year != 1969)
+```
+
+<!--
+Briefly describe and justify your plans for analysis (i.e., visualizations and summary table). Which graphs and corresponding visual cues do you plan to use? Which summary measures will you use in your table? (This will likely be a less detailed version of what you submitted for your proposal.) The idea is to let your reader know what is coming before they get to it. 
+--> 
+
+
+```{r vis1-prep, eval = FALSE}
+# Example of preparing dataset for first visualization
+
+# Compute total duration for each activity and number of each
+activities_total <- calendar_data %>% 
+  group_by(activity) %>%
+  summarize(duration = sum(duration),
+            count = n())
+
+```
+
+
+# Results 
+
+<!--
+You may organize your results however you see fit (e.g., one subsection for each question or one subsection for each visualization/table). 
+
+Each visualization and table should have its own code chunk. 
+
+Before each code chunk, describe what information is conveyed through the corresponding visualization or table in connection with the questions you posed (e.g., "The first figure captures how the time I spent on each class varied over the two-week period. It appears I spent the most time on..."). 
+-->
+
+
+<!--
+Describe what information is conveyed through your first data visualization (that you'll create below).
+-->
+
+
+```{r}
+# Code for first data visualization
+# Be sure to provide meaningful title and axes labels and
+# resize figure appropriately
+# Only code for your first visualization should be here (no or very minimal wrangling code)
+# Remove all these comments!
+```
+
+<!--
+Describe what information is conveyed through your second data visualization (that you'll create below).
+-->
+
+
+```{r}
+# Code for second data visualization
+# Be sure to provide meaningful title and axes labels and
+# resize figure appropriately
+# Only code for your second visualization should be here (no or very minimal wrangling code)
+# Remove all these comments!
+```
+
+<!--
+Describe what information is conveyed through the table (that you'll create) below. Again, the order is up to you. Move these around so they make sense for your analysis!
+-->
+
+
+```{r, results = 'asis'}
+# Code for table
+# Only code for your table should be here (no or very minimal wrangling code)
+```
+
+# Conclusions 
+
+<!--
+With your initial questions in mind, briefly summarize what you learned about how you spent your time. What are the big take-aways for you about how you spend your time? If relevant, how does this affect how you might spend your time going forward?
+-->
+
+
+\newpage
+
+
+# Reflection 
+
+<!--
+Write your reflection here in paragraph form. In particular, address...
+
+* What difficulties in the data collection and analysis process did you encounter?  Identify two of your main hurdles in gathering accurate data.
+* What implications do those difficulties have for future data collection and/or analysis projects if you were to repeat this project? 
+* Did you have enough data? How much data do you think you'd need to collect in order to satisfactorily answer your question(s) of interest? Would it be hard to collect that data? Why or why not?
+* As someone who provides data, what expectations do you have when you give your data (e.g. to Facebook, Google, MapMyRun, etc.)?  
+* As someone who analyzes others' data, what ethical responsibilities do you have?
+
+You may address these questions in any particular order. If it helps, you can make a subsection for each. 
+-->
