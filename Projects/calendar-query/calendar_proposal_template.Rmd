@@ -55,5 +55,5 @@ In order to investigate which part of the week I spend the most time doing homew
 
 ## Do you have any questions for me as we get started with this project?
 
-Does it make sense to start on the analysis as I collect the data if I have to add to that data? In other words is it easy to add in more data or would I need to rewrite the analysis portions and so would it be better to wait?
+Does it make sense to start on the analysis as I collect the data if I have to eventually add more data? In other words is it easy to add in more data or would I need to rewrite the analysis portions?
 
