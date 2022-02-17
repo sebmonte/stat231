@@ -289,8 +289,9 @@ Solution: There is an logarithmic relationship between body size and metabolic r
 z <- ggplot(data = MetabolicRate, mapping = aes(x = BodySize, y = Mrate)) +
   geom_point() +
   coord_trans(y = "log10") +
-  facet_wrap(~Instar, nrow = 3) +
-  ggtitle("Maduca Sexta Body Size and Metabolic Rate over life stages") +
+  facet_wrap(~Instar, nrow = 6) +
+  ggtitle("Maduca Sexta Body Size and Metabolic Rate 
+          over life stages") +
   ylab("Metabolic Rate") +
   xlab("Caterpillar Body Size (grams)")
 z
