@@ -149,7 +149,8 @@ g <- ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   facet_wrap(~drv, nrow = 1) +
   ylab("Highway miles per gallon") +
   xlab("Engine displacement (litres)") +
-  ggtitle("Miles per gallon and engine displacement across three types of drive train")
+  ggtitle("Miles per gallon and engine displacement across
+          three types of drive train")
   
 g
 ```
