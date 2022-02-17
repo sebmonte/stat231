@@ -427,13 +427,13 @@ Let's go back to our (almost) original plot to explore a few. This plot has the 
 
 > Change the geom_point() to geom_line(). What happens?
 
-Solution:
+Solution: The data is plotted using changes in lines rather than discrete points.
 
 ```{r original-plot-2, fig.width = 6.5, fig.height = 3}
 # plot the data  
 ggplot(data = unvotes_hr, mapping = aes(x = year, y = percent_yes, 
                                         color = country)) +
-  geom_point() +
+  geom_line() +
   labs(title = "Percentage of 'Yes' votes  on human rights issues",
        subtitle = "UN General Assembly, 1946 to 2019",
        y = "% Yes",
@@ -447,19 +447,33 @@ For these next geoms, our data isn't set up in such a way that they really make 
 
 > Copy over the code from above and use geom_area instead of geom_line. What happens?
 
-Solution:
+Solution: Designed for when values are fractions of a whole, adds up data and shades under area.
 
 ```{r geom-ribbon, fig.width = 6.5, fig.height = 3}
-
+ggplot(data = unvotes_hr, mapping = aes(x = year, y = percent_yes, 
+                                        color = country)) +
+  geom_area() +
+  labs(title = "Percentage of 'Yes' votes  on human rights issues",
+       subtitle = "UN General Assembly, 1946 to 2019",
+       y = "% Yes",
+       x = "Year",
+       color = "Country")
 ```
 
 
 > Now try geom_step. What happens?
 
-Solution:
+Solution: Creates a step graph with straight lines being drawn between the points.
 
 ```{r geom-step, fig.width = 6.5, fig.height = 3}
-
+ggplot(data = unvotes_hr, mapping = aes(x = year, y = percent_yes, 
+                                        color = country)) +
+  geom_step() +
+  labs(title = "Percentage of 'Yes' votes  on human rights issues",
+       subtitle = "UN General Assembly, 1946 to 2019",
+       y = "% Yes",
+       x = "Year",
+       color = "Country")
 ```
 
 Many geoms will show up if you search. Some are designed for univariate plots, etc. Feel free to experiment around to see what exists. For example, you might explore a violin plot over a boxplot. 
