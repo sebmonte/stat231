@@ -235,8 +235,8 @@ Solution:
 
 v <- ggplot(data = storms, mapping = aes(x = long, y = lat, color = name)) +
   geom_path() +
-  facet_wrap(~year, nrow = 7) +
-  ggtitle("Path of tropical storms over 1975-2015") +
+  facet_wrap(~year, nrow = 5) +
+  ggtitle("Path of tropical storms over 1995-2000") +
   ylab("latitude") +
   xlab("longitude")
 v
@@ -244,7 +244,7 @@ v
 
 > part b - How useful do you find the legend of storm names and colors? If your overall goal was to just look for common paths, would you need the names? 
 
-Solution:
+Solution: There are so many different storms names associated with so many different shades of color that it is not useful at all. It would take way too long and be too hard to associate a particular storm name with a specific color/spot on the graph. One can easily assess common paths without this convoluted legend. 
 
 
   
@@ -280,7 +280,13 @@ Hint: The help menu for the data set will describe what the variables are and ma
 Solution:
 
 ```{r}
-
+z <- ggplot(data = MetabolicRate, mapping = aes(x = BodySize, y = Mrate)) +
+  geom_point() +
+  coord_trans(y = "log10") +
+  ggtitle("Maduca Sexta Body Size and Metabolic Rate") +
+  ylab("Metabolic Rate") +
+  xlab("Caterpillar Body Size")
+z
 ```
 
 
