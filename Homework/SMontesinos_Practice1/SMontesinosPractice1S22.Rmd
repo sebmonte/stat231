@@ -181,7 +181,7 @@ p <- ggplot(data = MLB_teams, mapping = aes(x = WPct, y = payroll)) +
   geom_smooth(method = "lm") +
   ggtitle("MLB teams' win percentage and payroll") +
   ylab("Total Team Payroll") +
-  xlab("Winning Percentage")
+  xlab("Winning Percentage") 
 p
 ```
 
@@ -285,11 +285,11 @@ Hint: The help menu for the data set will describe what the variables are and ma
 
 Solution: There is an logarithmic relationship between body size and metabolic rate, wherein metabolic rate increases greatly with body size from 0 to 1 grams but slowly levels out after that. The life stage of the caterpillar also seems to effect body size, as later life stages are associated with greater body sizes and metabolic rates.
 
-```{r}
+```{r, fig.height = 6}
 z <- ggplot(data = MetabolicRate, mapping = aes(x = BodySize, y = Mrate)) +
   geom_point() +
   coord_trans(y = "log10") +
-  facet_wrap(~Instar, nrow = 6) +
+  facet_wrap(~Instar, nrow = 5) +
   ggtitle("Maduca Sexta Body Size and Metabolic Rate 
           over life stages") +
   ylab("Metabolic Rate") +
