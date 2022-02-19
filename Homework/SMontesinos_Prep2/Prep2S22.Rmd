@@ -13,6 +13,7 @@ library(tidyverse)
 library(mdsr)
 library(nycflights13)
 library(kableExtra)
+library(babynames)
 knitr::opts_chunk$set(
   tidy=FALSE,     # display code as typed
   size="small")   # slightly smaller font for code
@@ -135,7 +136,7 @@ delay_summary <- delay_summary %>%
          "Total Flights under 480 km" = N, 
          "Average arrival delay (mins)" = avg_arr_delay,
          "Average distance (km)" = avg_dist_km)
-kable(delay_summary, booktabs = TRUE, digits = c(0, 0, 0, 1))
+kable(delay_summary, booktabs = TRUE, digits = 0)
 ```
 
 
@@ -158,7 +159,7 @@ Knit and commit, and probably push. If you haven't committed (or pushed) by now,
 Solution:
 
 ```{r}
-
+glimpse(babynames)
 ```
 
 
