@@ -159,7 +159,8 @@ Knit and commit, and probably push. If you haven't committed (or pushed) by now,
 Solution:
 
 ```{r}
-glimpse(babynames)
+recent_names <- babynames %>%
+  filter(year > 2002 & year < 2018)
 ```
 
 
@@ -174,7 +175,10 @@ Take a look at the summarized dataset using `head()` or `View()` in the Console 
 Solution:
 
 ```{r}
-
+recentnames_summary <- recent_names %>%
+  group_by(name, sex) %>%
+  summarize(total = sum(n))
+recentnames_summary
 ```
 
 
@@ -187,7 +191,12 @@ Note: these names will likely be different from the ones found in the text since
 Solution:
 
 ```{r}
-
+recentnames_balancedwide <- recentnames_summary %>%
+  pivot_wider(names_from = sex, values_from = total,
+              values_fill = 0) %>%
+  filter(M > 8000 & F > 8000)
+  
+head(recentnames_balancedwide)
 ```
 
 
