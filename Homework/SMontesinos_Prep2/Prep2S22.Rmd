@@ -135,8 +135,7 @@ delay_summary <- delay_summary %>%
          "Total Flights under 480 km" = N, 
          "Average arrival delay (mins)" = avg_arr_delay,
          "Average distance (km)" = avg_dist_km)
-kable(delay_summary, booktabs = TRUE, digits = 0)
-delay_summary
+kable(delay_summary, booktabs = TRUE, digits = c(0, 0, 0, 1))
 ```
 
 
