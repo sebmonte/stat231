@@ -231,7 +231,7 @@ Each subsection of Section 8.4 discusses an ethical scenario and ends with one o
 
 Write two or three sentences reflecting on how using RMarkdown would help avoid some of the issues described in this scenario, or at least make them easier to spot. 
 
-Solution:
+Solution: RMarkdown allows the data manipulation and coding someone does to be easily reproducible by other statisticians. Therefore, RMarkdown would have allowed the errors to have been much more transparent and viewable to others.
 
 
 
