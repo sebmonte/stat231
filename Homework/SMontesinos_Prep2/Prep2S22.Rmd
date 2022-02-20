@@ -188,13 +188,16 @@ recentnames_summary
 Note: these names will likely be different from the ones found in the text since we limited the dataset to years 2003-2017 and names with greater than 8,000 individuals.)
 -->
 
-Solution:
+Solution: 
 
 ```{r}
 recentnames_balancedwide <- recentnames_summary %>%
   pivot_wider(names_from = sex, values_from = total,
               values_fill = 0) %>%
-  filter(M > 8000 & F > 8000)
+  filter(M > 8000 & F > 8000) %>%
+  mutate(ratio = pmin(M / F, F / M)) %>%
+  arrange(desc(ratio)) %>%
+  head(3)
   
 head(recentnames_balancedwide)
 ```
@@ -209,7 +212,12 @@ Hint: see Section 6.2.3.
 Solution:
 
 ```{r}
+recentnames_balanced <- recentnames_balancedwide %>%
+  pivot_longer(-name, names_to = "sex", values_to = "total") 
 
+recentnames_balanced <- filter(recentnames_balanced, sex == "F" | sex == "M")
+  
+recentnames_balanced
 ```
 
 
