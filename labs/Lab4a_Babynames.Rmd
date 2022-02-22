@@ -1,0 +1,331 @@
+---
+title: "Lab 4a - BabyNames Wrangling"
+author: "YourNameGoesHere"
+date: "For class Tuesday, Feb. 22"
+output:
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r setup, include = FALSE}
+# load packages
+library(tidyverse)
+library(babynames)
+library(mdsr)
+
+# set code chunk defaults
+knitr::opts_chunk$set(tidy = F, # display code as typed
+                      size = "small", # slightly smaller code font
+                      message = FALSE,
+                      warning = FALSE,
+                      comment = "\t") 
+
+# set black & white default plot theme
+theme_set(theme_classic()) 
+
+# improve digit and NA display 
+options(scipen = 1, knitr.kable.NA = '')
+```
+
+# Lab Purpose  
+
+This lab is designed to help you hone both your visualization and wrangling skills. While we'll practice wrangling ourselves later this week, for this exercise, we'll be looking at code from the textbook and trying to explain the wrangling functions/processes now that we've covered these functions. This is the code from the extended Babynames example in chapter 3 of the text. 
+
+You'll work on the lab in the company of classmates to help each other explain what each bit of code is doing.
+
+<!-- Remember to knit and commit as you work through the lab. Then push (along the way and/or) at the end.-->
+
+# Code
+
+Your goal is to proceed through the following code chunks, answering the short questions and adding comments to explain what the code is doing as you go along. The first chunk is a demo of how this will go.
+
+
+```{r}
+# Loads data relevant to people alive in 2014
+BabynamesDist <- make_babynames_dist()
+BabynamesDist
+```
+
+
+> Edit the code here so that your name is used in the filter. What does this code do? Use an appropriate comment to explain.
+
+```{r}
+# Sorts for people just with my Name
+BabynamesDist %>%
+ filter(name == "Sebastian")
+```
+
+
+(You can change the name in code chunks below to yours if you like, but the code is demo-ed using the name from the text.)
+
+> This next chunk contains a wrangling step and a plot step. Why does nothing show on the plot except axes? 
+
+```{r name_plot}
+sebastian <- BabynamesDist %>%
+  filter(name == "Sebastian" & sex == "M")
+name_plot <- ggplot(data = sebastian, aes(x = year))
+name_plot
+```
+
+Solution: Need to specify geom_point
+
+
+> Adding geoms means we'll see the plot taking shape (when it is next printed). This next chunk demos how if your arguments to a function won't fit nicely on a line, they should receive their own indenting under the function call.  
+
+There's nothing to "do" here, but I want you to pay attention to the spacing in the code here.
+
+
+```{r good_style}
+name_plot <- name_plot +
+  geom_col(
+    aes(y = count_thousands * alive_prob), 
+    fill = "#b2d7e9", 
+    color = "white",
+    size = 0.1
+  )
+```
+
+Consider above versus below, which is the same code, but in a style that's harder to read.
+
+```{r, eval = FALSE, notpreferred_style}
+name_plot <- name_plot +
+  geom_col(aes(y = count_thousands * alive_prob), fill = "#b2d7e9",  
+    color = "white", size = 0.1)
+```
+
+Again, our class is using the former style. Do your best with this - the idea is to keep your code readable. The closer you can stick to this style, the better. 
+
+> The next set of plot commands are shown in this next chunk. Add comments to explain what each line of code is doing.
+
+Remember, you can run name_plot at any time to see the current state of the plot. 
+
+```{r}
+#Adding a line on the y axis that tracks thousands of instances of names
+name_plot <- name_plot + 
+  geom_line(aes(y = count_thousands), size = 2)
+
+# Removes the x axis label, labels the Y axis
+name_plot <- name_plot +
+  ylab("Number of People (thousands)") + 
+  xlab(NULL)
+```
+
+
+The example gets back into some wrangling code next. Answer the following questions about this chunk.
+
+```{r}
+wtd_quantile <- Hmisc::wtd.quantile
+median_yob <- sebastian %>%
+  summarize(
+    year = wtd_quantile(year, est_alive_today, probs = 0.5)
+  ) %>% 
+  pull(year)
+median_yob
+```
+
+> The A::B structure was illustrated on Prep1. What does it mean/do here?
+
+Solution: grabs wtd.quantile package from hmisc and save it to something else
+
+
+> What wrangling verb is used here? What is it doing?
+
+Solution: Collapses the data frame into a single row based on the stats specified in the function. Median year of birth for the estimated number of people alive today.
+
+> What is pull() doing? (This can be figured out by running the code with and without the pull line and the previous piping operator.)
+
+Solution:
+
+
+
+(Hint: With the pull, you should see median_yob as a *value* in your Environment. Without the pull, it will be a dataset.)
+
+
+That information can be used to enhance the plot, as done in the next chunk. 
+
+```{r}
+name_plot <- name_plot +
+  geom_col(
+    color = "white", fill = "#008fd5", 
+    aes(y = ifelse(year == median_yob, est_alive_today / 1000, 0))
+  )
+name_plot
+```
+
+
+(We are skipping the part about context here, but you should look over that at some point to be sure you don't have any questions about it.)
+
+
+> In the next code chunk, we see our first use of %+%. What does this code do? Add a comment to explain.
+
+```{r}
+# ????
+name_plot %+% filter(
+  BabynamesDist, 
+  name == "Josephine" & sex == "F"
+)
+```
+
+> Adjust the code for your name and sex. What does your plot look like?
+
+```{r}
+# ????
+name_plot %+% filter(
+  BabynamesDist, 
+  name == "Josephine" & sex == "F"
+)
+```
+
+Solution:
+
+
+> Let's explore the %+% operator a bit more. What happens in this next chunk? Add a comment to explain each line. 
+
+
+```{r}
+# ????
+names_plot <- name_plot + 
+  facet_wrap(~sex)
+
+# ????
+names_plot %+% filter(BabynamesDist, name == "Jessie")
+```
+
+Okay. Now we get to a bigger challenge. The text demonstrates making a different plot from scratch. 
+
+The next chunk has a long series of wrangling commands related to getting the data set for the new plot. I've broken it down into a few chunks to help you see what is going on.
+
+> Add comments to explain what each line is doing. Comment locations have been indicated for you (comment before each line). Note, you probably don't normally need this many comments, but to make sure we understand the wrangling commands, we're explaining them here. 
+
+```{r}
+# overall comment for chunk here
+
+com_fem <- BabynamesDist %>%
+  # explain filter here
+  filter(n > 100, sex == "F") %>% 
+  # explain group_by here
+  group_by(name) %>%
+  # explain mutate here
+  mutate(wgt = est_alive_today / sum(est_alive_today)) %>%
+  # explain summarize here
+  summarize(
+    N = n(), 
+    est_num_alive = sum(est_alive_today),
+    quantiles = list(
+      wtd_quantile(
+        age_today, est_alive_today, probs = 1:3/4, na.rm = TRUE
+      )
+    )
+  )
+```
+
+That was just the first part of the code to create com_fem from the text. 
+
+Here's the next line (well, adjusted for being split apart like this.)
+
+> What does this line do?
+
+```{r}
+com_fem <- com_fem %>%
+  mutate(measures = list(c("q1_age", "median_age", "q3_age"))) 
+```
+
+Solution:
+
+
+
+This may not be a natural way you'd think of using mutate. But here it is useful because we plan to reshape the data set. 
+
+> What does unnest() do here?
+
+```{r}
+com_fem <- com_fem %>% unnest(cols = c(quantiles, measures))
+```
+
+<!-- Remember you can run com_fem to look at the data set to see what happens -->
+
+Solution:
+
+> Almost done. What does pivot_wider do here?
+
+```{r}
+com_fem <- com_fem %>%
+  pivot_wider(names_from = measures, values_from = quantiles)
+```
+
+Solution:
+
+
+> Finally, we have two *easier* wrangling commands at the end. Add comments to explain what each of these do.
+
+
+```{r}
+com_fem <- com_fem %>%
+  #
+  arrange(desc(est_num_alive)) %>%
+  #
+  head(25)
+com_fem
+```
+
+
+
+The data set generated was used to create the plot below. Feel free to run the code to see the plot, but that's it for the lab!
+
+```{r com_fem_plot}
+w_plot <- ggplot(
+  data = com_fem, 
+  aes(x = reorder(name, -median_age), y = median_age)
+) + 
+  xlab(NULL) + 
+  ylab("Age (in years)") + 
+  ggtitle("Median ages for females with the 25 most common names")
+
+
+w_plot <- w_plot + 
+  geom_linerange(
+    aes(ymin = q1_age, ymax = q3_age), 
+    color = "#f3d478", 
+    size = 4.5, 
+    alpha = 0.8
+  )
+
+
+w_plot <- w_plot +
+  geom_point(
+    fill = "#ed3324", 
+    color = "white", 
+    size = 2, 
+    shape = 21
+  )
+
+
+context <- tribble(
+  ~median_age, ~x, ~label, 
+  65, 24, "median",
+  29, 16, "25th", 
+  48, 16, "75th percentile",
+)
+
+age_breaks <- 1:7 * 10 + 5
+
+w_plot + 
+  geom_point(
+    aes(y = 60, x = 24), 
+    fill = "#ed3324", 
+    color = "white", 
+    size = 2, 
+    shape = 21
+  ) + 
+  geom_text(data = context, aes(x = x, label = label)) + 
+  geom_point(aes(y = 24, x = 16), shape = 17) + 
+  geom_point(aes(y = 56, x = 16), shape = 17) +
+  geom_hline(
+    data = tibble(x = age_breaks), 
+    aes(yintercept = x), 
+    linetype = 3
+  ) +
+  scale_y_continuous(breaks = age_breaks) + 
+  coord_flip()
+```

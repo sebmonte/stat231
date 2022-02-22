@@ -198,9 +198,11 @@ p <- ggplot(data = MLB_teams, mapping = aes(x = WPct, y = payroll))+
   geom_point(aes(color = attendancecat)) +
   geom_smooth(method = "lm") +
   scale_y_continuous(labels = scales::comma) +
-  ggtitle("MLB teams' win percentage and payroll") +
+  ggtitle("MLB teams' win percentage, payroll, 
+          and attendance") +
   ylab("Total Team Payroll") +
-  xlab("Winning Percentage")
+  xlab("Winning Percentage") +
+  labs(color = "Attendance")
 p
 ```
 
@@ -283,9 +285,9 @@ Create an informative data graphic that shows the relationship between these two
 
 Hint: The help menu for the data set will describe what the variables are and may help you identify potential scales to use. However, do not change the variables in the plot - use the variables above. 
 
-Solution: There is an logarithmic relationship between body size and metabolic rate, wherein metabolic rate increases greatly with body size from 0 to 1 grams but slowly levels out after that. The life stage of the caterpillar also seems to effect body size, as later life stages are associated with greater body sizes and metabolic rates.
+Solution: There is an logarithmic relationship between body size and metabolic rate, wherein metabolic rate increases greatly with body size from 0 to 1 grams but slowly levels out after that. Regression modeling seems appropriate for the relationship between body size and metabolic rate after body size has reached .3 grams. The life stage of the caterpillar also seems to effect body size, as later life stages are associated with greater body sizes and metabolic rates.
 
-```{r, fig.height = 6}
+```{r, fig.height = 5}
 z <- ggplot(data = MetabolicRate, mapping = aes(x = BodySize, y = Mrate)) +
   geom_point() +
   coord_trans(y = "log10") +
