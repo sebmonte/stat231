@@ -1,6 +1,6 @@
 ---
 title: "Practice2"
-author: "YourNameGoesHere"
+author: "Sebastian Montesinos"
 date: "Due by midnight, Friday, Feb. 25"
 output: 
   pdf_document:
@@ -11,6 +11,7 @@ output:
 ```{r, setup, include=FALSE}
 library(tidyverse)
 library(mdsr)
+library(Lahman)
 # add other packages needed here!
 knitr::opts_chunk$set(
   tidy=FALSE,     # display code as typed
@@ -99,7 +100,19 @@ Use the `Batting`, `Pitching`, and `Master` tables in the *Lahman* package to an
 Solution:
 
 ```{r}
-
+head(Batting)
+top300 <- Pitching %>%
+  left_join(Master, by = c("playerID")) %>%
+  left_join(Batting, by = c("playerID")) %>%
+  rename(HR = HR.y) %>%
+  select(nameFirst, playerID, nameLast, HR, SB) %>%
+  group_by(playerID, nameFirst, nameLast) %>%
+  summarize(HR = sum(HR), SB = sum(SB)) %>%
+  filter(HR > 300 & SB > 300) 
+  
+  
+head(top300, 20)
+ 
 ```
 
 > part b - Similarly, list the names every pitcher in baseball history who has accumulated at least 300 wins (W) and at least 3,000 strikeouts (SO).
