@@ -123,12 +123,11 @@ Solution:
 head(Batting)
 top300b <- Pitching %>%
   left_join(Master, by = c("playerID")) %>%
-  left_join(Batting, by = c("playerID")) %>%
-  rename(SO = SO.y) %>%
   select(nameFirst, playerID, nameLast, SO, W) %>%
   group_by(playerID, nameFirst, nameLast) %>%
   summarize(SO = sum(SO), W = sum(W)) %>%
   filter(SO > 3000 & W > 300) 
+head(top300b, 20)
   
   
 head(top300b, 30)
@@ -138,7 +137,7 @@ head(top300b, 30)
 
 Note: Batting average is calculated as the number of hits (H) divided by the number of at bats (AB).
 
-Solution:
+Solution: Too many observations, and what do I do with duplicate names?
 
 ```{r}
 homeruns <- Batting %>%
