@@ -108,7 +108,7 @@ top300 <- Batting %>%
   group_by(playerID, nameFirst, nameLast) %>%
   summarize(HR = sum(HR), SB = sum(SB)) %>%
   filter(HR > 300 & SB > 300) %>%
-  select(-playerID) %>%
+  subset(select = -playerID) %>%
   rename("First Name" = nameFirst, 
          "Last Name" = nameLast,  
          "Home Runs" = HR, 
@@ -301,7 +301,8 @@ newgrades <- oldgrades %>%
   filter(age < 20) %>%
   filter(absences.x < 10 | absences.y < 10) %>%
   select(G3.x, G3.y, traveltime.x, Walc.x) %>%
-  mutate(alcohol = as.factor(Walc.x)) 
+  mutate(alcohol_consumption = as.factor(Walc.x)) %>%
+  mutate(travel_time = as.factor(traveltime.x))
 
 glimpse(newgrades)
 ```
@@ -315,7 +316,7 @@ Solution:
 
 
 ```{r}
-p <- ggplot(data = newgrades, aes(x = G3.x, y = G3.y, color = alcohol)) +
+p <- ggplot(data = newgrades, aes(x = G3.x, y = G3.y, color = alcohol_consumption)) +
   geom_jitter() +
   labs(title = "x", x = "Final Math Grade", y = "Final Portuguese Grade")
 p
