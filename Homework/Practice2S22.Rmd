@@ -176,7 +176,8 @@ median_violation <- Violations %>%
  
 head(median_violation)
 
-p <- ggplot(data = median_violation, aes(x = medianviolations, y =inspections))
+p <- ggplot(data = median_violation, aes(x = medianviolations, y =inspections)) +
+  geom_point()
 p
 ```
 
@@ -195,7 +196,9 @@ Check out the text examples with `annotate()` [here](https://ggplot2.tidyverse.o
 Solution:
 
 ```{r}
-
+p <- ggplot(data = median_violation, aes(x = medianviolations, y =inspections)) +
+  geom_point() +  annotate("text", x = 5, y = 42, label = "10169")
+p
 ```
 
 
