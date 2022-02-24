@@ -12,6 +12,7 @@ output:
 library(tidyverse)
 library(mdsr)
 library(Lahman)
+library(kableExtra)
 # add other packages needed here!
 knitr::opts_chunk$set(
   tidy=FALSE,     # display code as typed
@@ -106,9 +107,13 @@ top300 <- Batting %>%
   select(nameFirst, playerID, nameLast, HR, SB) %>%
   group_by(playerID, nameFirst, nameLast) %>%
   summarize(HR = sum(HR), SB = sum(SB)) %>%
-  filter(HR > 300 & SB > 300) 
+  filter(HR > 300 & SB > 300) %>%
+  select(nameFirst, nameLast, HR, SB) %>%
+  rename("First Name" = nameFirst, "Last Name" = nameLast,  "Home Runs" = HR, "Stolen Bases" = SB) %>%
+  kable(booktabs = TRUE)
   
-kable()
+  
+
  
 ```
 
