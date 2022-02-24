@@ -222,7 +222,9 @@ head(findviolation)
 p <- ggplot(data = median_violation, aes(x = inspections, y =medianviolations)) +
   geom_point() +  
   annotate("text", x = 1000, y = 23, label = "10123") +
-  geom_curve(aes(x = 1000, y = 24, xend = 250, yend = 25), arrow = arrow(length = unit(.02, "npc")), color = "red")
+  geom_curve(aes(x = 1000, y = 24, xend = 250, yend = 25), 
+             arrow = arrow(length = unit(.02, "npc")), 
+             color = "red")
 p
 ```
 
@@ -255,7 +257,9 @@ Solution:
 ```{r}
 glimpse(OrigData)
 newData <- OrigData %>%
-pivot_longer(cols = meanL:sdR, names_to = "class", values_to = "values")  %>%
+pivot_longer(cols = meanL:sdR, 
+             names_to = "class", 
+             values_to = "values")  %>%
 pivot_wider(
   names_from = c(class, sex), 
   names_glue = ("{sex}.{class}"), 
@@ -308,13 +312,17 @@ Solution:
 
 ```{r}
 oldgrades <- math_data %>%
-  inner_join(port_data, c("school", "sex", "age", "address", "famsize","Pstatus", "Medu","Fedu","Mjob","Fjob","reason","nursery","internet"))
+  inner_join(port_data, 
+             c("school", "sex", "age", "address", "famsize","Pstatus", "Medu","Fedu","Mjob",
+               "Fjob","reason","nursery","internet"))
 glimpse(oldgrades)
 
 newgrades <- oldgrades %>%
   filter(age < 20) %>%
   filter(absences.x < 10 | absences.y < 10) %>%
-  select(G3.x, G3.y, traveltime.x, Walc.x) %>%
+  select(G3.x, 
+         G3.y, traveltime.x, 
+         Walc.x) %>%
   mutate(alcohol_consumption = as.factor(Walc.x)) %>%
   mutate(travel_time = as.factor(traveltime.x))
 
