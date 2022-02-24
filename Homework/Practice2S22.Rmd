@@ -108,9 +108,14 @@ top300 <- Batting %>%
   group_by(playerID, nameFirst, nameLast) %>%
   summarize(HR = sum(HR), SB = sum(SB)) %>%
   filter(HR > 300 & SB > 300) %>%
-  select(nameFirst, nameLast, HR, SB) %>%
-  rename("First Name" = nameFirst, "Last Name" = nameLast,  "Home Runs" = HR, "Stolen Bases" = SB) %>%
+  select(-playerID) %>%
+  rename("First Name" = nameFirst, 
+         "Last Name" = nameLast,  
+         "Home Runs" = HR, 
+         "Stolen Bases" = SB) %>%
   kable(booktabs = TRUE)
+
+top300
   
   
 
@@ -171,14 +176,14 @@ Solution:
 
 ```{r}
 median_violation <- Violations %>%
+  na.omit() %>%
   group_by(zipcode) %>%
-  summarize(medianviolations = median(score), 
-            inspections = n()) %>%
-  na.omit() 
+  summarize(medianviolations = median(score),
+            inspections = n()) 
  
 head(median_violation)
 
-p <- ggplot(data = median_violation, aes(x = medianviolations, y =inspections)) +
+p <- ggplot(data = median_violation, aes(x = inspections, y =medianviolations)) +
   geom_point()
 p
 ```
@@ -198,7 +203,7 @@ Check out the text examples with `annotate()` [here](https://ggplot2.tidyverse.o
 Solution:
 
 ```{r}
-p <- ggplot(data = median_violation, aes(x = medianviolations, y =inspections)) +
+p <- ggplot(data = median_violation, aes(x = inspections, y =medianviolations)) +
   geom_point() +  
   annotate("text", x = 5, y = 42, label = "10169") +
   geom_curve(aes(x = 5.3, y = 40.5, xend = 6.5, yend = 42), arrow = arrow(length = unit(.02, "npc")), color = "red")
@@ -293,7 +298,8 @@ glimpse(oldgrades)
 newgrades <- oldgrades %>%
   filter(age < 20) %>%
   filter(absences.x < 10 | absences.y < 10) %>%
-  select(G3.x, G3.y, traveltime.x, Walc.x)
+  select(G3.x, G3.y, traveltime.x, Walc.x) %>%
+  as.factor(Walc.x)
 
 glimpse(newgrades)
 ```
@@ -307,8 +313,8 @@ Solution:
 
 
 ```{r}
-p <- ggplot(data = newgrades, aes(x = G3.x, y = G3.y)) +
-  geom_point()
+p <- ggplot(data = newgrades, aes(x = G3.x, y = G3.y, color = Walc.x)) +
+  geom_jitter()
 p
 ```
 
