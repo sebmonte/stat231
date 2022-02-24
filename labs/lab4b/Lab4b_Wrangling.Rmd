@@ -1,6 +1,6 @@
 ---
 title: "Lab 4b - Wrangling"
-author: "YourNameGoesHere"
+author: "Sebastian Montesinos"
 date: "For class Thursday, Feb. 24"
 output:
   pdf_document:
@@ -87,8 +87,8 @@ If you copied over the Lab 4b folder in its entirety, the file structure should 
 Solution:
 
 ```{r}
-coverage <- read_csv("data/healthcare_coverage.txt")
-spending <- read_csv("data/healthcare_spending.txt")
+coverage <- read_csv("labs/lab4b/data/healthcare_coverage.txt")
+spending <- read_csv("labs/lab4b/data/healthcare_spending.txt")
 ```
 
 <!-- How easy is it to find files in your repo? If you aren't using any folder organization, it's probably a good time to start thinking about that and make some adjustments going forward to how you move files around so that things stay organized. -->
@@ -99,10 +99,11 @@ spending <- read_csv("data/healthcare_spending.txt")
 
 Hint: use `glimpse()`.
 
-Solution:
+Solution: Spending covers 1991 to 2014, while coverage covers 2013 to 2016. There are some N/A values in the coverage dataset, where there only should be doubles.
 
 ```{r}
-
+glimpse(coverage)
+glimpse(spending)
 ```
 
 > part c - The previous question was intentionally leading---you should have identified some mismatched variable types in the `coverage` dataset. This happened because missing numeric values were recorded as text ("N/A") instead of left empty. Run the code below to fix this problem. Then, in your own words, describe what the various commands (na_if, mutate, across) did. 
@@ -114,7 +115,7 @@ coverage <- coverage %>%
                 .fns = as.numeric))
 ```
 
-Solution:
+Solution: na_if finds N/As and replaces them with 'NA' without quotes. Mutate goes over every column ending with public and .cols tells mutate what column to work over, telling them to change the variable type to numeric.
 
 
 > part d - If we're interested in the relationship between spending and coverage, we'll only be able to use observations that have information on both.  That is, we won't be using data from years for which we only have spending information or only have coverage information. Remove any variables we won't be using from `coverage` and `spending`.
@@ -124,7 +125,12 @@ Solution:
 Solution:
 
 ```{r}
-
+relcoverage <- coverage %>%
+  select(Location |starts_with('2013') | starts_with('2014'))
+relspending <- spending %>%
+  select(Location |starts_with('2013') | starts_with('2014'))
+relcoverage <- relspending %>%
+  innerjoin(spending, by = "location")
 ```
 
 > part e - There are 50 states in the United States but 52 observations in the `coverage` and `spending` datasets. The two "bonus" cases contain information about the US as a whole and Washington DC.  Remove these observations from both datasets.
@@ -132,7 +138,10 @@ Solution:
 Solution:
 
 ```{r}
-
+state_relcoverage <- relcoverage %>%
+  filter(Location != "United States" & Location != "District of Columbia")
+state_relspending <- relspending %>%
+   filter(Location != "United States" & Location != "District of Columbia")
 ```
 
 <!--
