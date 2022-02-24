@@ -97,7 +97,7 @@ Use the `Batting`, `Pitching`, and `Master` tables in the *Lahman* package to an
 
 > part a - List the name of every player in baseball history who has accumulated at least 300 home runs (HR) and at least 300 stolen bases (SB). You can find the first and last name of the player in the `Master` data frame. Join this to your result along with the total home runs and total bases stolen for each of these elite players.
 
-Solution:
+Solution: Ben Chapman, Steve Finley, Charlie Hickman, Babe Ruth, Cy Seymour, George Sisler, Jack Stivetts, George Van Haltren, and Cy Young.
 
 ```{r}
 head(Batting)
@@ -120,7 +120,18 @@ head(top300, 20)
 Solution:
 
 ```{r}
-
+head(Batting)
+top300b <- Pitching %>%
+  left_join(Master, by = c("playerID")) %>%
+  left_join(Batting, by = c("playerID")) %>%
+  rename(SO = SO.y) %>%
+  select(nameFirst, playerID, nameLast, SO, W) %>%
+  group_by(playerID, nameFirst, nameLast) %>%
+  summarize(SO = sum(SO), W = sum(W)) %>%
+  filter(SO > 3000 & W > 300) 
+  
+  
+head(top300b, 30)
 ```
 
 > part c - Finally, list the name and year of every player who has hit at least 50 home runs in a single season. Which player had the lowest batting average in that season?
@@ -130,7 +141,9 @@ Note: Batting average is calculated as the number of hits (H) divided by the num
 Solution:
 
 ```{r}
-
+homeruns <- Batting %>%
+  left_join(Master, by = c("playerID")) %>%
+  select(nameFirst, nameLast, playerID, HR)
 ```
 
 
