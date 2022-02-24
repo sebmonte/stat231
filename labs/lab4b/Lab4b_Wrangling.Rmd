@@ -115,7 +115,7 @@ coverage <- coverage %>%
                 .fns = as.numeric))
 ```
 
-Solution: na_if finds N/As and replaces them with 'NA' without quotes. Mutate goes over every column ending with public and .cols tells mutate what column to work over, telling them to change the variable type to numeric.
+Solution: R isn't recognizing the n/a as NA in the actual dataset, so na_if finds N/As and replaces them with NAs. Mutate goes over every column ending with public and .cols tells mutate what column to work over, telling them to change the variable type to numeric.
 
 
 > part d - If we're interested in the relationship between spending and coverage, we'll only be able to use observations that have information on both.  That is, we won't be using data from years for which we only have spending information or only have coverage information. Remove any variables we won't be using from `coverage` and `spending`.
@@ -157,7 +157,7 @@ We'll want to create a scatterplot with `log(spending)` on the $x$-axis and `log
 
 > part a - First, sketch what the scatterplot should look like on paper or your tablet or some app (what are the axes? what does each point represent?). What does your dataset need to look like in order to create the scatterplot in `ggplot()`? What will each observation (row) in the dataset represent? What variables (columns) do you need?
 
-Solution: We will need a table with columns for year, location, 
+Solution: We will need a table with columns for year, spending, and employee coverage, with an observation for each state and year.
 
 
 
@@ -165,7 +165,7 @@ Solution: We will need a table with columns for year, location,
 
 Remember you can reference what the data sets look like currently in multiple ways. 
 
-Solution: 
+Solution: We will need to combine the spending and coverage sets. Then, we will need to turn year into a variable and ensure that we have a variable for coverage and spending: this will require two pivots
 
 
 
@@ -178,14 +178,15 @@ healthcarejoin <- state_relcoverage %>%
   inner_join(state_relspending, by = "Location")
 
 healthcarestep <- healthcarejoin %>%
-  pivot_longer(cols = -Location, 
-               name_sep = "__", 
-               names_to = c("year", "category"), 
+  pivot_longer(cols = -Location,
+               names_sep = "__",
+               names_to = c("year", "category"),
                values_to = "amount")
 
 healthcarewider <- healthcarestep %>%
-  pivot_wider(names_from = "category", values_from = "amount") %>%
-  clean_names() %>%
+  pivot_wider(names_from = "category", 
+              values_from = "amount") %>%
+  clean_names() 
   
 
 ```
@@ -196,6 +197,15 @@ healthcarewider <- healthcarestep %>%
 Solution:
 
 ```{r}
+ggplot(data = healthcarewider, aes(x = total_health_spending, y = employer, color = year)) +
+  geom_point() +
+  coord_trans(x = "log10", y = "log10") +
+  labs(x = "Total Health Spending in Millions",
+       y = "# covered (employer)",
+       color = "Year", 
+       title = "Health coverage vs US Spending",
+       subtitle = "2013-2014, log scale")
+       
 
 ```
 
