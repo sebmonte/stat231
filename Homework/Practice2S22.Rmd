@@ -143,11 +143,12 @@ Solution:
 ```{r}
 homeruns <- Batting %>%
   left_join(Master, by = c("playerID")) %>%
-  select(nameFirst, nameLast, playerID, HR, H, AB) %>%
+  select(nameFirst, yearID, nameLast, playerID, HR, H, AB) %>%
   filter(HR > 50) %>% 
-  group_by(playerID, nameFirst, nameLast) %>%
+  group_by(yearID, nameFirst, nameLast) %>%
   summarize(battingaverage = H/AB) %>%
-  arrange(homeruns, desc(battingaverage))
+  arrange(battingaverage)
+head(homeruns, 20)
 
 ```
 
