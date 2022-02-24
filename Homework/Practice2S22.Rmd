@@ -168,7 +168,11 @@ The `Violations` data set in the **mdsr** package contains information regarding
 Solution:
 
 ```{r}
+median_violation <- Violations %>%
+  group_by(zipcode) %>%
+  summarize(medianviolations = sum(score))
 
+head(median_violation)
 ```
 
 > part b - In your visualization above, there are several potential outliers but there is one zipcode in particular that does not seem to fall along the general trend. Add text to the outlier identifying what zipcode it is, and add an arrow pointing from the text to the observation. Note: first, you may want to `filter()` to identify the zipcode (so you know what text to add to the plot).  
