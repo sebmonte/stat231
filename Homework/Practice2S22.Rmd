@@ -133,11 +133,16 @@ top300b <- Pitching %>%
   select(nameFirst, playerID, nameLast, SO, W) %>%
   group_by(playerID, nameFirst, nameLast) %>%
   summarize(SO = sum(SO), W = sum(W)) %>%
-  filter(SO > 3000 & W > 300) 
-head(top300b, 20)
+  filter(SO > 3000 & W > 300) %>%
+  subset(select = -playerID) %>%
+  rename("First Name" = nameFirst, 
+         "Last Name" = nameLast,  
+         "Wins" = W, 
+         "Strikeouts" = SO) %>%
+  kable(booktabs = TRUE)
+top300b
   
-  
-head(top300b, 30)
+
 ```
 
 > part c - Finally, list the name and year of every player who has hit at least 50 home runs in a single season. Which player had the lowest batting average in that season?
@@ -153,8 +158,14 @@ homeruns <- Batting %>%
   filter(HR > 50) %>% 
   group_by(yearID, nameFirst, nameLast) %>%
   summarize(battingaverage = H/AB) %>%
-  arrange(battingaverage)
-head(homeruns, 20)
+  arrange(battingaverage) %>%
+  rename("First Name" = nameFirst, 
+         "Last Name" = nameLast,  
+         "Batting Average" = battingaverage) %>%
+  kable(booktabs = TRUE)
+
+homeruns
+
 
 ```
 
