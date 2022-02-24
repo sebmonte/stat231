@@ -216,10 +216,13 @@ Check out the text examples with `annotate()` [here](https://ggplot2.tidyverse.o
 Solution:
 
 ```{r}
+findviolation <- median_violation %>%
+  filter(medianviolations > 20)
+head(findviolation)
 p <- ggplot(data = median_violation, aes(x = inspections, y =medianviolations)) +
   geom_point() +  
-  annotate("text", x = 5, y = 42, label = "10169") +
-  geom_curve(aes(x = 5.3, y = 40.5, xend = 6.5, yend = 42), arrow = arrow(length = unit(.02, "npc")), color = "red")
+  annotate("text", x = 1000, y = 23, label = "10123") +
+  geom_curve(aes(x = 1000, y = 24, xend = 250, yend = 25), arrow = arrow(length = unit(.02, "npc")), color = "red")
 p
 ```
 
