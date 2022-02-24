@@ -1,0 +1,309 @@
+---
+title: "Practice2"
+author: "YourNameGoesHere"
+date: "Due by midnight, Friday, Feb. 25"
+output: 
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r, setup, include=FALSE}
+library(tidyverse)
+library(mdsr)
+# add other packages needed here!
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+```
+
+# Practice2
+
+Reminder: Practice assignments may be completed working with other individuals.
+
+# Reading 
+
+The associated reading for the week is Chapter 4, Chapter 5, Chapter 6 (skip 6.4), and Sections 8.3 and 8.4.
+
+# Practicing Academic Integrity
+
+If you worked with others or used resources outside of provided course material (anything besides our textbook, course materials in the repo, labs, R help menu) to complete this assignment, please acknowledge them below using a bulleted list. 
+
+<!-- ~~~~~~~~~~~~~~~~ YOU MAY BEGIN EDITING BELOW THIS LINE ~~~~~~~~~~~~~~~~ -->
+
+*I acknowledge the following individuals with whom I worked on this assignment:*
+
+Name(s) and corresponding problem(s)
+
+*
+
+*I used the following sources to help complete this assignment:*
+
+Source(s) and corresponding problem(s)
+
+* 
+
+
+
+\newpage
+
+
+<!-- PROBLEM 1 ---------------------------------------------------------------->
+
+# 1 - Hardest Concept
+
+We've covered many different data wrangling concepts and associated verbs during this unit. This problem will help you identify ways to get support on concepts you find challenging, beyond what we have in class and in the textbook. 
+
+> part a - What concept or data wrangling verb did you find most challenging to work with during this unit?
+
+Solution:
+
+> part b - Look in our Resources folder at the tidyr and data-transformation cheat sheets. Can you find information related to your selected concept or verb? If so, what sheet is it in? What if any insights do you get from the cheatsheet? 
+
+(If you picked a concept or verb not on these cheatsheets, try to find it on a different one, or ask me where it is likely to be. These are just the two most common cheatsheets to reference for these chapters.)
+
+Solution:
+
+> part c - Most of the packages we use have vignettes that have been created for them. Vignettes are designed to show how functions are used. Identify either a function related to your concept or your selected verb (which is a function), and find what package it is in. Then look for a package vignette. What package did you look for a vignette for? Is your concept or verb illustrated in the vignette?
+
+(Searching with Google or within R are possible.)
+
+Solution:
+
+
+> part d - Many people blog examples of different R functions. Search for an R example of your concept or verb using Google. Look over the search results and identify one that demonstrates correct use of the concept or verb. List the URL.
+
+Solution: 
+
+
+
+<!--
+You can make URLs clickable in the pdf if you use appropriate formatting. 
+[whatever you want link to be - could be url itself](url in parentheses)
+
+Remember to knit, commit, and push as you go!
+-->
+
+
+\newpage
+
+
+<!-- PROBLEM 2 ---------------------------------------------------------------->
+
+# 2 - MDSR 5.2
+
+Use the `Batting`, `Pitching`, and `Master` tables in the *Lahman* package to answer the following questions. Remember that you are responsible for loading packages in the setup chunk. 
+
+> part a - List the name of every player in baseball history who has accumulated at least 300 home runs (HR) and at least 300 stolen bases (SB). You can find the first and last name of the player in the `Master` data frame. Join this to your result along with the total home runs and total bases stolen for each of these elite players.
+
+Solution:
+
+```{r}
+
+```
+
+> part b - Similarly, list the names of every pitcher in baseball history who has accumulated at least 300 wins (W) and at least 3,000 strikeouts (SO).
+
+Solution:
+
+```{r}
+
+```
+
+> part c - Finally, list the name and year of every player who has hit at least 50 home runs in a single season. Which player had the lowest batting average in that season?
+
+Note: Batting average is calculated as the number of hits (H) divided by the number of at bats (AB).
+
+Solution:
+
+```{r}
+
+```
+
+
+<!-- Have you committed and/or pushed yet? -->
+
+
+\newpage
+
+<!-- PROBLEM 3 ---------------------------------------------------------------->
+
+# 3 - MDSR 4.11 (modified)
+
+The `Violations` data set in the **mdsr** package contains information regarding the outcome of health inspections of restaurants in New York City. Note that higher inspection scores indicate worse violations: "restaurants with an inspection score between 0 and 13 points earn an A, those with 14 to 27 points receive a B and those with 28 or more a C" ([nyc.gov](https://www1.nyc.gov/assets/doh/downloads/pdf/rii/how-we-score-grade.pdf)).
+
+> part a - Use these data to calculate the median violation score by zip code for zip codes in Manhattan. What pattern, if any, do you see between the number of inspections and the median score? Generate a visualization to support your response.  
+  
+Solution:
+
+```{r}
+
+```
+
+> part b - In your visualization above, there are several potential outliers but there is one zipcode in particular that does not seem to fall along the general trend. Add text to the outlier identifying what zipcode it is, and add an arrow pointing from the text to the observation. Note: first, you may want to `filter()` to identify the zipcode (so you know what text to add to the plot).  
+
+<!--
+(Can't remember how to create a curved arrow in `ggplot()`?  
+
+The answers to [this question](https://stackoverflow.com/questions/38008863/how-to-draw-a-nice-arrow-in-ggplot2/61383034) on Stack Exchange may help.  
+
+Can't remember how to add text to the plot in `ggplot()`? 
+
+Check out the text examples with `annotate()` [here](https://ggplot2.tidyverse.org/reference/annotate.html), or answers to [this question](https://stackoverflow.com/questions/14351608/color-one-point-and-add-an-annotation-in-ggplot2/14351810) that use `geom_text`.)
+-->
+
+Solution:
+
+```{r}
+
+```
+
+
+
+\newpage
+
+
+<!-- PROBLEM 4 ---------------------------------------------------------------->
+
+# 4 - MDSR 6.5
+
+Generate the code to convert the data frame from the starting point to the results.
+
+[Figures available in text online in Section 6.6.](https://mdsr-book.github.io/mdsr2e/ch-dataII.html#dataII-exercises)
+
+The starting data frame is provided. Hint (from text): Use *pivot_longer()* in conjunction with *pivot_wider()*. 
+
+```{r}
+OrigData <- data.frame(grp = c("A","A","B", "B")
+                           , sex = c("F", "M", "F", "M")
+                           , meanL = c(0.22, 0.47, 0.33, 0.55)
+                           , sdL = c(0.11, 0.33, 0.11, 0.31)
+                           , meanR = c(0.34, 0.57, 0.40, 0.65)
+                           , sdR = c(0.08, 0.33, 0.07, 0.27))
+```
+
+Solution:
+
+```{r}
+
+
+```
+
+
+<!--
+Coding note: Gather and spread are older functions used for similar reshaping. If you look them up, you'll see they are *superseded* by the pivot functions. This means gather and spread are no longer under development, but if you found an example online that used gather and/or spread, you could still use the code or adapt it to work with the pivot functions.
+--> 
+
+
+<!-- Remember to commit and push. -->
+
+\newpage
+
+
+<!-- PROBLEM 5 ---------------------------------------------------------------->
+
+# 5 - Combining your Wrangling and Visualization Skills
+
+When we looked at our first UN votes visual, some wrangling was required to get the data into a format appropriate for the visual. Now that we've examined both visualization and wrangling, you can combine the skills too! (And you did a little of this above). 
+
+We will be looking at a data set on high school students in Portugal. We have information on their performance in a Math course and a Portugeuse course (think of this as your natural language course, i.e. English for English speakers, etc.), as well as a host of demographic variables. Detailed information about the data set is provided on the following pages - you should look it over as you tackle this problem. (Feel free to remove the info when knitting to the final version of your assignment.)
+
+
+```{r, include = FALSE}
+# The data is loaded in two separate files
+math_data <- read.table("data/student-mat.txt", 
+                 sep = ";", header = TRUE)
+port_data <- read.table("data/student-por.txt",
+                 sep = ";", header = TRUE)
+```
+
+
+
+We want to visualize the relationship between final Math and final Portugeuse grade for students who were in both courses. In addition, we want to be sure all students in the visual were under 20 years old, and had fewer than 10 absences in either course (not total). We also want to factor in weekend alcohol use and travel time as reported in the Math data set in our examination of the relationship, treating these as appropriate group variables (categorical). (Students filled out the survey twice and not all responses match between them, even for the same student.)
+
+1. Wrangle the data you need into an appropriate format, and save it as a new data set with the variables you need for your visual.
+
+<!--
+To properly combine the files into the data set needed for this problem, you will need this:
+by = c("school", "sex", "age", "address", "famsize","Pstatus", "Medu","Fedu","Mjob","Fjob","reason","nursery","internet")
+When combined, before doing any further wrangling, there should be 382 observations in the data set.
+-->
+
+Solution:
+
+```{r}
+
+```
+
+
+2. Then generate an appropriate visual. Make sure your graphic has appropriate labels, legends (as needed), and a title.
+
+<!-- Looking up geom_jitter could be informative to help with your visual. -->
+
+Solution:
+
+
+```{r}
+
+```
+
+
+3. Finally, in a few sentences, describe what you find. 
+
+
+Solution:
+
+
+
+
+<!--
+Knit, commit, and push, including the final renamed pdf, to your repo. Then, upload the .pdf to Gradescope before the deadline. 
+-->
+
+\newpage
+
+# Data Set Information for Problem 5 
+
+The data set is from a paper called "Using Data Mining To Predict Secondary School Student Alcohol Consumption" by Fabio Pagnotta and Hossain Mohammad Amran of the Department of Computer Science, University of Camerino, and the data set is hosted online in UCI's machine learning repository. 
+
+The information below was copied from the provided codebook online.
+
+Attributes for both student-mat.csv (Math course) and student-por.csv (Portuguese language course) datasets:  
+1. school - student's school (binary: 'GP' - Gabriel Pereira or 'MS' - Mousinho da Silveira)  
+2. sex - student's sex (binary: 'F' - female or 'M' - male)  
+3. age - student's age (numeric: from 15 to 22)  
+4. address - student's home address type (binary: 'U' - urban or 'R' - rural)  
+5. famsize - family size (binary: 'LE3' - less or equal to 3 or 'GT3' - greater than 3)  
+6. Pstatus - parent's cohabitation status (binary: 'T' - living together or 'A' - apart)  
+7. Medu - mother's education (numeric: 0 - none, 1 - primary education (4th grade), 2 - 5th to 9th grade, 3 - secondary education or 4 - higher education)  
+8. Fedu - father's education (numeric: 0 - none, 1 - primary education (4th grade), 2 - 5th to 9th grade, 3 - secondary education or 4 - higher education)  
+9. Mjob - mother's job (nominal: 'teacher', 'health' care related, civil 'services' (e.g. administrative or police), 'at_home' or 'other')  
+10. Fjob - father's job (nominal: 'teacher', 'health' care related, civil 'services' (e.g. administrative or police), 'at_home' or 'other')  
+11. reason - reason to choose this school (nominal: close to 'home', school 'reputation', 'course' preference or 'other')  
+12. guardian - student's guardian (nominal: 'mother', 'father' or 'other')  
+13. traveltime - home to school travel time (numeric: 1 - <15 min., 2 - 15 to 30 min., 3 - 30 min. to 1 hour, or 4 - >1 hour)  
+14. studytime - weekly study time (numeric: 1 - <2 hours, 2 - 2 to 5 hours, 3 - 5 to 10 hours, or 4 - >10 hours)  
+15. failures - number of past class failures (numeric: n if 1<=n<3, else 4)  
+16. schoolsup - extra educational support (binary: yes or no)  
+17. famsup - family educational support (binary: yes or no)  
+18. paid - extra paid classes within the course subject (Math or Portuguese) (binary: yes or no)  
+19. activities - extra-curricular activities (binary: yes or no)  
+20. nursery - attended nursery school (binary: yes or no)  
+21. higher - wants to take higher education (binary: yes or no)  
+22. internet - Internet access at home (binary: yes or no)  
+23. romantic - with a romantic relationship (binary: yes or no)  
+24. famrel - quality of family relationships (numeric: from 1 - very bad to 5 - excellent)  
+25. freetime - free time after school (numeric: from 1 - very low to 5 - very high)  
+26. goout - going out with friends (numeric: from 1 - very low to 5 - very high)  
+27. Dalc - workday alcohol consumption (numeric: from 1 - very low to 5 - very high)  
+28. Walc - weekend alcohol consumption (numeric: from 1 - very low to 5 - very high)  
+29. health - current health status (numeric: from 1 - very bad to 5 - very good)  
+30. absences - number of school absences (numeric: from 0 to 93)  
+
+Finally, the grades are related with the course subject, Math or Portuguese:  
+31. G1 - first period grade (numeric: from 0 to 20)  
+32. G2 - second period grade (numeric: from 0 to 20)  
+33. G3 - final grade (numeric: from 0 to 20, output target)   
+Thus, these variables appear in each data set, but have different meaning in each. 
+
+The data was provided as two different .csv files online. I obtained some errors trying to work with them, so ended up saving them as .txt files on my website. Many of the students were in both courses, but not all. 
