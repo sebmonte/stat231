@@ -331,6 +331,7 @@ Solution:
 
 ```{r}
 p <- ggplot(data = newgrades, aes(x = G3.x, y = G3.y, color = alcohol_consumption)) +
+  facet_wrap(~travel_time, nrow = 2) +
   geom_jitter() +
   labs(title = "x", x = "Final Math Grade", y = "Final Portuguese Grade")
 p
