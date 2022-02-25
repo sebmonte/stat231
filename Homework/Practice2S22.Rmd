@@ -41,7 +41,8 @@ Name(s) and corresponding problem(s)
 
 *I used the following sources to help complete this assignment:*
 
-Source(s) and corresponding problem(s)
+Source(s) and corresponding problem(s):
+https://www.marsja.se/how-to-rename-factor-levels-in-r-dplyr/. I used this source to figure out how to name the facets in the final problem.
 
 * 
 
