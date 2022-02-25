@@ -149,7 +149,7 @@ top300b
 
 Note: Batting average is calculated as the number of hits (H) divided by the number of at bats (AB).
 
-Solution: Too many observations, and what do I do with duplicate names?
+Solution: Pete Alonso's 2019 season involved the lowest batting average of players who hit at least 50 home runs in a single season.
 
 ```{r}
 homeruns <- Batting %>%
@@ -188,16 +188,18 @@ Solution:
 ```{r}
 median_violation <- Violations %>%
   select(boro, zipcode, score) %>%
-  filter(boro == "MANHATTAN") %>%
   na.omit() %>%
+  filter(boro == "MANHATTAN") %>%
   group_by(zipcode) %>%
   summarize(medianviolations = median(score),
             inspections = n()) 
  
-head(median_violation)
 
 p <- ggplot(data = median_violation, aes(x = inspections, y =medianviolations)) +
-  geom_point()
+  geom_point() +
+  labs(title = "Restaurant Inspections vs Violation Score",
+       y = "Median Violation Score", 
+       x = "Inspections")
 p
 ```
 
@@ -224,7 +226,10 @@ p <- ggplot(data = median_violation, aes(x = inspections, y =medianviolations)) 
   annotate("text", x = 1000, y = 23, label = "10123") +
   geom_curve(aes(x = 1000, y = 24, xend = 250, yend = 25), 
              arrow = arrow(length = unit(.02, "npc")), 
-             color = "red")
+             color = "red") +
+  labs(title = "Restaurant Inspections vs Violation Score",
+       y = "Median Violation Score", 
+       x = "Inspections")
 p
 ```
 
@@ -313,8 +318,11 @@ Solution:
 ```{r}
 oldgrades <- math_data %>%
   inner_join(port_data, 
-             c("school", "sex", "age", "address", "famsize","Pstatus", "Medu","Fedu","Mjob",
-               "Fjob","reason","nursery","internet"))
+             c("school", "sex", "age", 
+               "address", "famsize","Pstatus",
+               "Medu","Fedu","Mjob",
+               "Fjob","reason","nursery",
+               "internet"))
 glimpse(oldgrades)
 
 newgrades <- oldgrades %>%
@@ -341,7 +349,11 @@ Solution:
 p <- ggplot(data = newgrades, aes(x = G3.x, y = G3.y, color = alcohol_consumption)) +
   facet_wrap(~travel_time, nrow = 2) +
   geom_jitter() +
-  labs(title = "x", x = "Final Math Grade", y = "Final Portuguese Grade")
+  labs(title = "x", x = "Final Math Grade", y = "Final Portuguese Grade") +
+  labs(title = "Grades in Portuguese vs Math",
+       subtitle = "Sorted by travel time to school 
+       and weekly alcohol consumption", color = "Alcohol consumption 
+       (low to high)", )
 p
 ```
 
