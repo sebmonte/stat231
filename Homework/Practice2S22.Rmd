@@ -101,7 +101,6 @@ Use the `Batting`, `Pitching`, and `Master` tables in the *Lahman* package to an
 Solution: 
 
 ```{r}
-head(Batting)
 top300 <- Batting %>%
   left_join(Master, by = c("playerID")) %>%
   select(nameFirst, playerID, nameLast, HR, SB) %>%
@@ -127,7 +126,6 @@ top300
 Solution:
 
 ```{r}
-head(Batting)
 top300b <- Pitching %>%
   left_join(Master, by = c("playerID")) %>%
   select(nameFirst, playerID, nameLast, SO, W) %>%
@@ -183,7 +181,7 @@ The `Violations` data set in the **mdsr** package contains information regarding
 
 > part a - Use these data to calculate the median violation score by zip code for zip codes in Manhattan. What pattern, if any, do you see between the number of inspections and the median score? Generate a visualization to support your response.  
   
-Solution:
+Solution: Restaurants with more than 100-200 inspections appear to have higher median violation scores than restaurants with less inspections, but beyond that point there does not appear to be a relationship between inspections and median violation score.
 
 ```{r}
 median_violation <- Violations %>%
@@ -220,7 +218,6 @@ Solution:
 ```{r}
 findviolation <- median_violation %>%
   filter(medianviolations > 20)
-head(findviolation)
 p <- ggplot(data = median_violation, aes(x = inspections, y =medianviolations)) +
   geom_point() +  
   annotate("text", x = 1000, y = 23, label = "10123") +
@@ -260,7 +257,6 @@ OrigData <- data.frame(grp = c("A","A","B", "B")
 Solution:
 
 ```{r}
-glimpse(OrigData)
 newData <- OrigData %>%
 pivot_longer(cols = meanL:sdR, 
              names_to = "class", 
@@ -323,7 +319,6 @@ oldgrades <- math_data %>%
                "Medu","Fedu","Mjob",
                "Fjob","reason","nursery",
                "internet"))
-glimpse(oldgrades)
 
 newgrades <- oldgrades %>%
   filter(age < 20) %>%
@@ -332,9 +327,9 @@ newgrades <- oldgrades %>%
          G3.y, traveltime.x, 
          Walc.x) %>%
   mutate(alcohol_consumption = as.factor(Walc.x)) %>%
-  mutate(travel_time = as.factor(traveltime.x))
+  mutate(travel_time = as.factor(traveltime.x)) 
+  
 
-glimpse(newgrades)
 ```
 
 
@@ -346,6 +341,7 @@ Solution:
 
 
 ```{r}
+
 p <- ggplot(data = newgrades, aes(x = G3.x, y = G3.y, color = alcohol_consumption)) +
   facet_wrap(~travel_time, nrow = 2) +
   geom_jitter() +
@@ -353,15 +349,16 @@ p <- ggplot(data = newgrades, aes(x = G3.x, y = G3.y, color = alcohol_consumptio
   labs(title = "Grades in Portuguese vs Math",
        subtitle = "Sorted by travel time to school 
        and weekly alcohol consumption", color = "Alcohol consumption 
-       (low to high)", )
+       (low to high)")
 p
+
 ```
 
 
 3. Finally, in a few sentences, describe what you find. 
 
 
-Solution:
+Solution: There is a positive relationship between math grades and Portuguese grades in general. There appears to be a much weaker relationship between the two final grades when travel time is highest. Alcohol consumption does not appear to have a very strong effect on final grades.
 
 
 
