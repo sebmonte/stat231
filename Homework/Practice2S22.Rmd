@@ -58,24 +58,24 @@ We've covered many different data wrangling concepts and associated verbs during
 
 > part a - What concept or data wrangling verb did you find most challenging to work with during this unit?
 
-Solution:
+Solution: I still find the combination of group_by() with summarise() to be hard to conceptualize. 
 
 > part b - Look in our Resources folder at the tidyr and data-transformation cheat sheets. Can you find information related to your selected concept or verb? If so, what sheet is it in? What if any insights do you get from the cheatsheet? 
 
 (If you picked a concept or verb not on these cheatsheets, try to find it on a different one, or ask me where it is likely to be. These are just the two most common cheatsheets to reference for these chapters.)
 
-Solution:
+Solution: In the data-transformation pdf there is a description of both the summarise and group_by function. The pdf has a visual showing how a data table gets transformed after using both functions (and the combination of both function). It also shows the basic syntax one would use in order to use the functions. Visually seeing how group_by allows each one of the computation summarise does to be done separately for different variables was helpful in visually conceptually how the functions work.
 
 > part c - Most of the packages we use have vignettes that have been created for them. Vignettes are designed to show how functions are used. Identify either a function related to your concept or your selected verb (which is a function), and find what package it is in. Then look for a package vignette. What package did you look for a vignette for? Is your concept or verb illustrated in the vignette?
 
 (Searching with Google or within R are possible.)
 
-Solution:
+Solution: I used for vignettes for the dplyr package. I found that there is a vignette for the 'grouped data' associated with this package that covers how group_by works in a variety of examples. The vignette also describes how to use group_by in conjunction with other verbs like summarise.
 
 
 > part d - Many people blog examples of different R functions. Search for an R example of your concept or verb using Google. Look over the search results and identify one that demonstrates correct use of the concept or verb. List the URL.
 
-Solution: 
+Solution: Here is the URL for the blogpost I found: ["https://cmdlinetips.com/2020/08/dplyr-groupby-and-summarize-group-by-one-or-more-variables/"]
 
 
 
