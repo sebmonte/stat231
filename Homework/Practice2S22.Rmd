@@ -328,6 +328,11 @@ newgrades <- oldgrades %>%
          Walc.x) %>%
   mutate(alcohol_consumption = as.factor(Walc.x)) %>%
   mutate(travel_time = as.factor(traveltime.x)) 
+
+levels(newgrades$travel_time) <- c("1-15 Minutes", 
+                                   "15-30 Minutes", 
+                                   "30-60 Minutes", 
+                                   ">60 minutes")
   
 
 ```
@@ -343,12 +348,14 @@ Solution:
 ```{r}
 
 p <- ggplot(data = newgrades, aes(x = G3.x, y = G3.y, color = alcohol_consumption)) +
-  facet_wrap(~travel_time, nrow = 2) +
+  facet_wrap(~travel_time, nrow =2) +
   geom_jitter() +
-  labs(title = "x", x = "Final Math Grade", y = "Final Portuguese Grade") +
+  labs(x = "Final Math Grade", 
+       y = "Final Portuguese Grade") +
   labs(title = "Grades in Portuguese vs Math",
        subtitle = "Sorted by travel time to school 
-       and weekly alcohol consumption", color = "Alcohol consumption 
+       and weekly alcohol consumption", 
+       color = "Alcohol consumption 
        (low to high)")
 p
 
