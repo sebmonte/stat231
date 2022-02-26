@@ -36,7 +36,7 @@ Remember, I recommend you code along with the book examples. You can try out the
 
 > part a - Many of our data sets have been provided as .csv files. What does .csv stand for?
 
-Solution: CVS stands for comma separated values, a non-compressed, widely used format for data exchange.
+Solution: csv stands for comma separated values, a non-compressed, widely used format for data exchange.
 
 > part b - Name one web-related data-table friendly format.
 
@@ -171,7 +171,7 @@ women_records
 
 As we wrap up the chapter on ethics, what are three major takeaways from Chapter 8 that had an impact on how you think about approaching your work as a budding data scientist?
 
-Solution:
+Solution: First, that just because you could engage in a particular analysis does not mean you should. You have to first consider whether your analysis could be used for biased, discriminatory purposes. Secondly, that it's crucial to keep track of and report even non-significant results from experiments & health trials to avoid publication bias. Thirdly, that it is important to consider the right of privacy in a world where public information is increasingly accessible. Using someone's publicly accessible data to reveal private, embarrassing information about them is a serious ethical danger.
 
 
 
