@@ -112,7 +112,7 @@ Hint: You can use the same code as used in the textbook to create the `amateur` 
 Solution:
 
 ```{r}
-amateur <- tables %>%
+women_indoor <- tables %>%
   purrr::pluck(10) %>%
   html_table()
 ```
@@ -127,7 +127,7 @@ Solution: Genzebe Dibaba of Ethiopia holds the one-mile record with a time of 4:
 
 
 ```{r}
-amateur %>%
+women_indoor %>%
   kable(booktabs = TRUE)
 ```
 
@@ -143,10 +143,24 @@ Read through all the desired items before beginning!
 
 <!-- Note: you can break a `kable` table across pages in the pdf by using the argument `longtable = TRUE` -->
 
-Solution:
+Solution: Sifan Hassan holds the fastest record, and it was during an outdoor event.
 
 ```{r}
+women_outdoor <- tables %>%
+  purrr::pluck(8) %>%
+  html_table()
+women_outdoor <- women_outdoor %>%
+  mutate(Type = "outdoor")
+women_indoor <- women_indoor %>%
+  mutate(Type = "indoor")
+women_records <- bind_rows(women_outdoor,
+                           women_indoor) %>%
+  select(!Venue) %>%
+  arrange(Time) %>%
+  kable(booktabs= TRUE)
+  
 
+women_records
 ```
 
 \newpage
