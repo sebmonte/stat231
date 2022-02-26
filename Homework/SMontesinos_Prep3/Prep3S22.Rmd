@@ -51,7 +51,7 @@ Solution: Haven can import files from Stata, SAS, and SPSS.
 
 Hint: arXiv is a website that hosts scholarly articles, often pre-prints, that are not peer-reviewed. (So, a later version of the paper might be peer-reviewed and published elsewhere.) The key to answering the question posed is the API part. Put another way, what does this package help you to do in relation to accessing the data stored by arXiv?
 
-Solution:
+Solution: An API is a protocol for interacting with a program, so this package would likely provide access to public API for the arXiv website and so allow us to use data from it.
 
 
 \newpage
