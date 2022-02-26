@@ -112,7 +112,9 @@ Hint: You can use the same code as used in the textbook to create the `amateur` 
 Solution:
 
 ```{r}
-
+amateur <- tables %>%
+  purrr::pluck(10) %>%
+  html_table()
 ```
 
 > part d - Use `kable()` to display the table from part c. Who holds the indoor one-mile world record for IAAF women, and what was her time?
@@ -121,11 +123,12 @@ Solution:
 Remember the argument `booktabs = TRUE` is a quick way to make the table look nice!
 -->
 
-Solution:
+Solution: Genzebe Dibaba of Ethiopia holds the one-mile record with a time of 4:13.21. 
 
 
 ```{r}
-
+amateur %>%
+  kable(booktabs = TRUE)
 ```
 
 > part e - Perform the necessary wrangling as directed to answer the question below. 
