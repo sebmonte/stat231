@@ -12,6 +12,7 @@ output:
 library(tidyverse)
 library(kableExtra)
 library(robotstxt)
+library(haven)
 knitr::opts_chunk$set(
   tidy=FALSE,     # display code as typed
   size="small")   # slightly smaller font for code
@@ -34,17 +35,17 @@ Remember, I recommend you code along with the book examples. You can try out the
 
 > part a - Many of our data sets have been provided as .csv files. What does .csv stand for?
 
-Solution:
+Solution: CVS stands for comma separated values, a non-compressed, widely used format for data exchange.
 
 > part b - Name one web-related data-table friendly format.
 
-Solution:
+Solution: One data-table friendly format this is web-related is HTML, or hypertext markup language.
 
 > part c - The *haven* package is designed to help import files from certain other apps into R. From its help file, list three apps it can import data files from.
 
 Hint: You may need to install *haven* if you want to look this up within R. Searching it on the web is also fine for this problem. 
 
-Solution: 
+Solution: Haven can import files from Stata, SAS, and SPSS.
 
 > part d - In Chapter 19, in our unit on text analysis, we will use the *aRxiv* package. From its help file, this package is an "Interface to the arXiv API". What does this mean?
 
