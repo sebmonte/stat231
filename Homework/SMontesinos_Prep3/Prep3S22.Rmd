@@ -13,6 +13,7 @@ library(tidyverse)
 library(kableExtra)
 library(robotstxt)
 library(haven)
+library(rvest)
 knitr::opts_chunk$set(
   tidy=FALSE,     # display code as typed
   size="small")   # slightly smaller font for code
@@ -51,8 +52,7 @@ Solution: Haven can import files from Stata, SAS, and SPSS.
 
 Hint: arXiv is a website that hosts scholarly articles, often pre-prints, that are not peer-reviewed. (So, a later version of the paper might be peer-reviewed and published elsewhere.) The key to answering the question posed is the API part. Put another way, what does this package help you to do in relation to accessing the data stored by arXiv?
 
-Solution: An API is a protocol for interacting with a program, so this package would likely provide access to public API for the arXiv website and so allow us to use data from it.
-
+Solution: An API is a protocol for interacting with a program, so this package would likely provide access to public API for the arXiv website. This would provide us with the R functions we would need to access the actual data.
 
 \newpage
 
@@ -70,7 +70,7 @@ If you're unsure of the permissions for a particular domain, you can use the han
 
 > part a - Check the permissions for the Wikipedia page using the code below. If the code returns "TRUE", then that indicates a bot has permission to access the page. Do you (via R) have permission to access the page? 
 
-Solution:
+Solution: I do have permission to access this wikipedia page via R.
 
 ```{r}
 # Define url to use again
@@ -91,10 +91,14 @@ Remember to load any necessary packages in the `setup` code chunk, installing th
 Note: `html_nodes()` shown in the text has now been superseded by `html_elements()` but they operate in the same way.
 -->
 
-Solution:
+Solution: There are 12 elements in the tables object I created.
 
 ```{r}
-
+url <- "http://en.wikipedia.org/wiki/Mile_run_world_record_progression"
+tables <- url %>% 
+  read_html() %>% 
+  html_elements("table")
+length(tables)
 ```
 
 
