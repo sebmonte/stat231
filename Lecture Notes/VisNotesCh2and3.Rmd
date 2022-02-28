@@ -1,0 +1,277 @@
+---
+title: "Visualization Notes - Chapter 2 and 3"
+output:
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+  html_document:
+    df_print: paged
+---
+
+```{r, setup, include=FALSE}
+#library(mosaic)
+library(tidyverse)
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+```
+
+# Key Components of a Visual - Yau's Taxonomy
+
+* Visual cues
+* Coordinate systems
+* Scale
+* Context
+
+# GGplot2's Grammar of Graphics
+
+Based on Wilkinson's grammar of graphics, very similar to Yau's Taxonomy
+
+* Layer - which consists of data and a mapping (required), and may contain a statistical transformation (stat), a geometric object (geom), and a position adjustment (position)
+* Coordinate system (coord)
+* Scale
+* Faceting
+
+Context is included by adding axis labels, titles, legends, etc. (e.g. labs)
+
+# Data
+
+FIFA game from 2019 - soccer - these are player statistics from within the game, combined with some real-life information (demographics, team ID, etc.). We will consider players with an Overall ability score in the game over 85.
+
+```{r, include = FALSE}
+Fifadata <- read_csv("https://awagaman.people.amherst.edu/stat240/FifaData2019Subset.csv")
+Fifasmall <- Fifadata %>% filter(Overall > 85)
+```
+
+There are 40 variables in the data set with 77 observations (down from over 18000 players in the original). 
+
+```{r}
+glimpse(Fifasmall)
+```
+
+```{r}
+#Fifasmall %>% 
+  #group_by(Position) %>% summarize(count = n())
+
+mosaic::tally(~ Position, data = Fifasmall)
+```
+
+We'll learn how the filtering worked and how to wrangle Position next week. (You might argue it's easier to want to work with only 4 categories for Position - forwards, midfielders, defenders, and goalkeepers rather than this breakdown.)
+
+# Making Plots
+
+The text demonstrates building graphics by literally *adding* to a saved plot object at each step. You can use this approach but you don't have to. 
+
+Example:
+
+```{r}
+g <- ggplot(data = Fifasmall, mapping = aes(x = Dribbling, y = FKAccuracy))
+g <- g + geom_point()
+g <- g + labs(title = "Dribbling versus Free Kick Accuracy")
+g
+
+#is equivalent to
+
+ggplot(data = Fifasmall, mapping = aes(x = Dribbling, y = FKAccuracy)) +
+  geom_point() +
+  labs(title = "Dribbling versus Free Kick Accuracy",
+       y = "Free Kick Accuracy")
+```
+
+The former approach may be helpful as you learn, but if you are comfortable with the latter, feel free to use it.
+
+
+# Plots
+
+Depending on your variable type, different plots are appropriate. 
+
+Drawing a bar chart for a categorical variable means you need the counts. We'll learn more about *group_by* and *summarize* next week, but that's how I got the counts here.
+
+```{r}
+Poscounts <- Fifasmall %>%
+  group_by(Position) %>% summarize(counts = n())
+ggplot(data = Poscounts, mapping = aes(y = counts, x = Position)) +
+  geom_col() +
+  scale_y_continuous(breaks = c(2, 4, 6, 8, 10)) +
+  labs(y = "Count",
+       title = "Distribution of Position")
+```
+
+In class I was asked how to make the axis show 2.0 instead of 2, etc. Here's that version of the plot.
+
+```{r}
+Poscounts <- Fifasmall %>%
+  group_by(Position) %>% summarize(counts = n())
+ggplot(data = Poscounts, mapping = aes(y = counts, x = Position)) +
+  geom_col() +
+  scale_y_continuous(breaks = c(2, 4, 6, 8, 10), label = scales::comma) +
+  labs(y = "Count",
+       title = "Distribution of Position")
+```
+
+Stacked bar charts let you add a second categorical variable. 
+
+```{r}
+ggplot(data = Fifasmall, aes(x = Position)) +
+  geom_bar(aes(fill = PreferredFoot), position = "fill") +
+  scale_fill_brewer(palette = "RdBu") +  #try commenting this line out
+  coord_flip() +
+  labs(y = "Proportion",
+       title = "Preferred Foot by Position") #note this is y before the flip!
+```
+
+Working with quantitative variables is more common. For univariate analyses, I strongly encourage you to use density plots, rather than histograms. 
+
+```{r}
+ggplot(data = Fifasmall, aes(x = Overall)) +
+  geom_density() +
+  labs(title = "Overall Score")
+```
+
+It's still easy to incorporate categorical variables to compare groups.
+
+```{r}
+ggplot(data = Fifasmall, aes(x = Overall, color = PreferredFoot)) +
+  geom_density() +
+  labs(title = "Overall Score by Preferred Foot")
+```
+
+Note that here, we set the color in the aesthetic for the overall plot. We could also set it just within the geom_density() portion.
+
+```{r}
+ggplot(data = Fifasmall, aes(x = Overall)) +
+  geom_density(aes(color = PreferredFoot)) +
+  labs(title = "Overall Score by Preferred Foot")
+```
+
+
+Sometimes boxplots can be better for comparing quantitative variables across groups.
+
+```{r}
+ggplot(data = Fifasmall, aes(x = Overall, color = PreferredFoot)) +
+  geom_boxplot() +
+  labs(title = "Overall Score by Preferred Foot") +
+  scale_fill_brewer(palette = "Spectral") +  
+  coord_flip() 
+```
+
+The minimum and Q1 are the same, in case you are wondering why there is no lower whisker.
+
+```{r}
+mosaic::favstats(Overall ~ PreferredFoot, data = Fifasmall)
+```
+
+In fact, the five number summaries are the same for both PreferredFoot groups. 
+
+More commonly, we'll start with some form of a scatterplot to examine the relationship between two quantitative variables.
+
+```{r}
+ggplot(data = Fifasmall, aes(x = Dribbling, y = FKAccuracy)) +
+  geom_point() +
+  labs(title = "Dribbling versus Free Kick Accuracy",
+       y = "Free Kick Accuracy") 
+```
+
+You can add smoothed lines or fitted regression lines with or without error margins.
+
+```{r}
+ggplot(data = Fifasmall, aes(x = Dribbling, y = FKAccuracy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(title = "Dribbling versus Free Kick Accuracy",
+       y = "Free Kick Accuracy")
+```
+
+```{r}
+ggplot(data = Fifasmall, aes(x = Dribbling, y = FKAccuracy)) +
+  geom_point() +
+  geom_smooth(se = FALSE) +
+  labs(title = "Dribbling versus Free Kick Accuracy",
+       y = "Free Kick Accuracy")
+```
+
+For that matter, you could combine these plots to compare the lines. You can adjust the linetypes and colors as desired. 
+
+```{r}
+ggplot(data = Fifasmall, aes(x = Dribbling, y = FKAccuracy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, linetype = 2) +
+  geom_smooth(se = FALSE, linetype = 6, color = "red") +
+  labs(title = "Dribbling versus Free Kick Accuracy",
+       y = "Free Kick Accuracy")
+```
+
+We can add another variable via color fairly easily.
+
+```{r}
+ggplot(data = Fifasmall, aes(x = Dribbling, y = FKAccuracy, color = PreferredFoot)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Dribbling versus Free Kick Accuracy",
+       subtitle = "By Preferred Foot",
+       y = "Free Kick Accuracy")
+```
+
+If you'd rather not have the plots overlaid, but would like them side by side, use facets.
+
+```{r}
+ggplot(data = Fifasmall, aes(x = Dribbling, y = FKAccuracy, color = PreferredFoot)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~ PreferredFoot) +
+  labs(title = "Dribbling versus Free Kick Accuracy",
+       subtitle = "By Preferred Foot",
+       y = "Free Kick Accuracy")
+```
+
+We have two geoms here. What happens if we set the color aesthetic within the call to geom_point here, instead of as part of the overall aesthetic? 
+
+```{r}
+ggplot(data = Fifasmall, aes(x = Dribbling, y = FKAccuracy)) +
+  geom_point(aes(color = PreferredFoot)) +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~ PreferredFoot) +
+  labs(title = "Dribbling versus Free Kick Accuracy",
+       subtitle = "By Preferred Foot",
+       y = "Free Kick Accuracy")
+```
+
+Which of these do you prefer? 
+
+Of course, nothing says the facet and color variables need to be the same. (I'm removing the regression lines for this, and setting color back in the overall aesthetic.)
+
+```{r}
+ggplot(data = Fifasmall, aes(x = Dribbling, y = FKAccuracy, color = Position)) +
+  geom_point() +
+  facet_wrap(~ PreferredFoot) +
+  labs(title = "Dribbling versus Free Kick Accuracy",
+       subtitle = "By Preferred Foot and Position",
+       y = "Free Kick Accuracy")
+```
+
+And we could play with point size still, and maybe we want those regression lines back.
+
+```{r, fig.height = 6, fig.width = 7.5}
+ggplot(data = Fifasmall, aes(x = Dribbling, y = FKAccuracy, color = Position)) +
+  geom_point(aes(size = Overall)) +
+  geom_smooth(method = "lm", se = FALSE)+
+  facet_wrap(~ PreferredFoot) +
+  labs(title = "Dribbling versus Free Kick Accuracy",
+       subtitle = "By Preferred Foot, Overall Score, and Position",
+       y = "Free Kick Accuracy")
+```
+
+This is not a very useful plot (Personally, I can't distinguish all those colors and some of those points are tiny), but you get the idea. You can layer on a lot here, and setting aesthetics will allow you to incorporate a lot of information into your plots. The plot also has to be re-sized so the legend stays on the page in the .pdf. 
+
+Your text has more examples that demonstrate (among other things):
+
+* mosaic plots (two categorical variables)
+* adding arrows and text features to plots (geom_curve, geom_text)
+* geom_line for lines
+* geom_linerange
+* tribbles - small data frames built for quick use (often to add context)
+* a lot of the data wrangling commands in the next few chapters (filter, group_by, summarize, mutate, %in%, unnest, pivot_wider)
+
+Don't worry if the data wrangling commands are unclear. That's what we'll be tackling in the coming weeks. 
+
+We examined scale changes and color a little bit, but there's a lot more you can do there as well. You can also do more with editing legends, including their positions, or simply removing them.  

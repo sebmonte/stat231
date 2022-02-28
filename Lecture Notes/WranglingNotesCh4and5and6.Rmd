@@ -1,0 +1,584 @@
+---
+title: "Wrangling Notes - Chapter 4, 5 and 6"
+output:
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+  html_document:
+    df_print: paged
+---
+
+```{r, setup, include=FALSE}
+library(tidyverse)
+library(lubridate)
+library(janitor)
+library(kableExtra)
+library(mdsr)
+
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+```
+
+# Wrangling in the Tidyverse (Ch 4)
+
+Key wrangling verbs are introduced:
+
+* select()
+* filter()
+* mutate()
+* arrange()
+* summarize()
+* group_by()
+* rename()
+
+# Demos functions commonly used in summarize
+
+* min, max
+* sum
+* mean
+* n()
+* pmin, pmax
+
+You might also be interested in:
+
+* sd
+* median
+
+
+# Other commands/concepts demo-ed (Ch 4)
+
+* ==, | , and & as the equality, `or`, and `and` operators
+* lubridate package for working with dates
+* %>% - piping operator
+* %in% operator
+* skim()
+* ifelse(), including nested ifelse statements
+* case_when() expression
+
+You might also be interested in:
+
+* != as the not equals operator
+* can do - inside select to remove variables (if keeping many and removing few)
+
+# Joins (Ch 5)
+
+Key join concepts are introduced including:
+
+* inner_join
+* left_join
+* right_join
+
+You might also be interested in:
+
+* full_join
+
+# Other commands/concepts demo-ed (Ch 5)
+
+* paste
+* n_distinct
+* concept of foreign `keys` relating tables / data sets
+* na.rm = TRUE
+
+# Tidying Data (Ch 6)
+
+In tidy data, 2 rules are followed. First, the rows (observations) refer to a specific, unique, and similar sort of "thing" or object. Second, the columns (variables) each have the same sort of value recorded for each row.  I.E. data is not tidy if you have both county and state level summary information in your rows (the rows represent different types of objects and some entries would be aggregates other others).
+
+This chapter demos using googlesheets4 including read_sheet and unnest() and shows two other key functions for reshaping data:
+
+* pivot_longer
+* pivot_wider
+
+# Other commands/concepts demo-ed (Ch 6)
+
+* collapse()
+* parse_number()
+* nest()
+* map()
+* pull()
+* pluck()
+* Naming and code style conventions
+* Case matters
+* janitor package including clean_names()
+
+# Other functions of interest
+
+This list is other functions that may or may not be demo-ed in the text (I tried to note highlights above), but that can be useful when wrangling.
+
+* ungroup()
+* na.omit()
+* names_glue option within pivot_wider()
+* relocate()
+* unite()
+
+You should know how to look these up now to learn about what they do. 
+
+# Data
+
+We return to our FIFA 2019 data to illustrate some of the wrangling commands and concepts. (A separate dataset is used below to illustrate working with dates.) 
+
+```{r}
+Fifadata <- read_csv("https://awagaman.people.amherst.edu/stat240/FifaData2019Subset.csv")
+```
+
+For our visualizations, we used only players with an overall rating of over 85. We also only used a few variables. The full data set is somewhat large - 18207 observations and 40 variables.
+
+```{r}
+dim(Fifadata)
+names(Fifadata)
+```
+
+For our visualizations previously, we didn't select the variables to reduce the number in the data set (I was trying not to introduce too many commands at once). But we can if we want to make it easier to work with. For our visuals, we needed the following variables:
+
+* Overall
+* PreferredFoot
+* Position
+* FKAccuracy
+* Dribbing
+
+So, we only need those 5 variables for players with overall ratings > 85. We might also want to keep Name just in case we see outliers and want to know who they are. What verbs should we use to generate this new data set?
+
+```{r}
+Fifasmall <- Fifadata %>%
+  filter(Overall > 85) %>%
+  select(Name, Overall, PreferredFoot, Position, FKAccuracy, Dribbling)
+
+glimpse(Fifasmall)
+```
+
+What would you have added if you wanted the new data set to have players ordered by overall score?
+
+# Coding Style, Commenting, Assigning
+
+Sometimes, we just want to print a short table to the screen, and don't need to save it as a new dataset. For example, if we want to see the top 5 players in terms of Dribbling rating, we could do this:
+
+```{r}
+Fifadata %>%
+  select(Name, Dribbling) %>%
+  arrange(desc(Dribbling)) %>%
+  head(5)
+```
+
+We could also save this as an object and to print later, and can jazz it up with kable().
+
+```{r}
+dribtable <- Fifadata %>%
+  select(Name, Dribbling) %>%
+  arrange(desc(Dribbling)) %>%
+  head(5)
+
+dribtable %>% kable(booktabs = TRUE)
+```
+
+
+This is a short set of commands and may not be too difficult to parse. However, we should get in the habit of providing documentation for our code - short comments about what is going on in a chunk. If you look at the calendar query project code for example, the documentation helps you understand what is going on with a lot of new commands.
+
+Here, this could be as easy as:
+
+```{r}
+# Obtain table of top 5 Dribblers
+dribtable <- Fifadata %>%
+  select(Name, Dribbling) %>%
+  arrange(desc(Dribbling)) %>%
+  head(5)
+
+#Print table
+dribtable %>% kable(booktabs = TRUE)
+```
+
+In addition, we want to be sure our code follows the general coding style we are using for class. I.E. we don't want our code to look like this:
+
+```{r}
+# Obtain table of top 5 Dribblers and print 
+dribtable <- Fifadata %>% select(Name, Dribbling) %>% arrange(desc(Dribbling)) %>% head(5) %>% kable(booktabs = TRUE)
+```
+
+This runs off the page. Even if this was split between two lines (as below), it's still easier to read in the format with just ONE pipe operator per line. Again, the class coding style has generally one %>% or + per line. 
+
+```{r}
+# Obtain table of top 5 Dribblers and print 
+dribtable <- Fifadata %>% select(Name, Dribbling) %>% arrange(desc(Dribbling)) %>%
+  head(5) %>% kable(booktabs = TRUE)
+```
+
+Various R style guides exist, as well as style guides for other programming languages. You can check out some listed below. Our class is using the first one - the tidyverse style guide. The pipes sub-page in particular might be of interest as you figure out what structure to use. 
+
+* [Tidyverse Style guide](https://style.tidyverse.org/index.html)
+* [Google R Style guide](https://google.github.io/styleguide/Rguide.html)
+* [Google Python Style guide](https://google.github.io/styleguide/pyguide.html)
+
+
+# Back to Wrangling Examples
+
+What happens in the following code chunk? What comment could you write for the chunk to describe it?
+
+```{r}
+# Count the mean age and number of players by preferred foot
+Fifadata %>%
+  group_by(PreferredFoot) %>%
+  na.omit() %>%
+  summarize(meanAge = mean(Age), Count = n())
+```
+
+And for this example?
+
+```{r}
+# Summary statistics of overall variable
+Fifadata %>% 
+  skim(Overall)
+```
+
+What about here?
+
+```{r}
+# Averages the skill of the top 10 goalkeepers
+Fifadata %>%
+  filter(Position == "GK") %>%
+  select(Name, 
+         GKDiving,
+         GKHandling,
+         GKKicking,
+         GKPositioning,
+         GKReflexes) %>%
+  mutate(GKSkillAvg = (GKDiving + GKHandling + GKKicking +
+                        GKPositioning + GKReflexes)/5) %>%
+  arrange(desc(GKSkillAvg)) %>%
+  head(10) 
+```
+
+How would you look at the worst 8 goal keepers?
+- Sort them in ascending order and do head(8) or tail(8)
+
+What would need to be different if you wanted to do the *select* before the *filter* to get the same result?
+- Must preserve position in select if you want to filter on position
+
+What could be done differently if you didn't want to keep all the original GK variables, just name and the new average?
+- Do mutate before select, and then just select the new name and average to keep
+- Take another select and insert it before arrange
+
+What would you add to make the table `nicer` in your pdf?
+- kable = TRUE
+
+
+# Fixing position
+
+```{r}
+mosaic::tally(~ Position, data = Fifadata)
+```
+
+We can see that there are many positions in the overall data set - including some missing values (which we didn't see in the `small` version of the data set). How can we create just four categories (and remove missing values) from these values? We want to create forwards, midfielders, defenders, and goalkeepers. 
+
+From a website about the game, I found the following suggested breakdown:
+
+* FWD - CF, LF, LS, LW, RF, RS, RW, ST
+* MID - CAM, CDM, CM, LAM, LCM, LDM, LM, RAM, RCM, RDM, RM
+* DEF - CB, LB, LCB, LWB, RB, RCB, RWB
+* GK - GK
+
+We also have some NA values to deal with. However, since those players won't be included in any plots using Position, we can also just remove them from the data set we are creating.
+
+We will create a new position variable using this breakdown with the case_when() expression. Since MID has the most options, I will leave that as the final option (meaning all other cases get assigned that).
+
+```{r}
+# Add new position variable
+# Remove position NAs
+Fifadata <- Fifadata %>%
+  filter(Position != "NA") %>%
+  mutate(position_four = case_when(
+    Position == "GK" ~ "GK",
+    Position %in% c("CF","LF","LS","LW","RF","RS","RW","ST") ~ "FWD",
+    Position %in% c("CB","LB","LCB","LWB","RB","RCB","RWB") ~ "DEF",
+    TRUE ~ "MID"
+    )
+  )
+
+# Check new position breakdown
+Fifadata %>%
+  group_by(position_four) %>%
+  summarize(count = n())
+```
+
+
+Note: I could have called the new data set by a new name, and I could have overwritten the position variable, but I chose not to for several reasons. First, I was just removing 60 observations that I won't need going forward, and adding a new variable, not dropping a large number. Often, it will be prudent to save a new, smaller data set with a new name. You need to be careful overwriting variables to make sure you get what you expect. After making sure the code works, you can always redo it to overwrite once you are sure it works. 
+
+How can I check that it worked? I need to be sure all the positions went where I expected. There are many ways to check. Here is a way to check with a plot.
+
+```{r}
+ggplot(data = Fifadata, aes(x = Position)) +
+  geom_bar(aes(fill = position_four), position = "fill") +
+  coord_flip() 
+```
+
+I could make a table too.
+
+```{r}
+Fifadata %>%
+  group_by(position_four, Position) %>%
+  summarize(count = n())
+
+#2-way table might be useful as well
+mosaic::tally(Position ~ position_four, data = Fifadata)
+```
+
+Now we can go back to the original plot with position I was interested in last week. 
+
+With so many data points, I also adjusted the point transparency. Darker points mean more values are present. I used facet_wrap because it was hard to see different colors when points were on top of each other. 
+
+```{r}
+ggplot(data = Fifadata, aes(x = Dribbling, y = FKAccuracy, color = position_four)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~ position_four) +
+  labs(title = "Dribbling versus Free Kick Accuracy",
+       subtitle = "By Position",
+       y = "Free Kick Accuracy",
+       color = "Position")
+```
+
+
+Ok. Let's briefly look at some date examples with lubridate, before we finish with some join and pivot examples. 
+
+
+# Storms with Dates
+
+You saw the nasaweather package for homework. The storms data set there is a filtered version of a storms data set in the *dplyr* package, which is loaded when we load the tidyverse package. We'll use this version since it has more data. The storms data set contains dates but not in a "date" format. 
+
+```{r}
+data(storms)
+names(storms)
+
+storms <- storms %>% mutate(date = ymd(paste(year,month,day)))
+glimpse(storms)
+```
+
+We can paste the date information together, and use the lubridate ymd() function to convert the variable to a date object. Note that I could have used dmy(), or whatever order I wanted, as long as it matched my paste.
+
+Now that we have a date as a date object, we can do typical "date" computations - you can subtract dates to find time differences for example. What happens in the next chunk?
+
+```{r}
+storms2 <- storms %>%
+  # including year in the group_by is important...why?
+  group_by(name, year) %>%
+  summarize(startdate = min(date), enddate = max(date), 
+            length = (enddate - startdate)/ddays())
+
+head(storms2, 10)
+storms2 %>% filter(name == "Ana")
+```
+
+What about here? 
+
+```{r}
+storms3 <- storms2 %>% arrange(enddate)
+head(storms3, 10)
+```
+
+And finally, here?
+
+```{r}
+storms4 <- storms2 %>% arrange(desc(length))
+head(storms4, 10)
+```
+
+
+# Joins
+
+*Joins* are ways of putting two or more data sets together. They are very useful for allowing the incorporation of data from different sources, but also to allow us to store data more effectively.
+
+For the un_votes data set that we saw previously, for example, there were 2 data sets that basically provided supplementary information to a primary data set. While the primary data set had a row for every country-vote pair, the other data sets had information about each vote. Such information would be repeated (duplicated) for every country-vote pair where the vote was constant. Thus, it's more effective to store this information separately - provided you know how to recombine the data sets when you need the information.
+
+*Keys* are important for linking datasets together. These are variables shared in common between the data sets that allow for reference between them.
+
+The Fifadata set above was loaded in from a website where I am hosting the data. This is data from 2019. More recent data exists from 2021 (downloaded from Kaggle). Can we combine the files?
+
+```{r}
+Fifadata19 <- Fifadata
+Fifadata21 <- read_csv("data/fifa21data.csv")
+
+dim(Fifadata19)
+dim(Fifadata21)
+```
+
+The two data sets have different numbers of observations and variables. They do share a "Name" column. Since the time periods are different, we can't combine based on Age, Weight, etc. and even things like "Clubs" may have changed. Let's see how we do trying to join them based on Name, after selecting just a few variables out of each dataset.
+
+
+```{r}
+Fifadata21 <- Fifadata21 %>%
+  select(Name, Age, OVA, Dribbling, Agility)
+
+Fifadata19 <- Fifadata19 %>%
+  select(Name, Age, Overall, Dribbling, Agility)
+```
+
+Now, I've kept some of the *same* variables in each data set so we can compare over time. However, I don't want to join based on those variables. We'll join just using Name. That's why the *by* argument is so important. Don't just let the computer pick columns. Set it yourself.
+
+```{r}
+FifaCombined <- Fifadata19 %>%
+  inner_join(Fifadata21, by = "Name")
+
+glimpse(FifaCombined)
+```
+
+Note how the variables have .x or .y added to them depending on which dataset they came from. We can adjust with rename.
+
+```{r}
+FifaCombined <- FifaCombined %>%
+  rename(Age19 = Age.x,
+         OVA19 = Overall,
+         Dribbling19 = Dribbling.x,
+         Agility19 = Agility.x,
+         Age21 = Age.y,
+         OVA21 = OVA,
+         Dribbling21 = Dribbling.y,
+         Agility21 = Agility.y)
+```
+
+Now we can consider differences, if any, between the scores in the game on the attributes here and see what has changed, if anything. For example,
+
+```{r}
+ggplot(FifaCombined, aes(x = OVA19, y = OVA21)) +
+  geom_point(alpha = 0.3) +
+  labs(x = "Overall Rating 2019",
+       y = "Overall Rating 2021",
+       title = "Overall Rating Changes")
+```
+
+Or maybe we just want to compute the difference and see some statistics about it. We'll do 2021 rating minus 2019 rating so that positive numbers show an improvement between the two years (at least in how the game was rating folks).
+
+```{r}
+FifaCombined %>%
+  mutate(OverallChange = OVA21 - OVA19) %>%
+  skim(OverallChange)
+```
+
+The agility and dribbling variables are included here so you have some options to play around with if you are looking through the notes. 
+
+When we first loaded the Fifadata21 data set, some of the variable names included spaces and other symbols. That's not ideal. R can protest and it becomes difficult to work with the data. How could we fix this at the outset? Try janitor's clean_names() function. Let's reload the data (since we overwrote it with select) and see what this does.
+
+```{r}
+Fifadata21 <- read_csv("data/fifa21data.csv")
+names(Fifadata21)
+
+Fifadata21 <- Fifadata21 %>%
+  janitor::clean_names()
+names(Fifadata21)
+```
+
+Everything goes to lowercase, and spaces are replaced by _. A few other problematic symbols are changed as well, such as A/W became a_w. If you have problematic variable names, do this EARLY in your wrangling process. Here, because the variables we were pulling did not have issues, I didn't run it. 
+
+
+# Pivots / Reshaping Data
+
+The pivot commands can be challenging to understand. The basic premise behind needing them is that sometimes the way in which we store data isn't quite the format we want for analysis. We need to be able to move between formats.
+
+Your text describes narrow versus wide formats. We may often collect data in wide formats, but need to put it in narrow format for analysis. Or it might be in narrow format, but going back to wide helps you get summary statistics you want. 
+
+Pivot_longer and pivot_wider are the pivot functions in the tidyverse. Previous versions of the functions were called gather and spread. So if you see an example online about gather or spread, it's the same concepts. 
+
+For these examples, we'll use a really small data set - suppose these are self-esteem scores for 10 subjects evaluated at 3 different time points (t1, t2, t3). 
+
+```{r}
+data("selfesteem", package = "datarium")
+selfesteem
+```
+
+This is a natural way to enter the data for data collection - there is one column for each time point. It's also a nice structure if we wanted to compute differences between time points. Or if we wanted to plot the trajectory for a particular patient. This is the wide data format, even though it's only 4 columns. The time points are in separate columns, rather than having a tp column that specifies the time point and a value column for the esteem value. 
+
+However, if we wanted to do an analysis to assess differences in means between the time points (ANOVA), or to do anything where time point is considered a variable, we need the narrow format. Thus, we want to pivot_longer into that format. We should end up with 30 rows instead of 10, as each row becomes a subject-time point, not just a subject.
+
+
+```{r}
+esteem_narrow <- selfesteem %>%
+  pivot_longer(-id,
+               names_to = "time_point",
+               values_to = "esteem_score")
+esteem_narrow
+```
+
+Variables that are NOT being "reshaped", i.e. that you just want to carry along, need to be denoted with the -, or you can instead identify columns to include with the cols argument. For example, the following code gives the same data set.
+
+```{r}
+selfesteem %>%
+  pivot_longer(cols = starts_with("t"),
+               names_to = "time_point",
+               values_to = "esteem_score")
+
+# OR
+selfesteem %>%
+  pivot_longer(cols = t1:t3,
+               names_to = "time_point",
+               values_to = "esteem_score")
+```
+
+Choosing whether to use the - or specify the columns in some way to pivot depends on how many variables are involved in each. 
+
+
+If the data started in this format and we wanted to go from narrow to wide, we could use pivot_wider(). Here, you just have to identify the column that the split is occurring across and what variable values go with it.
+
+```{r}
+esteem_wide <- esteem_narrow %>%
+  pivot_wider(names_from = time_point,
+              values_from = esteem_score)
+esteem_wide
+```
+
+
+To illustrate with a closely related example, I'm going to add a variable here so we can think about different plots/summaries the formats could be used to generate. Suppose of the 10 subjects, the first 5 were under condition "A" and the last 5 were under condition "B". 
+
+
+```{r}
+selfesteem <- selfesteem %>%
+  mutate(condition = c(rep(c("A","B"), each = 5)))
+
+selfesteem
+```
+
+With the data in this wide format, I could compute average esteem values for each individual across the time points and compare the means for condition A versus B. I could make boxplots from this to compare the conditions in terms of their average scores (a little silly since there are only 5 observations for each condition).
+
+```{r}
+selfesteem %>%
+  group_by(condition) %>%
+  summarize(avgscore = (t1+t2+t3)/3) 
+
+# To add on the plot
+selfesteem %>%
+  group_by(condition) %>%
+  summarize(avgscore = (t1+t2+t3)/3) %>%
+  ggplot(aes(x=condition, y = avgscore)) +
+  geom_boxplot()
+```
+
+
+But anything I want to do to compare time points needs the data to be reshaped into the narrow format. This loses the repeated measures aspect of the data (i.e. be careful you don't interpret these as independent observations). 
+
+```{r}
+esteem_narrow <- selfesteem %>%
+  pivot_longer(-c(id, condition), names_to = "time_point", values_to = "esteem_score")
+esteem_narrow
+
+#To add the plot
+esteem_narrow %>%
+  ggplot(aes(x=time_point, y = esteem_score)) +
+  geom_boxplot()
+```
+
+Here, I could plot all 15 esteem scores for each condition more easily. And I can get an overall average for condition much more easily than in the wide format. 
+
+```{r}
+esteem_narrow %>%
+  group_by(condition) %>%
+  summarize(average_esteem = mean(esteem_score))
+```
+
+I could also get it by time point by condition.
+
+```{r}
+esteem_narrow %>%
+  group_by(condition, time_point) %>%
+  summarize(average_esteem = mean(esteem_score))
+```
+
+
+For pivots, thinking about what your data needs to look like is key. Sketch out what the data set needs to look like on a sheet of paper or a chalk board. Once you get a sense of what the data needs to look like, you can start implementing steps to get it to that point. 
+
+
