@@ -87,8 +87,8 @@ If you copied over the Lab 4b folder in its entirety, the file structure should 
 Solution:
 
 ```{r}
-coverage <- read_csv("labs/lab4b/data/healthcare_coverage.txt")
-spending <- read_csv("labs/lab4b/data/healthcare_spending.txt")
+coverage <- read_csv("data/healthcare_coverage.txt")
+spending <- read_csv("data/healthcare_spending.txt")
 ```
 
 <!-- How easy is it to find files in your repo? If you aren't using any folder organization, it's probably a good time to start thinking about that and make some adjustments going forward to how you move files around so that things stay organized. -->
