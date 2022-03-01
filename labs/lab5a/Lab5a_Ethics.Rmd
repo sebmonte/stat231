@@ -1,0 +1,111 @@
+---
+title: "Lab 5a - Ethics"
+author: "YourNameGoesHere"
+date: "For class Tuesday, March 1"
+output:
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+# 1 - Group Roles
+
+For this discussion, each student in the group will be in charge of managing, questioning, recording, or time keeping (if your group only has three people, then the Manager should also keep track of time). The purpose of establishing these roles is to support the overall collaborative learning process and to facilitate a richer discussion where all voices are heard.
+
+Identify who in the group has the next birthday---they'll be the Manager. Identify who in the group has the next birthday after that---they'll be the Questioner. Identify who in the group has the next birthday after that---they'll be the Recorder. If you have a fourth person in your group, the remaining person will be the Time keeper. Otherwise, the Manager can also keep time.
+
+**Manager:**: Makes sure all voices in the group are heard, and promotes active participation of all members. Makes sure the group remains focused during the conversation.
+
+* Address group members by name and ensure that everyone contributes
+* Help a student who hasn't talked much to enter the discussion
+  * "[Name], what do you think about...?"
+  * "I would like to hear what you think, (name)."
+* Ask different members to read the conversation questions on a rotating basis
+
+**Questioner:** Pushes back when the group comes to consensus too quickly without considering a number of options or points of view. The questioner makes sure that the group hears varied points of view, and that the group is not avoiding potentially rich areas of disagreement.
+
+* Raise counter-arguments and constructive objections
+* Introduce alternative explanations and perspectives
+* Challenge group assumptions
+
+**Recorder:** Takes notes on important thoughts expressed in the group. 
+
+* Bullet points with important thoughts expressed while discussing the questions
+* Share with class when solicited as a group
+
+**Time Keeper:** Monitors time and reminds group how much time is left. Moves the group along so they can discuss all questions.
+
+* Take care of time management
+* Keep an eye on the clock
+  * "I think we need to focus on _________ so we get to discuss each of the questions."
+  * "We have ______ minutes before we need to _________."
+
+\newpage
+
+# 2 - Getting Started
+
+Before launching into this part of the activity, be sure to introduce yourself to your groupmates and be sure that the roles are clear.
+
+We are expecting to spend about 20 minutes on this set of discussion questions. 
+
+We'll start our discussion looking at one of the 10 "data science experiments" described [here.](https://online.datasciencedojo.com/blogs/big-data-ethics-and-10-controversial-data-science-experiments)
+
+We're looking at the second scenario, described as:
+"Car insurance premiums can make or break the bank. This is especially true depending on one’s driving record. For the most part, it’s easy to find an insurance company to ensure you (even if your driving record is less than desirable). Within the next decade, expect to see major changes in how insurance premiums are determined. One of the leading companies in this change is Allstate.
+
+Allstate’s Drivewise package offers (mostly good) drivers the chance to save money based on their driving habits. The only caveat here is that Allstate will install a telematics tracking device in your vehicle to obtain this information. Your braking, speeding, and even call center data can potentially be used to determine your premiums. If you’re a good driver, this might be great news for you, but some concerns get raised when it comes to GPS tracking. How ethically sound is this practice of using your driving data? This potentially identifiable information needs to be diligently safeguarded, but the real concern is how GPS tracking will affect people from poorer areas.
+
+Car insurance companies can rate roads by how safe they are. If people from poorer areas are surrounded by roads with a less “safe” rating, and they spend 60% of their time driving on this, how much will this negatively affect their insurance premiums? Will their good driving record be enough to save them from outrageous premiums? What other data will be used- Tweets and other social media posts?"
+
+Imagine that your group is in charge of data management/access/analysis for the data coming from the tracking device for the company. 
+
+> part a - In developing the algorithm to help determine premiums based on driving, how might you address the concern about poorer areas having overall lower "safe" ratings and thus, resulting in higher premiums for individuals living there?
+
+Group thoughts:
+
+
+> part b - Through analysis of your data, you can determine that some individuals are perpetual speeders, perhaps even dangerously so. What obligation(s), if any, do you have to society at large in dealing with these individuals? What obligations do you have to these customers? How can the company meet this(these) (potentially competing) obligation(s)?
+
+Group thoughts:
+
+> part c - Consumers enter into Drivewise in order to reduce their premiums, and the GPS data collected can be identifiable information. If a consumer asked how the data was being protected, to protect their identity but still be used for its intended purpose, what would you like to be able to tell them? 
+
+For example, how should the data be stored?
+
+Group thoughts:
+
+> part d - (Time permitting) Brainstorm a different ethical issue related to Drivewise. What other issues can you think of that should be addressed?
+
+Group thoughts:
+
+
+
+
+\newpage
+
+# 3 - College Applications
+
+In the reading in Chapter 8, you learned some about algorithmic bias and why that's important to think about and understand as a data scientist. 
+
+Now, let's think about an algorithmic application all of us can relate to directly: applying to college!
+
+We are expecting to spend about 20 minutes on this set of discussion questions. 
+
+Consider the various sorts of information you had to submit in your college applications: demographics, standardized testing scores (now optional, at least at Amherst), high school transcripts, essays, etc. It used to be that humans in college admissions offices would sift through all this information and rank applicants based on the information they submitted. As technology and data science methods improved, more efficient ranking systems were created. Tech companies came along with admissions software that promised to improve results, cut costs, and "make admissions systems more equitable, by helping schools reduce unseen human biases that can impact admissions decisions." More recently, some schools have even accounted for information not explicitly submitted by prospective students: data from their web browsing histories and social media presence.
+
+> part a - In a sense, the early ranking systems are still algorithms. But they were more interpretable and clear as compared to some of the black-box algorithms applied today. Which do you think is better for determining whether or not someone gets into college? Would you prefer to have a human analyze your college essay, or an algorithm? Explain your choice. (Consider how you're defining "better", and who you're considering "better" for.) 
+
+Group thoughts:
+
+
+> part b - Does it have to be a forced choice? Can you come up with an alternative?---so it's not a forced choice of "would you rather rely on the daily whims and biases of an (admissions officer, hiring employer, etc.) or rely on a computer algorithm based on biased data?" 
+
+Group thoughts: 
+
+
+
+A Brookings Institute report on [*Algorithmic bias detection and mitigation: Best practices and policies to reduce consumer harms*](https://www.brookings.edu/research/algorithmic-bias-detection-and-mitigation-best-practices-and-policies-to-reduce-consumer-harms/) notes that "Fairness is a human, not a mathematical determination, grounded in shared ethical beliefs." 
+
+> part c - What is "fairness" in algorithms? Can you agree upon what notions of fairness are (most) important to consider in this context? What are some ways algorithm operators and developers could ensure this fairness in an algorithm designed to aid college admissions officers in selecting applicants to accept?
+
+Group thoughts: 
