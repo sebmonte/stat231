@@ -1,6 +1,6 @@
 ---
 title: "Lab 5a - Ethics"
-author: "YourNameGoesHere"
+author: "Sebastian Montesinos"
 date: "For class Tuesday, March 1"
 output:
   pdf_document:
@@ -96,12 +96,15 @@ Consider the various sorts of information you had to submit in your college appl
 > part a - In a sense, the early ranking systems are still algorithms. But they were more interpretable and clear as compared to some of the black-box algorithms applied today. Which do you think is better for determining whether or not someone gets into college? Would you prefer to have a human analyze your college essay, or an algorithm? Explain your choice. (Consider how you're defining "better", and who you're considering "better" for.) 
 
 Group thoughts:
+- If the algorithm was shown to receive similar scores as human raters, we were less bothered by the idea of using the algorithm
+- We did not have a problem with the algorithm ranking people quantitatively, but we did not like the idea of an algorithm being used to evaluate someone's personality or how good their essay was
+
 
 
 > part b - Does it have to be a forced choice? Can you come up with an alternative?---so it's not a forced choice of "would you rather rely on the daily whims and biases of an (admissions officer, hiring employer, etc.) or rely on a computer algorithm based on biased data?" 
 
 Group thoughts: 
-
+- We could use the algorithm to sift through the easier, quantitative measures and cut out people below a certain point and then have humans step in and review applicants after
 
 
 A Brookings Institute report on [*Algorithmic bias detection and mitigation: Best practices and policies to reduce consumer harms*](https://www.brookings.edu/research/algorithmic-bias-detection-and-mitigation-best-practices-and-policies-to-reduce-consumer-harms/) notes that "Fairness is a human, not a mathematical determination, grounded in shared ethical beliefs." 
