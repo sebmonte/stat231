@@ -62,17 +62,22 @@ Imagine that your group is in charge of data management/access/analysis for the 
 > part a - In developing the algorithm to help determine premiums based on driving, how might you address the concern about poorer areas having overall lower "safe" ratings and thus, resulting in higher premiums for individuals living there?
 
 Group thoughts:
+- Could have some offset system where people who stay safe on less safe roads get a bonus
+- Could test the algorithm and look and its natural ratings before making a determination to see whether it would be biased
 
 
 > part b - Through analysis of your data, you can determine that some individuals are perpetual speeders, perhaps even dangerously so. What obligation(s), if any, do you have to society at large in dealing with these individuals? What obligations do you have to these customers? How can the company meet this(these) (potentially competing) obligation(s)?
 
 Group thoughts:
+- Ideally you might want to publish the data anonymously so you do not disclose people's information but give people information about areas where speeding occurs. However, this could lead to labeling certain areas as more dangerous which could lead to more bias against poorer areas.
+- Give the anonymized data to people conducting studies on ways to promote safe driving
 
 > part c - Consumers enter into Drivewise in order to reduce their premiums, and the GPS data collected can be identifiable information. If a consumer asked how the data was being protected, to protect their identity but still be used for its intended purpose, what would you like to be able to tell them? 
 
 For example, how should the data be stored?
 
 Group thoughts:
+- You would want to store it so the data that gets shared with other companies or for studies is anonymized so that you could never trace it back to a specific individual's identity
 
 > part d - (Time permitting) Brainstorm a different ethical issue related to Drivewise. What other issues can you think of that should be addressed?
 
@@ -114,5 +119,5 @@ A Brookings Institute report on [*Algorithmic bias detection and mitigation: Bes
 Group thoughts: 
 - Maybe an algorithm could be more fair since it would be free from human bias, once we establish one
 - Need admissions officers to agree on what is important and how important it is to program it into the algorithm so that it applies the same standards to everyone
-- It would be good to make the algorithm blind to aspects like the person's ethnic or economic background, but at the same time it could be hard to ensure that it is.
+- It would be good to make the algorithm blind to aspects like the person's ethnic or economic background, but at the same time it could be hard to ensure that it is
 
