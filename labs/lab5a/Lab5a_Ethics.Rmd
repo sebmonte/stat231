@@ -112,3 +112,7 @@ A Brookings Institute report on [*Algorithmic bias detection and mitigation: Bes
 > part c - What is "fairness" in algorithms? Can you agree upon what notions of fairness are (most) important to consider in this context? What are some ways algorithm operators and developers could ensure this fairness in an algorithm designed to aid college admissions officers in selecting applicants to accept?
 
 Group thoughts: 
+- Maybe an algorithm could be more fair since it would be free from human bias, once we establish one
+- Need admissions officers to agree on what is important and how important it is to program it into the algorithm so that it applies the same standards to everyone
+- It would be good to make the algorithm blind to aspects like the person's ethnic or economic background, but at the same time it could be hard to ensure that it is.
+
