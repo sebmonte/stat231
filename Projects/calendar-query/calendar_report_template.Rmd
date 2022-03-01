@@ -96,8 +96,9 @@ calendar_data <- "Projects/calendar-query/SMontesinosCalendarQuery.ics" %>%
   ## Turning the date variable into a date type
   mutate(date = ymd(date)) %>%
   ## Including only dates after I started collecting for the project
-  filter(year >= 2022 & month >= 2 & day >= 17)
-
+  filter(year >= 2022 & month >= 2 & day >= 17) %>%
+  ##Removing trailing whitespace
+  mutate(activity = str_trim(activity))
 
 ```
 
@@ -113,7 +114,7 @@ Briefly describe and justify your plans for analysis (i.e., visualizations and s
 activities_total <- calendar_data %>% 
   group_by(activity) %>%
   summarize(duration = sum(duration),
-            count = n())
+            count = n()) 
 
 
 
@@ -128,11 +129,14 @@ activities_comparison <- calendar_data %>%
   select(day, activity, duration) %>% 
 # Adding a unique row identifier so I can pivot
   mutate(row = row_number()) %>%
+# Pivoting wider to get each activity by day
   pivot_wider(names_from = activity, values_from = duration) %>%
+#dropping row identifier
   select(-row) 
-
+#replacing NA values with 0s
 activities_comparison[is.na(activities_comparison)] = 0
 
+# Now that I have a wider format and 0s for activities I spent no time on, I can group by day and sum the activity time into categories I want to compare
 activities_comparison2 <- activities_comparison %>%
   group_by(day) %>%
   summarise(Work_time = sum(thesis, oceanography, religion), Personal_Time = sum(personal), Extracurricular_time = sum(extracurriculars))
