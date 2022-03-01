@@ -1,7 +1,7 @@
 ---
 title: "YOUR TITLE HERE"
 subtitle: "STAT 231: Calendar Query"
-author: "YOUR NAME HERE"
+author: "Sebastian Montesinos"
 date: "Last updated \\today"
 output: pdf_document
 ---
@@ -93,8 +93,11 @@ calendar_data <- "Projects/calendar-query/SMontesinosCalendarQuery.ics" %>%
     day_of_year = yday(date)) %>% 
   ## remove spurious year (added to every Google calendar)
   filter(year != 1969) %>%
+  ## Turning the date variable into a date type
   mutate(date = ymd(date)) %>%
+  ## Including only dates after I started collecting for the project
   filter(year >= 2022 & month >= 2 & day >= 17)
+
 
 ```
 
@@ -111,6 +114,30 @@ activities_total <- calendar_data %>%
   group_by(activity) %>%
   summarize(duration = sum(duration),
             count = n())
+
+
+
+```
+
+```{r vis2-prep, eval = FALSE}
+# Preparing dataset for second visualization
+
+
+activities_comparison <- calendar_data %>%
+#Selecting relevant variables
+  select(day, activity, duration) %>% 
+# Adding a unique row identifier so I can pivot
+  mutate(row = row_number()) %>%
+  pivot_wider(names_from = activity, values_from = duration) %>%
+  select(-row) 
+
+activities_comparison[is.na(activities_comparison)] = 0
+
+activities_comparison2 <- activities_comparison %>%
+  group_by(day) %>%
+  summarise(Work_time = sum(thesis, oceanography, religion), Personal_Time = sum(personal), Extracurricular_time = sum(extracurriculars))
+# 
+
 
 
 
