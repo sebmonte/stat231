@@ -46,6 +46,10 @@ Your final *calendar-query* project folder should be organized such that file na
 
 <!--
 Describe the questions of interest: what are they and why are they important or useful to you?
+
+
+The second question I address is how the amount of time I spend on work in a day relates to the amount of personal time I take during a day. One might expect that since the more time I spend on one activity the less time there is for the other, there will be a simple negative correlation. However, I have noticed that I sometimes give myself more time for recreational activities when I have done a lot of work as a 'reward', and spend more time on independent academic projects or looking for jobs when I do not spend a lot of time on work in a day since I feel guilty if I am not productive in a day. Therefore, it could also be the case that as I spent more time on schoolwork I also take more personal time, making the two positively correlated. I was also interested in how this relationship might change on weekdays vs weekends, since I try to give myself more of a break during the weekends.
+
 -->
 
 # Data collection 
@@ -102,10 +106,9 @@ calendar_data <- "Projects/calendar-query/SMontesinosCalendarQuery.ics" %>%
   mutate(activity = str_trim(activity)) %>%
   ##Replacing spaces with underscores in activity names 
   mutate(activity = str_replace(activity, " ", "_")) %>%
-  mutate(week_status = case_when(day_of_week == "Sat" | 
-                                   day_of_week == "Sun" 
-                                 ~ "Weekend", 
-                    TRUE ~ "Weekday"))
+  ##Creating another column that records whether the observation was made on the weekday or weekend
+  mutate(week_status = case_when(day_of_week == "Sat" | day_of_week == "Sun" ~ "Weekend", 
+                                 TRUE ~ "Weekday"))
 
 ```
 
@@ -119,14 +122,16 @@ Briefly describe and justify your plans for analysis (i.e., visualizations and s
 
 # Compute total duration for each activity and number of each
 activities_total <- calendar_data %>% 
-  mutate(week_status = case_when(day_of_week == "Sat" | 
-                                   day_of_week == "Sun" 
-                                 ~ "Weekend", 
-                    TRUE ~ "Weekday")) %>%
   group_by(day_of_week, activity) %>%
   summarize(duration = sum(duration),
-            count = n()) 
+            count = n()) %>%
+  pivot_wider(names_from = activity, values_from = duration)
 
+activities_total[is.na(activities_total)] = 0
+
+activities_total <- activities_total %>%
+  group_by(day_of_week) %>%
+  summarise(average = mean(data_science))
 
 
 ```
