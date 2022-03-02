@@ -53,6 +53,7 @@ Describe the questions of interest: what are they and why are they important or 
 <!--
 Briefly describe your data collection process, including how you defined variables of interest (include the levels/categories of categorical variables and the units for quantitative variables).
 --> 
+I coded my data into three broad categories: 'work', for anything related to school (ie. class and homework), 'personal' for anything related to recreation (ie. gaming, seeing friends) and 'extracurricular' for any work outside of class (ie. job applications, clubs, independent projects). I decided to code the work category as four subcategories corresponding to my four classes: data science, oceanography, religion, and my thesis. I decided not to further divide the other two categories since my questions did not require doing so. So, in the end, I had six ways I marked off time on my calendar: 4 for my classes, 1 for personal time, and 1 for extracurricular. The units for all of these categories were in time, specifically minutes spent on each activity, which I used google calendar to code in.
 
 
 <!--
@@ -98,7 +99,13 @@ calendar_data <- "Projects/calendar-query/SMontesinosCalendarQuery.ics" %>%
   ## Including only dates after I started collecting for the project
   filter(year >= 2022 & month >= 2 & day >= 17) %>%
   ##Removing trailing whitespace
-  mutate(activity = str_trim(activity))
+  mutate(activity = str_trim(activity)) %>%
+  ##Replacing spaces with underscores in activity names 
+  mutate(activity = str_replace(activity, " ", "_")) %>%
+  mutate(week_status = case_when(day_of_week == "Sat" | 
+                                   day_of_week == "Sun" 
+                                 ~ "Weekend", 
+                    TRUE ~ "Weekday"))
 
 ```
 
@@ -112,7 +119,11 @@ Briefly describe and justify your plans for analysis (i.e., visualizations and s
 
 # Compute total duration for each activity and number of each
 activities_total <- calendar_data %>% 
-  group_by(activity) %>%
+  mutate(week_status = case_when(day_of_week == "Sat" | 
+                                   day_of_week == "Sun" 
+                                 ~ "Weekend", 
+                    TRUE ~ "Weekday")) %>%
+  group_by(day_of_week, activity) %>%
   summarize(duration = sum(duration),
             count = n()) 
 
@@ -126,20 +137,21 @@ activities_total <- calendar_data %>%
 
 activities_comparison <- calendar_data %>%
 #Selecting relevant variables
-  select(day, activity, duration) %>% 
+  select(day, activity, duration, week_status) %>% 
 # Adding a unique row identifier so I can pivot
   mutate(row = row_number()) %>%
 # Pivoting wider to get each activity by day
   pivot_wider(names_from = activity, values_from = duration) %>%
-#dropping row identifier
+# Dropping row identifier
   select(-row) 
 #replacing NA values with 0s
 activities_comparison[is.na(activities_comparison)] = 0
 
-# Now that I have a wider format and 0s for activities I spent no time on, I can group by day and sum the activity time into categories I want to compare
+# Grouping by day and summing the activity duration into categories I want to compare
 activities_comparison2 <- activities_comparison %>%
-  group_by(day) %>%
-  summarise(Work_time = sum(thesis, oceanography, religion), Personal_Time = sum(personal), Extracurricular_time = sum(extracurriculars))
+  group_by(day, week_status) %>%
+# Calculating total school work time, personal time, and extracurricular time
+  summarise(work_time = sum(thesis, oceanography, religion, data_science), personal_time = sum(personal), extracurricular_time = sum(extracurriculars))
 # 
 
 
@@ -178,11 +190,14 @@ Describe what information is conveyed through your second data visualization (th
 
 
 ```{r}
-# Code for second data visualization
-# Be sure to provide meaningful title and axes labels and
-# resize figure appropriately
-# Only code for your second visualization should be here (no or very minimal wrangling code)
-# Remove all these comments!
+#Plotting total work time against personal time per day
+n <- ggplot(data = activities_comparison2, aes(x= work_time, y = personal_time)) +
+  facet_wrap(~extracurricular_time, nrow = 2) +
+  geom_point() +
+  labs(title = "Time spent on work vs Recreation per day",
+       y = "Personal time (hours)",
+       x = "Schoolwork time (hours)")
+n
 ```
 
 <!--
