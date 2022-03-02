@@ -192,8 +192,11 @@ Describe what information is conveyed through your second data visualization (th
 ```{r}
 #Plotting total work time against personal time per day
 n <- ggplot(data = activities_comparison2, aes(x= work_time, y = personal_time)) +
-  facet_wrap(~extracurricular_time, nrow = 2) +
+#Creating 1 plot for weekends and one for weekdays
+  facet_wrap(~week_status, nrow = 1) +
+#Using points to represent each day
   geom_point() +
+#Labeling the graph
   labs(title = "Time spent on work vs Recreation per day",
        y = "Personal time (hours)",
        x = "Schoolwork time (hours)")
