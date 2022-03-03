@@ -1,0 +1,127 @@
+---
+title: "Practice3"
+author: "Sebastian Montesinos"
+date: "Due by midnight, Friday, March 4"
+output: 
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r, setup, include=FALSE}
+library(tidyverse)
+library(mdsr)
+library(robotstxt)
+library(rvest)
+# add other packages needed here!
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+```
+
+Reminder: Practice assignments may be completed working with other individuals.
+
+# Reading 
+
+The associated reading for the week is Sections 6.4, 8.5-8.7, and 8.9-8.10. 
+
+# Practicing Academic Integrity
+
+If you worked with others or used resources outside of provided course material (anything besides our textbook, course materials in the repo, labs, R help menu) to complete this assignment, please acknowledge them below using a bulleted list. 
+
+<!-- ~~~~~~~~~~~~~~~~ YOU MAY BEGIN EDITING BELOW THIS LINE ~~~~~~~~~~~~~~~~ -->
+
+*I acknowledge the following individuals with whom I worked on this assignment:*
+
+Name(s) and corresponding problem(s)
+
+*
+
+*I used the following sources to help complete this assignment:*
+
+Source(s) and corresponding problem(s)
+
+* 
+
+
+
+\newpage
+
+
+<!-- PROBLEM 1 ---------------------------------------------------------------->
+
+# 1 - Scraping Tables
+
+The text example showed how to scrape tables from a Wikipedia page. We also saw how to scrape a table from basketball-reference.com in our lecture notes. For this exercise, your task is to:
+
+* scrape a table of your choosing from a different website (yes, it can be a different Wikipedia page),
+* clean it up (i.e. understandable variable names, etc. in a display), and
+* display a few rows of it in a nice table.
+
+You must be sure that scraping the table is allowed. Your code should show appropriate documentation of your steps.
+
+Solution:
+
+```{r}
+
+```
+
+
+<!--
+Remember to knit, commit, and push as you go!
+-->
+
+
+\newpage
+
+
+<!-- PROBLEM 2 ---------------------------------------------------------------->
+
+# 2 - MDSR 8.6
+
+Complete MDSR 8.6, which states: "A Slate article (http://tinyurl.com/slate-ethics) discussed whether race/ethnicity should be included in a predictive model for how long a homeless family would stay in homeless services. Discuss the ethical considerations involved in whether race/ethnicity should be included as a predictor in the model."
+
+<!-- This is designed to be more than a sentence or two but less than a page. One or two paragraphs would be reasonable. -->
+
+Solution:
+
+
+
+<!-- Have you committed and/or pushed yet? -->
+
+
+\newpage
+
+<!-- PROBLEM 3 ---------------------------------------------------------------->
+
+# 3 - Scraping Text with Weather Data
+
+We want to get a tiny bit of practice with the web developer tools demo-ed in class for scraping in this exercise.
+
+Go to the National Weather Service website and get a forecast page for a city of your choice (maybe your hometown, or Amherst, or a place you want to visit in the States, etc.).
+
+> part a - Save the url of the page as `weatherurl`. Then, check that you are allowed to access the page for scraping.
+
+Solution:
+
+```{r}
+
+```
+
+In class, we accessed the table of current conditions and the extended forecast temperatures for the Amherst page via text. Above but near the table of current conditions is information about the local site the conditions are taken from. This includes the latitude, longitude, and elevation of the site. 
+
+> part b - Adjust the commands demonstrated in class (used to get the extended forecast temperature information) to get these 3 pieces of information off your chosen page. Print the information to the screen from the website. 
+
+<!-- 
+Note: The information does not need to be presented nicely - I just want you to practice a little bit with the selector and looking at html. My scrape from the Amherst page yields: "Lat: 42.2°NLon: 72.53°WElev: 246ft.", which definitely still needs some cleaning up, but the important part is the information is pulled straight from the website. 
+-->
+
+```{r}
+
+```
+
+
+<!--
+Knit, commit, and push, including the final renamed pdf, to your repo. Then, upload the .pdf to Gradescope before the deadline. Wondering why this practice was shorter than the last? Keep working on your calendar query project!
+-->
+
