@@ -68,7 +68,7 @@ If you are using the code, be sure to update the capitalized parts with the rele
 NOTE: All of your wrangling should be in this file - preferably well-organized and in one place if possible. You may use multiple chunks if it makes it easier to tell your narrative. This is demo-ed below, where the data is wrangled first for one visualization, then could be used for the second, etc. 
 -->
 
-```{r import-wrangle, eval = FALSE}
+```{r import-wrangle, eval = TRUE}
 # Data import and preliminary wrangling
 calendar_data <- "Projects/calendar-query/SMontesinosCalendarQuery.ics" %>% 
   ## Use ical package to import into R
@@ -120,18 +120,23 @@ Briefly describe and justify your plans for analysis (i.e., visualizations and s
 ```{r vis1-prep, eval = FALSE}
 # Example of preparing dataset for first visualization
 
-# Compute total duration for each activity and number of each
+# Computing total duration for each activity per day of the week
 activities_total <- calendar_data %>% 
-  group_by(day_of_week, activity) %>%
+  group_by(date, day_of_week, activity) %>%
   summarize(duration = sum(duration),
-            count = n()) %>%
+#Including number of total observations
+            ) %>%
   pivot_wider(names_from = activity, values_from = duration)
 
+#Filling in 
 activities_total[is.na(activities_total)] = 0
 
 activities_total <- activities_total %>%
   group_by(day_of_week) %>%
-  summarise(average = mean(data_science))
+  summarise(DS_Average = mean(data_science), 
+            O_Average = mean(oceanography), 
+            R_Average = mean(religion),
+            T_Average = mean(thesis))
 
 
 ```
@@ -187,6 +192,7 @@ Describe what information is conveyed through your first data visualization (tha
 # resize figure appropriately
 # Only code for your first visualization should be here (no or very minimal wrangling code)
 # Remove all these comments!
+
 ```
 
 <!--
