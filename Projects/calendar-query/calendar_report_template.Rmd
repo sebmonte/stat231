@@ -195,9 +195,9 @@ Describe what information is conveyed through your first data visualization (tha
 # resize figure appropriately
 # Only code for your first visualization should be here (no or very minimal wrangling code)
 # Remove all these comments!
-p <- ggplot(data = activities_average, aes(x=day_of_week, y = Duration, color = Activity)) +
+p <- ggplot(data = activities_average, aes(x=day_of_week, y = Duration, color = Activity, group = Activity)) +
   geom_point() + 
-  geom_smooth(method = "loess")
+  geom_line()
 
 p
 
