@@ -106,6 +106,9 @@ Complete MDSR 8.6, which states: "A Slate article (http://tinyurl.com/slate-ethi
 
 Solution:
 
+Since these algorithms are being used in ways that will directly effect people's material lives, we need to be very careful in considering whether to include race. On the one hand, race is an additional piece of information that could make the algorithm more predictive. However, including race means that one could bias the model against historically discriminated against minorities. Since these groups have faced systemic discrimination in the past, it is likely that they have had more trouble staying with and accessing homeless services. Therefore, including race in the model will probably output that people from these groups are less likely to stay in help programs. The issue with this result is that the factors that underlie this result would be the result of patterns of injustice, and such algorithms are blind to this pattern.
+
+Given the potential for bias in algorithms that try to make such determinations, ethical practices in data science demand that special care be given to model testing and transparency in this process. This means that special consideration needs to be given to producing reproducible analyses that are available for others to access and scrutinize for possible 'proxies' for race. This will ensure that data scientists live up to the principles of minimizing and recognizing bias in their work.
 
 
 <!-- Have you committed and/or pushed yet? -->
