@@ -125,7 +125,12 @@ Go to the National Weather Service website and get a forecast page for a city of
 
 Solution:
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
+# National Weather Service for Santa Fe, NM forecast
+weatherurl <- "https://forecast.weather.gov/MapClick.php?CityName=Santa+Fe&state=NM&site=ABQ&textField1=35.6785&textField2=-105.954&e=0#.YiDe1-jMI2w"
+
+#Checking Permissions
+paths_allowed(weatherurl)
 
 ```
 
@@ -138,7 +143,15 @@ Note: The information does not need to be presented nicely - I just want you to 
 -->
 
 ```{r}
+latlong <- weatherurl %>%
+  read_html() %>%
+#Get the span.smallTxt elements on the page
+  html_elements("span.smallTxt") %>%
+#Convert into a text format
+  html_text()
 
+#Print text
+print(latlong)
 ```
 
 
