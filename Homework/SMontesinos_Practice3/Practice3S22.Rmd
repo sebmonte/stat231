@@ -13,6 +13,7 @@ library(tidyverse)
 library(mdsr)
 library(robotstxt)
 library(rvest)
+library(knitr)
 # add other packages needed here!
 knitr::opts_chunk$set(
   tidy=FALSE,     # display code as typed
@@ -63,6 +64,26 @@ You must be sure that scraping the table is allowed. Your code should show appro
 Solution:
 
 ```{r}
+url <- "https://en.wikipedia.org/wiki/List_of_highest_scores_in_figure_skating#Men"
+#Checking if I can scrape
+paths_allowed(url)
+
+#Reading in the tables
+mens_records <- url %>% 
+  read_html() %>% 
+  html_elements("table") 
+
+#Scraping a particular table 
+men_total <- mens_records %>%
+  purrr::pluck(9) %>%
+  html_table() 
+
+#Displaying the first few rows of the table
+men_total_display <- head(men_total, 3) %>%
+  kable(caption = "Top 3 Best Total Scores in Men's Ice Skating", 
+        booktabs = TRUE)
+men_total_display
+
 
 ```
 
