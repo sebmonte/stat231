@@ -1,6 +1,6 @@
 ---
 title: "Lab 5b - Scraping"
-author: "YourNameGoesHere"
+author: "Sebastian Montesinos"
 date: "For class Thursday, March 3"
 output:
   pdf_document:
@@ -77,16 +77,19 @@ For this lab, we'll need to modify and repeat this process many times to scrape 
 
 > part a - Skim [Web Scraping 101](https://rvest.tidyverse.org/articles/rvest.html), courtesy of rvest.tidyverse.org, focusing particularly on the section on [Extracting Data](https://rvest.tidyverse.org/articles/rvest.html#extracting-data) (text, attributes, and tables). Feel free to take some notes below if desired. 
 
-Notes:
-
+Notes: HTML has a hierarchical structure formed by elements (ie. <tag>), attributes (ie. id = 'first'), and end tags (ie. </tag>). First you put the link into an html, then you use html_elements and highlight what part of the html code to look in, then you use html_text or html_text(2). 
+- Can also pull out attributes using html_attr, may need to post process with as.interger() or parse_integer()
+- Pulling out data from page: p selects all <p> elements, .title selects all elements with the title calss, p.special selects all <p> elements with class "special" and #title selects the element with the id attribute that equals title
 
 > part b - Revisit the [List of Emily Dickinson's poems](https://en.wikipedia.org/wiki/List_of_Emily_Dickinson_poems) and recall how you scraped a single poem already (*September's Baccalaureate* above). Broadly speaking, what are the things you need to do to get to our final goal? Don't worry about the specific details yet---ignore the  functions and arguments you'll need in R and don't worry about the particular order of steps for now. 
 
 You might call writing out these steps the "pseudocode". You're not coding, you're figuring out the steps you need to take. Later, we figure out the code to enact the steps. 
 
 Solution: 
-
-
+(1) Identify the page with the poem
+(2) Check whether I have permission to scrape
+(3) Get the text of the poem
+(4) Print the poem
 
 > part c - One of your steps likely involved scraping the table that lists Emily Dickinson's poems. Use the code chunk below to do that, creating a dataframe called `poem_table`. Be sure to check that bots are allowed first, and make sure the column names of your dataframe are user-friendly or "clean".
 
