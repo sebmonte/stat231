@@ -202,8 +202,8 @@ p <- ggplot(data = activities_average,
                 group = Activity)) +
   geom_line(size = 1.2, alpha = 1) + 
   scale_color_brewer(type = "qual", 
-                     palette = 7) +
-  scale_color_discrete(labels = c("Data Science", 
+                     palette = 7, 
+                     labels = c("Data Science", 
                                   "Oceanography", 
                                   "Apocalyptic Religion", 
                                   "Thesis")) +
@@ -211,7 +211,9 @@ p <- ggplot(data = activities_average,
        title = "Average Work Time Per Class Over a Week",
        x = "Day", 
        y = "Average Work Time (hours)",
-       color = "Class")
+       color = "Class") +
+  theme(legend.text = element_text(size = 8)) +
+  theme(legend.title = element_text(size = 10))
 
 p
 
