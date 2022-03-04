@@ -195,10 +195,22 @@ Describe what information is conveyed through your first data visualization (tha
 # resize figure appropriately
 # Only code for your first visualization should be here (no or very minimal wrangling code)
 # Remove all these comments!
-p <- ggplot(data = activities_average, aes(x=day_of_week, y = Duration, color = Activity, group = Activity)) +
+p <- ggplot(data = activities_average, 
+            aes(x=day_of_week, 
+                y = Duration,
+                color = Activity, 
+                group = Activity)) +
   geom_line(size = 1.2, alpha = 1) + 
-  labs(title = "Average Work Time Per Class Over a Week",
-       x = "Day", y = "Average Work Time (hours)",
+  scale_color_brewer(type = "qual", 
+                     palette = 7) +
+  scale_color_discrete(labels = c("Data Science", 
+                                  "Oceanography", 
+                                  "Apocalyptic Religion", 
+                                  "Thesis")) +
+  labs(DS_Average = "Data Science", 
+       title = "Average Work Time Per Class Over a Week",
+       x = "Day", 
+       y = "Average Work Time (hours)",
        color = "Class")
 
 p
