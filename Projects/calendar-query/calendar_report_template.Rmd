@@ -196,8 +196,10 @@ Describe what information is conveyed through your first data visualization (tha
 # Only code for your first visualization should be here (no or very minimal wrangling code)
 # Remove all these comments!
 p <- ggplot(data = activities_average, aes(x=day_of_week, y = Duration, color = Activity, group = Activity)) +
-  geom_point() + 
-  geom_line()
+  geom_line(size = 1.2, alpha = 1) + 
+  labs(title = "Average Work Time Per Class Over a Week",
+       x = "Day", y = "Average Work Time (hours)",
+       color = "Class")
 
 p
 
