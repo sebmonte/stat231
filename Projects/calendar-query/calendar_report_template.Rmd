@@ -46,11 +46,11 @@ Your final *calendar-query* project folder should be organized such that file na
 
 <!--
 Describe the questions of interest: what are they and why are they important or useful to you?
+-->
 
+The first question I addressed is how the amount of time I spend on each class changes over the course of a week. One of my goals this semester is to have a structured and planned week where I dedicate certain days to certain classes. This allows me to easily plan when I will do work and not get overloaded on any particular day. I aim to concentrate my data science work towards the end of the week - specifically, around Thursday, Friday, and Saturday. I aim to do my oceanography and religion work around the start of the week, particularly Monday and Tuesday respectively. Finally, I aim to scatter my thesis work throughout the week. 
 
 The second question I address is how the amount of time I spend on work in a day relates to the amount of personal time I take during a day. One might expect that since the more time I spend on one activity the less time there is for the other, there will be a simple negative correlation. However, I have noticed that I sometimes give myself more time for recreational activities when I have done a lot of work as a 'reward', and spend more time on independent academic projects or looking for jobs when I do not spend a lot of time on work in a day since I feel guilty if I am not productive in a day. Therefore, it could also be the case that as I spent more time on schoolwork I also take more personal time, making the two positively correlated. I was also interested in how this relationship might change on weekdays vs weekends, since I try to give myself more of a break during the weekends.
-
--->
 
 # Data collection 
 
@@ -114,7 +114,12 @@ calendar_data <- "SMontesinosCalendarQuery.ics" %>%
 
 <!--
 Briefly describe and justify your plans for analysis (i.e., visualizations and summary table). Which graphs and corresponding visual cues do you plan to use? Which summary measures will you use in your table? (This will likely be a less detailed version of what you submitted for your proposal.) The idea is to let your reader know what is coming before they get to it. 
+
 --> 
+
+To address my first question, I intend to create a line graph that shows the average amount of time I spend on work on each day of the week, by the specific class I am working on. This graph will have the day of the week on the x axis and the time I spend on work on the y axis. There will be four lines, each corresponding to my four courses. The peaks of these lines 
+
+
 
 
 ```{r vis1-prep, eval = TRUE}
