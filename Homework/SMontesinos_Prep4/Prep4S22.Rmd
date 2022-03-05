@@ -1,0 +1,130 @@
+---
+title: "Prep4"
+author: "YourNameGoesHere"
+date: "Due by midnight, Monday March 7"
+output: 
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r, setup, include=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(robotstxt)
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+```
+
+Reminder: Prep assignments are to be completed individually. Upload a final copy of the .Rmd and renamed .pdf to your private repo, and submit the renamed pdf to Gradescope. 
+
+# Reading
+
+The associated reading for the week is Chapter 14. The prep involves looking through one tutorial and working through another - estimated time at least 20 minutes each. 
+
+Note: There is no practice set this week, so that you can focus on completing the calendar query individual project due Thursday by midnight and start on the Shiny group project, where an initial proposal is due Friday by midnight. Then you can go off and enjoy your Spring breaks!
+
+\newpage
+
+# 1 - Exploring Shiny
+								
+A Shiny app is an interactive visualization. These apps can be written in R using the *shiny* R package. We want to explore Shiny and its many uses with this prep.
+
+To get a sense of what’s out there with Shiny, let’s look at some example tutorials.
+
+Stir your browsers to [this tutorial: http://zevross.com/blog/2016/04/19/r-powered-web-applications-with-shiny-a-tutorial-and-cheat-sheet-with-40-example-apps/](http://zevross.com/blog/2016/04/19/r-powered-web-applications-with-shiny-a-tutorial-and-cheat-sheet-with-40-example-apps/)
+
+This is a tutorial on (fairly simple) Shiny apps which are each created from a SINGLE file. For larger apps, you would want to create server.R and UI.R files, which are separate – one to govern the R computations and one to govern the UI. There are many examples of these files online. 
+
+When tackling learning Shiny, don’t start from scratch! Find an example that does some of what you want and take its code and modify it. 
+
+Let’s look through some of the tutorial now. For each example app, there is a code file showing the R code and an App tab that shows what the resulting app looks like. Note that these do not compile like .Rmd files.  You RUN the apps instead of knitting. Alternatively, you’d make an R script file instead, and RUN within that.
+
+Take a look at a few of the first apps and their code. Most of these are skeletons to demo the structure of Shiny.
+
+The apps get more complicated as the tutorial proceeds. Try to look through the commands and see how the apps can do different things. Then, answer the following questions about some of the examples. 
+
+(If you want details about the data set, remember you can look up its help file.)
+
+> part a - Take a look at Code 30/App 30. What does this App let you do with the mtcars data set?
+
+Solution:
+
+> part b - What about Code 31/App 31? 
+
+Solution:
+
+
+> part c - What about Code 33/App 33?
+
+Solution:
+
+
+> part d - What about Code 37/App 37?
+
+Solution:
+
+
+> part e - One last one! What does Code 40/App 40 let you do with the mtcars dataset?
+
+Solution:
+
+
+
+The blog entry is just one of many tutorials about Shiny out there. 
+
+<!-- Remember to commit and push as you go! -->
+
+\newpage
+
+
+# 2 - One more tutorial 
+
+The main home page for Shiny is https://shiny.rstudio.com/
+
+It has a tutorial page: https://shiny.rstudio.com/tutorial/
+
+Watching a good chunk of this tutorial will be part of the upcoming Shiny project. For now, we'll just look at a shorter tutorial to get an example app running. (As soon as that project is ready to post, I'll post and you could start on the individual part watching the tutorial, etc.)
+
+About midway down the tutorial page there is a written tutorial with several lessons. For this prep, your next task is to do Lesson 1 - Welcome to Shiny in the written tutorial – you’ll modify an existing Shiny app and run it! You may need to install the Shiny package if you are working on your own computer, if you do not already have it, before getting started. 
+
+You can *run* a shiny app in RStudio on your computer; you do not need to work on the server to run the apps. However, eventually, we will need to publish our apps to allow others to view them. You can do this either through the R server or through external sites such as shinyapps.io. We will look at this in lab. For the prep, you do not need to publish the app. 
+
+When the tutorial tells you to play around and make some changes to the app.R file, do the following:
+
+1. Be sure you have the app.R file that is posted for the Prep. Copy it into your repo if you didn't already.
+2. Run the app. It should show the same starting point as the tutorial app.
+3. Make the requested changes/updates to the app in the tutorial.
+4. Run the app with the changes and be sure it matches the tutorial. 
+
+Then, complete the questions below. 
+
+> part a - Were you able to implement the requested changes and run the updated app?
+
+Solution:
+
+
+
+Once you’ve completed lesson 1, please look at at least 5 of the other pre-loaded examples in the Shiny package.
+
+> part b - What pre-loaded example did you find the most interesting?
+
+Solution:
+
+> part c - Are there any applications you can think of where you might like to investigate the use of a Shiny app?
+
+Solution:
+
+
+(Note, the next project will require you to work with an assigned group and make a Shiny app, so this is preliminary brainstorming about your individual interests. )
+
+Finally, if you are interested in more information about Dashboards, or more examples of Shiny apps, here are some reference pages hosted by RStudio.
+
+https://rstudio.github.io/shinydashboard/
+
+https://www.rstudio.com/products/shiny/shiny-user-showcase/
+
+<!--
+Remember to do the final commit + push, this time including your renamed pdf, and upload to Gradescope.
+-->
