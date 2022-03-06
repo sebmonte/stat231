@@ -1,6 +1,6 @@
 ---
 title: "Prep4"
-author: "YourNameGoesHere"
+author: "Sebastian Montesinos"
 date: "Due by midnight, Monday March 7"
 output: 
   pdf_document:
@@ -49,26 +49,26 @@ The apps get more complicated as the tutorial proceeds. Try to look through the 
 
 > part a - Take a look at Code 30/App 30. What does this App let you do with the mtcars data set?
 
-Solution:
+Solution: This app displays an interactive data table that allows you to filter the number of rows displayed and for values in each column, and search for particular entries.
 
 > part b - What about Code 31/App 31? 
 
-Solution:
+Solution: This app makes the ggplot interactive, allowing one to use a slider to change how much of the x/y axis shows, and to 'mouse over' particular data points.
 
 
 > part c - What about Code 33/App 33?
 
-Solution:
+Solution: This app creates a geospatial map with markers whose relative size indicates the 
 
 
 > part d - What about Code 37/App 37?
 
-Solution:
+Solution: This app allows the user to click on or brush across particular parts of a ggplot to filter the table below. The app uses the plot0utput function to do this, filtering the data table based on the way the user intearcts with the graph.
 
 
 > part e - One last one! What does Code 40/App 40 let you do with the mtcars dataset?
 
-Solution:
+Solution: It allows you to display graphs based on the dataset on a dashboard with menu selection and scrolling features.
 
 
 
