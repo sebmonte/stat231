@@ -11,7 +11,7 @@ output: pdf_document
 library(tidyverse)
 library(lubridate)
 library(ical)
-
+library(kableExtra)
 # set code chunk defaults
 knitr::opts_chunk$set(tidy = F, # display code as typed
                       size = "small", # slightly smaller code font
@@ -101,7 +101,7 @@ calendar_data <- "SMontesinosCalendarQuery.ics" %>%
   ## Turning the date variable into a date type
   mutate(date = ymd(date)) %>%
   ## Including only dates after I started collecting for the project
-  filter(year >= 2022 & month >= 2 & day >= 17) %>%
+  filter(year >= 2022 & month >= 2 & day >= 17 | year >= 2022 & month >= 3) %>%
   ##Removing trailing whitespace
   mutate(activity = str_trim(activity)) %>%
   ##Replacing spaces with underscores in activity names 
@@ -123,19 +123,18 @@ To address my first question, I intend to create a line graph that shows the ave
 
 
 ```{r vis1-prep, eval = TRUE}
-# Example of preparing dataset for first visualization
-
+# Preparing dataset for first visualization
 # Computing total duration for each activity per day of the week
 activities_total <- calendar_data %>% 
   group_by(date, day_of_week, activity) %>%
-  summarize(duration = sum(duration),
-#Including number of total observations
-            ) %>%
+  summarize(duration = sum(duration)) %>%
+#Pivoting wider to get rows as days and activities as columns
   pivot_wider(names_from = activity, values_from = duration)
 
-#Filling in 
+#Filling in columns with NAs with '0' for 0 time spent
 activities_total[is.na(activities_total)] = 0
 
+#Calculating the mean time spent for each activity by day of the week
 activities_average <- activities_total %>%
   group_by(day_of_week) %>%
   summarise(DS_Average = mean(data_science), 
@@ -145,7 +144,6 @@ activities_average <- activities_total %>%
   pivot_longer(-day_of_week, 
                names_to = "Activity",
                values_to = "Duration")
-
 
 ```
 
@@ -178,6 +176,35 @@ activities_comparison2 <- activities_comparison %>%
 ```
 
 
+```{r vis3-prep, eval = TRUE}
+# Preparing dataset for table
+
+
+week_comparison <- activities_comparison2 %>%
+  group_by(week_status) %>%
+  summarise(mean_work = mean(work_time), 
+            median_work = median(work_time), 
+            sd_work = sd(work_time),
+            mean_personal = mean(personal_time),
+            median_personal = median(personal_time),
+            sd_personal = sd(personal_time),
+            mean_extracurricular = mean(extracurricular_time),
+            median_extracurricular = median(extracurricular_time),
+            sd_extracurricular = sd(extracurricular_time)) %>%
+  t() %>%
+  janitor::row_to_names(1) 
+
+  
+
+
+
+
+
+
+```
+
+
+
 # Results 
 
 <!--
@@ -191,6 +218,8 @@ Before each code chunk, describe what information is conveyed through the corres
 
 <!--
 Describe what information is conveyed through your first data visualization (that you'll create below).
+
+My first visualization shows the average amount of time I spend on each class per day of the week. The x axis represents a particular day of the week (ie. monday, sunday) and the y axis represents the average amount of time I spend in hours on an activity. A line is used for each class, so that each point on the line at a particular day represents the average amount of time I spend on that class on that day. Thus, the height of these lines and their pattern over time allows me to compare how much time I spend on work changes throughout a week.
 -->
 
 
@@ -226,6 +255,8 @@ p
 
 <!--
 Describe what information is conveyed through your second data visualization (that you'll create below).
+
+My second visualization shows the relationship between the amount of time I work per day to the amount of time I spend on personal time per day.
 -->
 
 
@@ -251,6 +282,10 @@ Describe what information is conveyed through the table (that you'll create) bel
 ```{r, results = 'asis'}
 # Code for table
 # Only code for your table should be here (no or very minimal wrangling code)
+
+week_comparison <- week_comparison %>%
+  kable(booktabs = TRUE, digits = 2)
+week_comparison
 ```
 
 # Conclusions 
@@ -276,3 +311,5 @@ Write your reflection here in paragraph form. In particular, address...
 
 You may address these questions in any particular order. If it helps, you can make a subsection for each. 
 -->
+
+I think I did not have quite enough data to completely answer some of my important questions. For instance, my first question was about how the time I spend on each class changed throughout the course of an average week. However, I only had two weeks worth of data to average across. These two weeks are not perfectly representative of my average week. For instance, I have spent a lot more time on my thesis in the past and happened to have less work for it in the last two weeks since I am between writing sections. To get a representative sample of my typical week I think collecting data for at least 1-2 months would be ideal. Collecting this data would not be too difficult since I would just need to continue to track my time for a full month.
