@@ -58,7 +58,7 @@ Solution: This app makes the ggplot interactive, allowing one to use a slider to
 
 > part c - What about Code 33/App 33?
 
-Solution: This app creates a geospatial map with markers whose relative size indicates the 
+Solution: This app creates a geospatial map with markers whose relative size is adjustable, and a slider that will change how many of those markers appear.
 
 
 > part d - What about Code 37/App 37?
@@ -102,7 +102,7 @@ Then, complete the questions below.
 
 > part a - Were you able to implement the requested changes and run the updated app?
 
-Solution:
+Solution: Yes, I was able to make all the changes. I had some trouble using the suggested command in R to run the app but I was able to run it using the R shortcut at the top.
 
 
 
@@ -110,11 +110,11 @@ Once you’ve completed lesson 1, please look at at least 5 of the other pre-loa
 
 > part b - What pre-loaded example did you find the most interesting?
 
-Solution:
+Solution: I found examples 3 & 4 most interesting, because they introduced the idea of reactivity wherein the app responds differentially based on your input. I still don't quite understand the code but it seems important.
 
 > part c - Are there any applications you can think of where you might like to investigate the use of a Shiny app?
 
-Solution:
+Solution: One interesting application might be an app where a user could upload some set of data or information, and then the app could automatically compute/display information about that dataset.
 
 
 (Note, the next project will require you to work with an assigned group and make a Shiny app, so this is preliminary brainstorming about your individual interests. )
