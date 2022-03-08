@@ -44,6 +44,7 @@ name_choices <- unique(skateboards$board)
 
 ## For selectizeInput choices for company name, pull directly from data
 cmpy_choices <- unique(skateboards$company)
+year_choices <- unique(skateboards$year)
 
 ############
 #    ui    #
@@ -105,9 +106,9 @@ ui <- navbarPage(
     sidebarLayout(
       sidebarPanel(
         selectizeInput(inputId = "cmpy",
-                       label = "Choose one or more companies:",
-                       choices = cmpy_choices,
-                       selected = "DIYElectric",
+                       label = "Choose one or more years:",
+                       choices = year_choices,
+                       selected = "2017",
                        multiple = TRUE)
       ),
       
@@ -174,7 +175,7 @@ server <- function(input, output){
   
   # TAB 3: TABLE
   data_for_table <- reactive({
-    data <- filter(skateboards, company %in% input$cmpy)
+    data <- filter(skateboards, year %in% input$cmpy)
   })
   
   output$table <- DT::renderDataTable({ 
