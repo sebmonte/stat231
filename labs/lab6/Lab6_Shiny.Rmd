@@ -1,0 +1,133 @@
+---
+title: "Lab 6 - Shiny"
+author: "YourNameGoesHere"
+date: "For class Tuesday, March 8"
+output:
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r setup, include = FALSE}
+# load packages
+library(tidyverse)
+library(kableExtra)
+library(robotstxt) 
+#library(polite) #investigate if doing a lot of scraping
+library(rvest) 
+library(purrr) 
+# set code chunk defaults
+knitr::opts_chunk$set(tidy = F, # display code as typed
+                      size = "small", # slightly smaller code font
+                      message = FALSE,
+                      warning = FALSE,
+                      comment = "\t") 
+
+# set black & white default plot theme
+theme_set(theme_classic()) 
+
+# improve digit and NA display 
+options(scipen = 1, knitr.kable.NA = '')
+```
+
+# Lab Purpose  
+
+This lab is designed to help you engage with Shiny and building Shiny apps. Developing a Shiny app is a process - you won't sit down and just write out the code in one sitting. There are items to consider including layout, appropriate app organization, and then challenges dealing with reactive inputs and outputs. This lab will let you engage with two different apps, and you will learn to publish an app as well. This is the START of your learning with Shiny, which you'll be focusing on in the next project (introduced Thursday). 
+
+Why do we want to be able to build a Shiny app as data scientists? This is a data product. In other words, the app is a way you can share your analysis/data/results with other individuals to help them understand a problem and your take on it. Many `dashboards` you may have seen around the web are Shiny apps (or related constructs)! 
+
+As stated previously, when working on a coding project, don't start from scratch! Part of the reason for engaging with two different tutorials in the prep was to introduce you to existing resources. Find examples and use them to help you. 
+
+
+<!-- PART 1 ------------------------------------------------------------------->
+# 1 - Publishing your first Shiny app 
+
+What does it mean to publish an app? If you have the app.R file, you can run it in RStudio, whether that's on the server or on your personal machine. However, if you want other individuals to be able to access the app, you likely want to host it on a website. (This may also mean making the dataset available.) Publishing an app refers to the process for making the app accessible to others. 
+
+There are two choices you have for publishing shiny apps for our class.  You can either publish the app via the RStudio server (even if you regularly work on your own machine) or you can use shinyapps.io. (Other external sites exist, but these are the options for our class.)
+
+In this question, you'll walk through the process of publishing your first app with one of these two options. First, we'll play with the app, update it, and then to publish, you can pick an option and walk through the steps presented below. 
+
+## Setting up the app
+
+1. Open *lab6_shiny-baby-names* folder within the Lab folder and open *app.R*. 
+
+Important: While the application folder can have any name, the shiny app script must be named "app.R" in order to publish. 
+
+2. Update the app so that 
+
+* the default name choice is your name;
+* the default sex is whichever one you want (options are limited to "M" or "F");
+* the text for the title panel is something informative.
+
+3. Click "*Run App*" in upper right corner to make sure it's working as expected (update if not).
+
+4. Now pick one of the two options below to publish the app.
+
+<!-- You can commit and push your app.R file after making the edits before proceeding, even though it's not a .Rmd or .pdf file. -->
+
+## Option 1 - Using the R Server to publish
+
+The R server is set up to deploy Shiny apps if they are loaded on it in a certain way. 
+
+1. Navigate to the R server at r.amherst.edu.
+2. On the R server, in your `Home` directory, create a folder called ShinyApps.
+3. Then, inside that folder, create another folder called BabyNames231.
+4. Inside that final folder, upload the app.R file that you have edited.
+5. You can now view your deployed app by visiting:  
+https://r.amherst.edu/apps/awagaman/BabyNames231/ or look at all your available apps at
+https://r.amherst.edu/apps/awagaman/	by subbing in your username instead of mine.
+
+You can just click the Run button to run the app from the RStudio window, but now that it is published, you can also run it from the website. 
+
+Congratulations, you’ve published your first Shiny app! If you make edits locally, you can re-deploy the app by updating the app.R file on the server. Other apps can be published in the same way in new folders within your ShinyApps folder. These apps will be available at the websites associated with your username until graduation. 
+
+## Option 2 - Using shinyapps.io to publish
+
+1. Go to [shinyapps.io](https://www.shinyapps.io/admin/#/login) and either log in with your existing account or create an account using either the "Log in with Github" option with your GitHub account or the "Log in with Google" option with your Amherst email. If you are already logged into either account on another tab, it should automatically recognize the account. 
+
+By default, you will be set up with a free plan that limits you to 5 active shiny apps on your account.
+
+Keep this tab open.
+
+2. Go back to the app in R. Run it and make sure you have the updates completed. Click "*Publish*" in upper right corner.
+
+3. Follow the instructions in the box that pops up to link your shinyapps.io account with your RStudio.
+
+4. Go back to shinyapps.io in your browser, and click "Dashboard". You should be able to see your Shiny app under "Recent Applications". 
+
+5. To verify it’s working on the web, click on the app, then click on the URL. 
+
+Congratulations, you’ve published your first Shiny app! If you make edits locally, you can re-deploy the app by clicking *Publish* again. When you eventually want to publish more and more apps but run out of space on your free account (a cap of 5 active apps on the free plan), you can archive and then delete any apps you no longer want to be active.
+
+\newpage
+
+
+<!-- PART 2 ------------------------------------------------------------------->
+# 2 - Updating a Shiny app
+
+Open the *lab6-shiny-skateboards* folder and the corresponding *app.R* file. Choose one of the options below to update your app. It can be helpful to isolate parts of the app while you work. To facilitate this, separate files have been provided for you that reproduce only a single app tab (histogram, scatterplot, and table). Note that this app requires a data set to be loaded in - the data set is IN the folder, so be sure the path to load it works for wherever you put it when you grab the materials. 
+
+*Option 1*: Update the template to still explore the skateboards dataset, but with different app functionality. Update:
+
+* at least 2 different widgets and
+* either the layout (e.g. not in tabs or different page layout) or the theme (check out the [**shinythemes** package](https://rstudio.github.io/shinythemes/)).
+
+Like a challenge? Incorporate one of the click, hover, or brush features  (read about plot [interactions](https://shiny.rstudio.com/articles/plot-interaction.html)).
+
+*Option 2:* Use this as a template to create a Shiny app for one of the following datasets from the **fivethirtyeight** package: 
+
+* `candy_rankings` (candy characteristics and popularity);
+* `hate_crimes` (hate crimes in US states, 2010-2015);
+* `mad_men` (tv performers and their post-show career);
+* `ncaa_w_bball_tourney` (women's NCAA div 1 basketball tournament, 1982-2018); or
+* `nfl_suspensions` (NFL suspensions, 1946-2014).
+
+The data dictionaries are included in the lab folder. The data sets can be found by loading the appropriate package. 
+
+Once finished, publish your app. 
+
+Complete the lab by linking to your published app for this question here:
+
+<!-- Remember to commit and push when you have the link in your .Rmd -->
+
