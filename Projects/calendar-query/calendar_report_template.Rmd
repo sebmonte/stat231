@@ -4,6 +4,8 @@ subtitle: "STAT 231: Calendar Query"
 author: "Sebastian Montesinos"
 date: "Last updated \\today"
 output: pdf_document
+fig_width: 6
+fig_height: 4
 ---
 
 ```{r setup, include = FALSE}
@@ -52,12 +54,14 @@ The first question I addressed is how the amount of time I spend on each class c
 
 The second question I address is how the amount of time I spend on work in a day relates to the amount of personal time I take during a day. One might expect that since the more time I spend on one activity the less time there is for the other, there will be a simple negative correlation. However, I have noticed that I sometimes give myself more time for recreational activities when I have done a lot of work as a 'reward', and spend more time on independent academic projects or looking for jobs when I do not spend a lot of time on work in a day since I feel guilty if I am not productive in a day. Therefore, it could also be the case that as I spent more time on schoolwork I also take more personal time, making the two positively correlated. I was also interested in how this relationship might change on weekdays vs weekends, since I try to give myself more of a break during the weekends.
 
+The final question I addressed was how much time I spend doing work on weekdays versus on weekends. One of my aims at Amherst has been to have concentrated, productive weekdays so that I mostly have my weekends off. However, since I am writing a thesis this semester that has been harder to accomplish. I was interested in how productive I managed to be during the weekdays, and whether the time I spent on work during the weeks differed from on the weekends.
+
 # Data collection 
 
 <!--
 Briefly describe your data collection process, including how you defined variables of interest (include the levels/categories of categorical variables and the units for quantitative variables).
 --> 
-I coded my data into three broad categories: 'work', for anything related to school (ie. class and homework), 'personal' for anything related to recreation (ie. gaming, seeing friends) and 'extracurricular' for any work outside of class (ie. job applications, clubs, independent projects). I decided to code the work category as four subcategories corresponding to my four classes: data science, oceanography, religion, and my thesis. I decided not to further divide the other two categories since my questions did not require doing so. So, in the end, I had six ways I marked off time on my calendar: 4 for my classes, 1 for personal time, and 1 for extracurricular. The units for all of these categories were in time, specifically minutes spent on each activity, which I used google calendar to code in.
+I coded my data into three broad categories: 'work', for anything related to school (ie. class and homework), 'personal' for anything related to recreation (ie. gaming, seeing friends) and 'extracurricular' for any club activities. I decided to code the work category as four subcategories corresponding to my four classes: data science, oceanography, religion, and my thesis. I decided not to further divide the other two categories since my questions did not require doing so. So, in the end, I had six ways I marked off time on my calendar: 4 for my classes, 1 for personal time, and 1 for extracurricular. The units for all of these categories were in time, specifically minutes spent on each activity, which I used google calendar to code in. I did not code every single thing I did in the day, so tasks such as job applications or independent projects did not show up on my calendar.
 
 
 <!--
@@ -90,7 +94,7 @@ calendar_data <- "SMontesinosCalendarQuery.ics" %>%
     activity = str_to_lower(activity),
     ## separate date from time
     date = floor_date(start_datetime, unit = "day"),
-    ## Examples of ways to parse dates, times (keep only what you need!)
+    ## Parsing dates and times
     year = year(date),
     month = month(date, label = FALSE),
     day = day(date),
@@ -117,14 +121,18 @@ Briefly describe and justify your plans for analysis (i.e., visualizations and s
 
 --> 
 
-To address my first question, I intend to create a line graph that shows the average amount of time I spend on work on each day of the week, by the specific class I am working on. This graph will have the day of the week on the x axis and the time I spend on work on the y axis. There will be four lines, each corresponding to my four courses. The peaks of these lines 
+To address my first question, I intend to create a line graph that shows the average amount of time I spend on work on each day of the week, by the specific class I am working on. This graph will have the day of the week on the x axis and the time I spend on work on the y axis. There will be four lines, each corresponding to my four courses. 
+
+To address my second question, I intend to create a scatterplot that shows the relationship between the amount of work I do in a day and the amount of personal time I take in a day. The x axis will represent work time and the y axis will represent personal time. A line of best fit will be used if appropriate, and I will use faceting to create a version of the graph for weekdays & for weekends.
+
+
 
 
 
 
 ```{r vis1-prep, eval = TRUE}
 # Preparing dataset for first visualization
-# Computing total duration for each activity per day of the week
+# Computing total duration for each activity per date
 activities_total <- calendar_data %>% 
   group_by(date, day_of_week, activity) %>%
   summarize(duration = sum(duration)) %>%
@@ -141,6 +149,7 @@ activities_average <- activities_total %>%
             O_Average = mean(oceanography), 
             R_Average = mean(religion),
             T_Average = mean(thesis)) %>%
+#Pivoting back longer to put the mean time for each activity in one column
   pivot_longer(-day_of_week, 
                names_to = "Activity",
                values_to = "Duration")
@@ -149,8 +158,6 @@ activities_average <- activities_total %>%
 
 ```{r vis2-prep, eval = TRUE}
 # Preparing dataset for second visualization
-
-
 activities_comparison <- calendar_data %>%
 #Selecting relevant variables
   select(day, activity, duration, week_status) %>% 
@@ -163,11 +170,17 @@ activities_comparison <- calendar_data %>%
 #replacing NA values with 0s
 activities_comparison[is.na(activities_comparison)] = 0
 
-# Grouping by day and summing the activity duration into categories I want to compare
+# Grouping by day and week status
 activities_comparison2 <- activities_comparison %>%
-  group_by(day, week_status) %>%
-# Calculating total school work time, personal time, and extracurricular time
-  summarise(work_time = sum(thesis, oceanography, religion, data_science), personal_time = sum(personal), extracurricular_time = sum(extracurriculars))
+  group_by(day, 
+           week_status) %>%
+# Calculating total school work time, personal time, and extracurricular time for each day
+  summarise(work_time = sum(thesis, 
+                            oceanography, 
+                            religion, 
+                            data_science), 
+            personal_time = sum(personal), 
+                            extracurricular_time = sum(extracurriculars))
 # 
 
 
@@ -179,10 +192,11 @@ activities_comparison2 <- activities_comparison %>%
 ```{r vis3-prep, eval = TRUE}
 # Preparing dataset for table
 
-
+#Grouping adjusted dataset from Vis2-prep by only week_status
 week_comparison <- activities_comparison2 %>%
   group_by(week_status) %>%
-  summarise(mean_work = mean(work_time), 
+#Calculating the mean, median, and standard deviation of work, personal, and extracurricular time by week status
+  summarise("Mean Work Time" = mean(work_time), 
             median_work = median(work_time), 
             sd_work = sd(work_time),
             mean_personal = mean(personal_time),
@@ -191,7 +205,9 @@ week_comparison <- activities_comparison2 %>%
             mean_extracurricular = mean(extracurricular_time),
             median_extracurricular = median(extracurricular_time),
             sd_extracurricular = sd(extracurricular_time)) %>%
+#Flipping the columns to rows and rows to columns to make the table nicer
   t() %>%
+#Shifting the first row to be the column names
   janitor::row_to_names(1) 
 
   
@@ -219,16 +235,11 @@ Before each code chunk, describe what information is conveyed through the corres
 <!--
 Describe what information is conveyed through your first data visualization (that you'll create below).
 
-My first visualization shows the average amount of time I spend on each class per day of the week. The x axis represents a particular day of the week (ie. monday, sunday) and the y axis represents the average amount of time I spend in hours on an activity. A line is used for each class, so that each point on the line at a particular day represents the average amount of time I spend on that class on that day. Thus, the height of these lines and their pattern over time allows me to compare how much time I spend on work changes throughout a week.
 -->
+My first visualization shows the average amount of time I spend on each class per day of the week. The x axis represents a particular day of the week (ie. monday, sunday) and the y axis represents the average amount of time I spend in hours on an activity. A line is used for each class, so that each point on the line at a particular day represents the average amount of time I spend on that class on that day. 
 
-
-```{r}
+```{r visualization-1, eval = TRUE}
 # Code for first data visualization
-# Be sure to provide meaningful title and axes labels and
-# resize figure appropriately
-# Only code for your first visualization should be here (no or very minimal wrangling code)
-# Remove all these comments!
 p <- ggplot(data = activities_average, 
             aes(x=day_of_week, 
                 y = Duration,
@@ -238,14 +249,14 @@ p <- ggplot(data = activities_average,
   scale_color_brewer(type = "qual", 
                      palette = 7, 
                      labels = c("Data Science", 
-                                  "Oceanography", 
+                                "Oceanography", 
                                   "Apocalyptic Religion", 
                                   "Thesis")) +
-  labs(DS_Average = "Data Science", 
-       title = "Average Work Time Per Class Over a Week",
-       x = "Day", 
-       y = "Average Work Time (hours)",
-       color = "Class") +
+                     labs(DS_Average = "Data Science", 
+                          title = "Average Work Time Per Class Over a Week",
+                          x = "Day", 
+                          y = "Average Work Time (hours)",
+                          color = "Class") +
   theme(legend.text = element_text(size = 8)) +
   theme(legend.title = element_text(size = 10))
 
@@ -256,17 +267,21 @@ p
 <!--
 Describe what information is conveyed through your second data visualization (that you'll create below).
 
-My second visualization shows the relationship between the amount of time I work per day to the amount of time I spend on personal time per day.
 -->
 
+My second visualization shows the relationship between the amount of time I work per day to the amount of time I spend on personal time per day. The x axis represents the amount of work per day, and I was interested in how this impacted the amount of personal time I took, which I put on the y axis. I used faceting to divide this data into two separate graphs for the weekend and weekday. 
 
-```{r}
+It appears that there is no clear relationship between the amount of work time I take in a day and the amount of personal time I take in a day, lending support to neither of my hypotheses. Because of this lack of a clear relationship, I did not add a line of best fit to the graphs as it would not be appropriate. It does appear that there may be a slightly negative relationship between personal time and work time on the weekends, but I would need more data to draw any significant conclusion.
+
+
+```{r visualization-2, eval = TRUE}
 #Plotting total work time against personal time per day
 n <- ggplot(data = activities_comparison2, aes(x= work_time, y = personal_time)) +
 #Creating 1 plot for weekends and one for weekdays
   facet_wrap(~week_status, nrow = 1) +
 #Using points to represent each day
   geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
 #Labeling the graph
   labs(title = "Time spent on work vs Recreation per day",
        y = "Personal time (hours)",
@@ -284,8 +299,12 @@ Describe what information is conveyed through the table (that you'll create) bel
 # Only code for your table should be here (no or very minimal wrangling code)
 
 week_comparison <- week_comparison %>%
-  kable(booktabs = TRUE, digits = 2)
+  kable(booktabs = TRUE, digits = 2, caption = "test") %>%
+  kable_styling(latex_options = "HOLD_position")
+
 week_comparison
+
+
 ```
 
 # Conclusions 
@@ -293,6 +312,12 @@ week_comparison
 <!--
 With your initial questions in mind, briefly summarize what you learned about how you spent your time. What are the big take-aways for you about how you spend your time? If relevant, how does this affect how you might spend your time going forward?
 -->
+
+I learned that I have succeeded fairly well in my goal of planning out my week such that I do work for each class on a pre-planned part of the week. I tend to do most of my data science work at the end of the week, my religion & oceanography work at the start of the week, and my thesis work scattered throughout the week and weekend. I also learned in this analysis that I spend the most time on data science rather than my thesis, which was somewhat surprising. However, I did collect my data during two non-representative weeks, something I will address in my reflection. 
+
+Next, I learned that there is no strong relationship between how much time I spend on work and how much personal time I take in a day. The idea that I give myself a break when I do a lot of work was not confirmed by the data, suggesting that I d
+
+
 
 
 \newpage
@@ -312,4 +337,17 @@ Write your reflection here in paragraph form. In particular, address...
 You may address these questions in any particular order. If it helps, you can make a subsection for each. 
 -->
 
+Future data projects
+
+I think one of the things that would have helped with my second analysis is coding in not only personal time but the time I spent on non-school work like independent projects or looking for jobs. Without having explicitly coded in my non-school work time, I was only able to indirectly measure that time via personal time, which was not ideal.
+
+
+
+Did I have enough data?
+
 I think I did not have quite enough data to completely answer some of my important questions. For instance, my first question was about how the time I spend on each class changed throughout the course of an average week. However, I only had two weeks worth of data to average across. These two weeks are not perfectly representative of my average week. For instance, I have spent a lot more time on my thesis in the past and happened to have less work for it in the last two weeks since I am between writing sections. To get a representative sample of my typical week I think collecting data for at least 1-2 months would be ideal. Collecting this data would not be too difficult since I would just need to continue to track my time for a full month.
+
+Ethical Responsibilities
+
+When analyzing others data, I have the responsibility to check whether I have permission to use their data and to respect the privacy of the people referenced by the data whenever possible. For instance, we should anonymize data for people who are uncomfortable with their personal information being shared in data analyses. I also have the responsibility to work to mitigate biased analyses wherever possible. This means not only avoiding un
+
