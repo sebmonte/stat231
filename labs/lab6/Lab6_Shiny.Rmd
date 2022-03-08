@@ -1,6 +1,6 @@
 ---
 title: "Lab 6 - Shiny"
-author: "YourNameGoesHere"
+author: "Sebastian Montesinos"
 date: "For class Tuesday, March 8"
 output:
   pdf_document:

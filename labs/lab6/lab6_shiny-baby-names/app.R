@@ -31,7 +31,7 @@ name_choices <- c("Adam", "Aidan", "Alex", "Alexandra",
 ui <- fluidPage(
   
   # Application title
-  titlePanel("This is the title panel"),
+  titlePanel("Popularity of Baby Names Over Time"),
   
   # Sidebar with a dropdown name input and radio button to choose
   # corresponding sex assigned at birth
@@ -43,13 +43,13 @@ ui <- fluidPage(
       selectInput(inputId = "nm",
                   label = "Name:",
                   choices = name_choices,
-                  selected = "Brittney"),
+                  selected = "Sebastian"),
       
       # Choose Sex
       radioButtons(inputId = "sx",
                    label = "Sex:",
                    choices = c("M", "F"),
-                   selected = "F")
+                   selected = "M")
     ),
     
     # Show change in name use over time
