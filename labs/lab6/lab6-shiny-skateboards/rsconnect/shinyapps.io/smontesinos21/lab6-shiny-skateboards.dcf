@@ -1,0 +1,13 @@
+name: lab6-shiny-skateboards
+title: lab6-shiny-skateboards
+username:
+account: smontesinos21
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5805562
+bundleId: 5656645
+url: https://smontesinos21.shinyapps.io/lab6-shiny-skateboards/
+when: 1646750368.2324
+lastSyncTime: 1646750368.2324
+asMultiple: FALSE
+asStatic: FALSE
