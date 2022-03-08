@@ -32,8 +32,8 @@ drv_choices <-  unique(skateboards$drive)
 # For TAB 2 SCATTERPLOT widgets:
 
 ## For radio button
-size_choice_values <- c("price", "weight", "battery")
-size_choice_names <- c("Price", "Weight", "Battery")
+size_choice_values <- c("blue", "red", "yellow")
+size_choice_names <- c("Blue", "Red", "Yellow")
 names(size_choice_values) <- size_choice_names
 
 ## For selectizeInput choices for skateboard name, pull directly from data
@@ -85,7 +85,7 @@ ui <- navbarPage(
         radioButtons(inputId = "pt_size",
                      label = "Size points by:",
                      choices = size_choice_values,
-                     selected = "weight"),
+                     selected = "blue"),
         
         selectizeInput(inputId = "id_name",
                        label = "Identify skateboard(s) in the scatterplot:",
@@ -160,13 +160,13 @@ server <- function(input, output){
   output$scatter <- renderPlot({
     skateboards %>%
       filter(drive != "Direct") %>%
-    ggplot(aes_string(x = "range", y = "top_speed", size = input$pt_size)) +
-      geom_point(color = "#2c7fb8") +
+    ggplot(aes_string(x = "range", y = "top_speed")) +
+      geom_point(color = input$pt_size) +
       labs(title = "Electric Skateboards", 
            subtitle = "August 2018",
            x = "Range (miles)", 
            y = "Top Speed (mph)",
-           size = size_choice_names[size_choice_values == input$pt_size]) +
+           color = size_choice_names[size_choice_values == input$pt_size]) +
       geom_label_repel(data = filter(skateboards, board %in% input$id_name),
                        aes(label = board), show.legend = FALSE) +
       facet_grid(~drive) 
