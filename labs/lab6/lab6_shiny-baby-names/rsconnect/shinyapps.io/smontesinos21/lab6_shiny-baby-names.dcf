@@ -1,0 +1,13 @@
+name: lab6_shiny-baby-names
+title: lab6_shiny-baby-names
+username:
+account: smontesinos21
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5805154
+bundleId: 5656424
+url: https://smontesinos21.shinyapps.io/lab6_shiny-baby-names/
+when: 1646747028.11328
+lastSyncTime: 1646747028.11328
+asMultiple: FALSE
+asStatic: FALSE
