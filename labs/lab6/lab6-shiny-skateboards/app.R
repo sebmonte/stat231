@@ -15,6 +15,9 @@ skateboards <- read_csv("electric_skateboards.txt")
 # - Can then refer to them in server                        #
 #############################################################
 
+
+
+
 # For TAB 1 HISTOGRAM widgets:
 
 ## For selectInput, 'choices' object should be a NAMED LIST
@@ -47,7 +50,8 @@ cmpy_choices <- unique(skateboards$company)
 ############
 ui <- navbarPage(
   title = "Electric Skateboards",
-  
+  #Updating theme
+  theme = shinytheme("slate"),
   # Tab 1: Histogram
   tabPanel(
     title = "Histogram",
@@ -130,7 +134,7 @@ ui <- navbarPage(
                 plotOutput(outputId = "original")
       )
     )
-  )
+  ),
   
 )
 
