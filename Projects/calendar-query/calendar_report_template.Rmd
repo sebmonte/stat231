@@ -125,6 +125,8 @@ To address my first question, I intend to create a line graph that shows the ave
 
 To address my second question, I intend to create a scatterplot that shows the relationship between the amount of work I do in a day and the amount of personal time I take in a day. The x axis will represent work time and the y axis will represent personal time. A line of best fit will be used if appropriate, and I will use faceting to create a version of the graph for weekdays & for weekends.
 
+To answer my final question, I intended to create a table that displays a variety of summary statistics about the time I spend on the weekdays vs weekends. Specifically, I intended to show the mean, median, and standard deviation of my time spent on schoolwork, personal activities, and extracurriculars on weekdays vs weekends.
+
 
 
 
@@ -197,18 +199,20 @@ week_comparison <- activities_comparison2 %>%
   group_by(week_status) %>%
 #Calculating the mean, median, and standard deviation of work, personal, and extracurricular time by week status
   summarise("Mean Work Time" = mean(work_time), 
-            median_work = median(work_time), 
-            sd_work = sd(work_time),
-            mean_personal = mean(personal_time),
-            median_personal = median(personal_time),
-            sd_personal = sd(personal_time),
-            mean_extracurricular = mean(extracurricular_time),
-            median_extracurricular = median(extracurricular_time),
-            sd_extracurricular = sd(extracurricular_time)) %>%
+            "Median Work Time" = median(work_time), 
+            "Standard Deviation (Work Time)" = sd(work_time),
+            "Mean Personal Time" = mean(personal_time),
+            "Median Personal Time" = median(personal_time),
+            "Standard Deviation (Personal Time)" = sd(personal_time),
+            "Mean Extracurricular Time" = mean(extracurricular_time),
+            "Median Extracurricular Time" = median(extracurricular_time),
+            "Standard Deviation (Extracurricular time)" = sd(extracurricular_time)) %>%
 #Flipping the columns to rows and rows to columns to make the table nicer
   t() %>%
 #Shifting the first row to be the column names
-  janitor::row_to_names(1) 
+  janitor::row_to_names(1) %>%
+#t() turned the data into a matrix, putting it back in a data frame format
+  as.data.frame()
 
   
 
@@ -237,6 +241,8 @@ Describe what information is conveyed through your first data visualization (tha
 
 -->
 My first visualization shows the average amount of time I spend on each class per day of the week. The x axis represents a particular day of the week (ie. monday, sunday) and the y axis represents the average amount of time I spend in hours on an activity. A line is used for each class, so that each point on the line at a particular day represents the average amount of time I spend on that class on that day. 
+
+This visualization reveals that I spend the most time on data science towards the end of the week, and the most time on religion towards the beginning of the week. Overall, I seem to spend less time on oceanography than my other classes and the bulk of that work is still concentratedtowards the beginning of the week. Finally, time spent on my thesis is scattered throughout the week with no clear peak.
 
 ```{r visualization-1, eval = TRUE}
 # Code for first data visualization
@@ -299,7 +305,7 @@ Describe what information is conveyed through the table (that you'll create) bel
 # Only code for your table should be here (no or very minimal wrangling code)
 
 week_comparison <- week_comparison %>%
-  kable(booktabs = TRUE, digits = 2, caption = "test") %>%
+  kable(booktabs = TRUE, digits = 2, caption = "Differences in Time Spent on Weekdays vs. Weekends") %>%
   kable_styling(latex_options = "HOLD_position")
 
 week_comparison
@@ -315,7 +321,9 @@ With your initial questions in mind, briefly summarize what you learned about ho
 
 I learned that I have succeeded fairly well in my goal of planning out my week such that I do work for each class on a pre-planned part of the week. I tend to do most of my data science work at the end of the week, my religion & oceanography work at the start of the week, and my thesis work scattered throughout the week and weekend. I also learned in this analysis that I spend the most time on data science rather than my thesis, which was somewhat surprising. However, I did collect my data during two non-representative weeks, something I will address in my reflection. 
 
-Next, I learned that there is no strong relationship between how much time I spend on work and how much personal time I take in a day. The idea that I give myself a break when I do a lot of work was not confirmed by the data, suggesting that I d
+Next, I learned that there is no strong relationship between how much time I spend on work and how much personal time I take in a day. The idea that I give myself a break when I do a lot of work was not confirmed by the data, suggesting that I should not count on this pattern when planning out my days.
+
+Finally, I learned that I do seem to spend more time on work during the weekdays and give myself a greater break on the weekends. During the weekdays I work an average of approximately 5 hours and this reduces to approximately 3 on the weekends. The average amount of personal time I take on the weekends is approximately double that of the weekdays. 
 
 
 
@@ -345,9 +353,15 @@ I think one of the things that would have helped with my second analysis is codi
 
 Did I have enough data?
 
-I think I did not have quite enough data to completely answer some of my important questions. For instance, my first question was about how the time I spend on each class changed throughout the course of an average week. However, I only had two weeks worth of data to average across. These two weeks are not perfectly representative of my average week. For instance, I have spent a lot more time on my thesis in the past and happened to have less work for it in the last two weeks since I am between writing sections. To get a representative sample of my typical week I think collecting data for at least 1-2 months would be ideal. Collecting this data would not be too difficult since I would just need to continue to track my time for a full month.
+I think I did not have quite enough data to completely answer some of my important questions. For instance, my first question was about how the time I spend on each class changed throughout the course of an average week. However, I only had two weeks worth of data to average across. These two weeks are not perfectly representative of my average week. For instance, I have spent a lot more time on my thesis in the past and happened to have less work for it in the last two weeks since I am between writing sections. To get a representative sample of my typical week I think collecting data for at least 1-2 months would be ideal. Collecting this data would not be too difficult since I would just need to continue to track my time for a full month. I think the same point applies to my analysis of work time on weekdays vs. weekends, it would be better to have a more representative sample by collecting data for a few months.
+
+
+
+Providing Data
+
+I expect that when I provide data that my personal information will be anonymized. It would be a violation of my privacy for companies to take sensitive personal information and share it with others without my consent. 
 
 Ethical Responsibilities
 
-When analyzing others data, I have the responsibility to check whether I have permission to use their data and to respect the privacy of the people referenced by the data whenever possible. For instance, we should anonymize data for people who are uncomfortable with their personal information being shared in data analyses. I also have the responsibility to work to mitigate biased analyses wherever possible. This means not only avoiding un
+When analyzing others data, I have the responsibility to check whether I have permission to use their data and to respect the privacy of the people referenced by the data whenever possible. For instance, we should anonymize data for people who are uncomfortable with their personal information being shared in data analyses. I also have the responsibility to work to mitigate biased analyses wherever possible. This means not only avoiding analyses that use factors such as race or gender in unscrupulous ways, but also being vigilant in avoiding 'proxies' for these categories that end up producing results based on the legacy of discrimination in this country.
 
