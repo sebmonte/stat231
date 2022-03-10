@@ -213,10 +213,8 @@ week_comparison <- activities_comparison2 %>%
   janitor::row_to_names(1) %>%
 #t() turned the data into a matrix, putting it back in a data frame format
   as.data.frame() %>%
-  mutate(
-         Weekday = round(as.numeric(Weekday), 2),
+  mutate(Weekday = round(as.numeric(Weekday), 2), 
          Weekend = round(as.numeric(Weekend), 2))
- 
 
   
 
@@ -313,7 +311,7 @@ This table provides summary statistics about the ways I spend my time on the wee
 ```{r, results = 'asis', eval = TRUE}
 # Code for table
 # Only code for your table should be here (no or very minimal wrangling code)
-##options(digits = 2)
+options(digits = 3)
 week_comparison %>%
 #Titling the table, setting digit cap
   kable(booktabs = TRUE, caption = "Differences in Time Spent on Weekdays vs. Weekends") %>%
