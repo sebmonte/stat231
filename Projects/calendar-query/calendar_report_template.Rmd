@@ -311,10 +311,9 @@ This table provides summary statistics about the ways I spend my time on the wee
 ```{r, results = 'asis', eval = TRUE}
 # Code for table
 # Only code for your table should be here (no or very minimal wrangling code)
-options(digits = 3)
 week_comparison %>%
 #Titling the table, setting digit cap
-  kable(booktabs = TRUE, caption = "Differences in Time Spent on Weekdays vs. Weekends") %>%
+  kable(booktabs = TRUE, digits = 3, caption = "Differences in Time Spent on Weekdays vs. Weekends") %>%
 #Holding the table in place on the pdf
   kable_styling(latex_options = "HOLD_position")
 
