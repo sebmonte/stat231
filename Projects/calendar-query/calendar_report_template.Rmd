@@ -237,7 +237,6 @@ Each visualization and table should have its own code chunk.
 Before each code chunk, describe what information is conveyed through the corresponding visualization or table in connection with the questions you posed (e.g., "The first figure captures how the time I spent on each class varied over the two-week period. It appears I spent the most time on..."). 
 -->
 
-
 <!--
 Describe what information is conveyed through your first data visualization (that you'll create below).
 
