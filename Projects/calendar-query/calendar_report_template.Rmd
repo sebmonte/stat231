@@ -1,5 +1,5 @@
 ---
-title: "YOUR TITLE HERE"
+title: "Schoolwork and Personal Time Across Weekdays and Weekends at Amherst"
 subtitle: "STAT 231: Calendar Query"
 author: "Sebastian Montesinos"
 date: "Last updated \\today"
@@ -212,7 +212,11 @@ week_comparison <- activities_comparison2 %>%
 #Shifting the first row to be the column names
   janitor::row_to_names(1) %>%
 #t() turned the data into a matrix, putting it back in a data frame format
-  as.data.frame()
+  as.data.frame() %>%
+  mutate(
+         Weekday = round(as.numeric(Weekday), 2),
+         Weekend = round(as.numeric(Weekend), 2))
+ 
 
   
 
@@ -251,18 +255,22 @@ p <- ggplot(data = activities_average,
                 y = Duration,
                 color = Activity, 
                 group = Activity)) +
+#Setting the size for the lines
   geom_line(size = 1.2, alpha = 1) + 
+#Setting line colors and labels for the legend
   scale_color_brewer(type = "qual", 
                      palette = 7, 
                      labels = c("Data Science", 
                                 "Oceanography", 
                                   "Apocalyptic Religion", 
                                   "Thesis")) +
+#Setting graph title and axes labels
                      labs(DS_Average = "Data Science", 
                           title = "Average Work Time Per Class Over a Week",
                           x = "Day", 
                           y = "Average Work Time (hours)",
                           color = "Class") +
+#Adjusting font size
   theme(legend.text = element_text(size = 8)) +
   theme(legend.title = element_text(size = 10))
 
@@ -299,16 +307,20 @@ n
 Describe what information is conveyed through the table (that you'll create) below. Again, the order is up to you. Move these around so they make sense for your analysis!
 -->
 
+This table provides summary statistics about the ways I spend my time on the weekdays and the weekend. Specifically, it indicates the mean, median, and standard deviation of my schoolwork time, personal time, and extracurricular time spent on weekdays vs. weekends. The table reveals that I spend more time on schoolwork during weekdays, and take more personal time on weekends. No noticeably different patterns were present for extracurricular time.
 
-```{r, results = 'asis'}
+
+```{r, results = 'asis', eval = TRUE}
 # Code for table
 # Only code for your table should be here (no or very minimal wrangling code)
-
-week_comparison <- week_comparison %>%
-  kable(booktabs = TRUE, digits = 2, caption = "Differences in Time Spent on Weekdays vs. Weekends") %>%
+##options(digits = 2)
+week_comparison %>%
+#Titling the table, setting digit cap
+  kable(booktabs = TRUE, caption = "Differences in Time Spent on Weekdays vs. Weekends") %>%
+#Holding the table in place on the pdf
   kable_styling(latex_options = "HOLD_position")
 
-week_comparison
+
 
 
 ```
@@ -345,9 +357,14 @@ Write your reflection here in paragraph form. In particular, address...
 You may address these questions in any particular order. If it helps, you can make a subsection for each. 
 -->
 
-Future data projects
+Difficulties & Future data projects
 
-I think one of the things that would have helped with my second analysis is coding in not only personal time but the time I spent on non-school work like independent projects or looking for jobs. Without having explicitly coded in my non-school work time, I was only able to indirectly measure that time via personal time, which was not ideal.
+
+
+
+One difficulty I encountered when analyzing my data is that I did not code all activities I did, only a certain set of activities. This was a problem because my second analysis involved looking at how the amount of schoolwork I did in a day affected the personal time I took, and this would have been neater if I was able to compare it to the amount of non-college related work I did. If I were to repeat this project, I would have coded in not only personal time but the time I spent on non-school work like independent projects or looking for jobs. Without having explicitly coded in my non-school work time, I was only able to indirectly measure that time via personal time, which was not ideal.
+
+Another difficulty I encountered was in the process of coding data. Initially I was not consistently calling each activity the same label. For instance, I might use 'oceanography class', 'homework', and 'oceanography studying' as labels on different days. If I wanted to dig into each of these specific categories this would have been fine, but I wanted to analyze all these events as one category and R recognizes them separately. I could have either used wrangling to do this or simply recoded my information, and I ended up choosing the latter. If I could repeat the project I would be more careful to come up with a distinct system for coding ahead of time where I know exactly what categories I want to examine, and then been sure to name each of these timeslots the exact same thing.
 
 
 
@@ -359,7 +376,7 @@ I think I did not have quite enough data to completely answer some of my importa
 
 Providing Data
 
-I expect that when I provide data that my personal information will be anonymized. It would be a violation of my privacy for companies to take sensitive personal information and share it with others without my consent. 
+I expect that when I provide data that my personal information will be anonymized. It would be a violation of my privacy for companies to take sensitive personal information and share it with others without my consent. I also expect that my data will be used for ethically acceptable purposes. For instance, it would be concerning if companies sold my data to more malicious corporations that wanted to target particular people with false advertising they may be susceptible to. Thus, I expect that there is some system by which we grant explicit consent for our data to be used and background principles that this data only be shared for useful & ethically acceptable purposes.
 
 Ethical Responsibilities
 
