@@ -213,6 +213,7 @@ week_comparison <- activities_comparison2 %>%
   janitor::row_to_names(1) %>%
 #t() turned the data into a matrix, putting it back in a data frame format
   as.data.frame() %>%
+#Turning the values into doubles to set digits
   mutate(Weekday = round(as.numeric(Weekday), 2), 
          Weekend = round(as.numeric(Weekend), 2))
 
@@ -282,7 +283,7 @@ Describe what information is conveyed through your second data visualization (th
 
 My second visualization shows the relationship between the amount of time I work per day to the amount of time I spend on personal time per day. The x axis represents the amount of work per day, and I was interested in how this impacted the amount of personal time I took, which I put on the y axis. I used faceting to divide this data into two separate graphs for the weekend and weekday. 
 
-It appears that there is no clear relationship between the amount of work time I take in a day and the amount of personal time I take in a day, lending support to neither of my hypotheses. Because of this lack of a clear relationship, I did not add a line of best fit to the graphs as it would not be appropriate. It does appear that there may be a slightly negative relationship between personal time and work time on the weekends, but I would need more data to draw any significant conclusion.
+It appears that there is no clear relationship between the amount of work time I take in a day and the amount of personal time I take in a day, lending support to neither of my hypotheses. The line of best fit is not very good in either condition. However, it does appear that there may be a slightly negative relationship between personal time and work time on the weekends, but I would need more data to draw any significant conclusion.
 
 
 ```{r visualization-2, eval = TRUE}
@@ -327,11 +328,11 @@ week_comparison %>%
 With your initial questions in mind, briefly summarize what you learned about how you spent your time. What are the big take-aways for you about how you spend your time? If relevant, how does this affect how you might spend your time going forward?
 -->
 
-I learned that I have succeeded fairly well in my goal of planning out my week such that I do work for each class on a pre-planned part of the week. I tend to do most of my data science work at the end of the week, my religion & oceanography work at the start of the week, and my thesis work scattered throughout the week and weekend. I also learned in this analysis that I spend the most time on data science rather than my thesis, which was somewhat surprising. However, I did collect my data during two non-representative weeks, something I will address in my reflection. 
+I have succeeded fairly well in my goal of planning out my week such that I do work for each class on specific days. I tend to do most of my data science work at the end of the week, my religion & oceanography work at the start of the week, and my thesis work scattered throughout the week and weekend. I also learned in this analysis that I spend the most time on data science rather than my thesis, which was somewhat surprising. However, I did collect my data during two non-representative weeks, something I will address in my reflection. These results indicate that if I want to continue to plan out my weeks I appear to adhere to those plans fairly well.
 
-Next, I learned that there is no strong relationship between how much time I spend on work and how much personal time I take in a day. The idea that I give myself a break when I do a lot of work was not confirmed by the data, suggesting that I should not count on this pattern when planning out my days.
+Next, I learned that there is no strong relationship between how much time I spend on work and how much personal time I take in a day. The idea that I give myself a break when I do a lot of work was not confirmed by the data, suggesting that I should not count on this pattern when planning out my days. Indeed, there is even a slightly negative correlation between work and personal time on the weekends, though I would need more data to draw conclusive conclusions. This suggests that, if anything, when I do more work I have less time for recreational activities.
 
-Finally, I learned that I do seem to spend more time on work during the weekdays and give myself a greater break on the weekends. During the weekdays I work an average of approximately 5 hours and this reduces to approximately 3 on the weekends. The average amount of personal time I take on the weekends is approximately double that of the weekdays. 
+Finally, I learned that I do seem to spend more time on work during the weekdays and give myself a greater break on the weekends. During the weekdays I work an average of approximately 5 hours and this reduces to approximately 3 on the weekends. The average amount of personal time I take on the weekends is approximately double that of the weekdays. Therefore, I have generally succeeded at finishing most of my work during the week. Interestingly, the standard deviation of time I spend on work is also much greater during weekdays than weekends, suggesting that I may allocate certain weekdays in particular to work. If I were to do further analyses, I could identify which weekdays in particular are those I am most efficient on. I did not garner very interesting information about extracurricular time since it seems I spend very little time on extracurriculars overall. Since I only participate in a few this is unsurprising, but I clearly have time to spend more time on these activities if I so chose.
 
 
 
@@ -354,8 +355,6 @@ You may address these questions in any particular order. If it helps, you can ma
 -->
 
 Difficulties & Future data projects
-
-
 
 
 One difficulty I encountered when analyzing my data is that I did not code all activities I did, only a certain set of activities. This was a problem because my second analysis involved looking at how the amount of schoolwork I did in a day affected the personal time I took, and this would have been neater if I was able to compare it to the amount of non-college related work I did. If I were to repeat this project, I would have coded in not only personal time but the time I spent on non-school work like independent projects or looking for jobs. Without having explicitly coded in my non-school work time, I was only able to indirectly measure that time via personal time, which was not ideal.
