@@ -104,7 +104,7 @@ str_subset(macbeth, "MACBETH\\.") %>% head()
 str_subset(macbeth, "MACBETH.") %>% head()
 ```
 
-Solution:
+Solution: '.' is a metacharacter that will match any character, so if you want to look for a literal period you need to put in the two backslashes. Therefore, the first line will return every place where "MACBETH." is found, while the second will just look for MACBETH followed by any character.
 
 
 > part c - The three commands below look similar, but return different results. In words, explain what overall pattern is being searched for in each of the three cases (i.e., what do the patterns `MAC[B-Z]`, `MAC[B|Z]`, and `^MAC[B-Z]` indicate?)?
@@ -117,7 +117,7 @@ str_subset(macbeth,"MAC[B|Z]") %>% head()
 str_subset(macbeth, "^MAC[B-Z]") %>% head()
 ```
 
-Solution:
+Solution: MAC[B-Z] looks for any line containing MAC followed by any character other than A. MAC[B|Z] looks for any line containing MAC followed by either a B or a Z. ^MAC[B-Z] looks for any line starting with MAC followed by a b or z at the beginning of the line (the ^ symbol anchors it to the beginning of the line).
 
 
 > Optional - Explore these other patterns to figure out what they do.
