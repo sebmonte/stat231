@@ -36,7 +36,7 @@ Note: If you decide to run the script in its entirety yourself, the process will
 
 > part a - In the `collect list` section, two datasets are generated - poem_table and url_table, which are then joined. What is the difference between these two datasets (before the join) and how is that visible in the scraping code? 
 
-Solution:
+Solution: The poem_table dataset contains a list of the titles of all of the Emily Dickinson poem's from the webpage. The code grabs the table on the wikipedia page and records all the names. On the other hand, url_table is a combination of a table containing the names of all these poems, and of a table containing the links to all these poem's scraped from the wikipedia page. Therefore, url_table contains two columns, one for the name of the poem and one for its link, while poem_table just contains once column with the names of the poems.
 
 > part b - In the `scrape all poems` section, what does `n_links <- nrow(poem_table)` do to help set up the loop to go through all the poems? Why might that be problematic?
 
