@@ -90,7 +90,7 @@ length(str_detect(macbeth, "  MACBETH"))
 str_detect(macbeth, "  MACBETH") %>% head()
 ```
 
-Solution: 
+Solution: The first code using str_subset finds and returns every line where "  MACBETH" is found as a string in the character vector. The code using str_which will tell us us the indicdes where "  MACBETH" is found within the character vector. The code using str_detect will also look for every instance of "  MACBETH" but will return a vector that is the length of the original vector, with information about whether "  MACBETH" was found at each line.
 
 <!--
 Yes, the textbook explains the differences, but it can be helpful if you run the lines yourself, as well, to be sure they work as you'd expect and to inspect the results.
