@@ -40,17 +40,17 @@ Solution: The poem_table dataset contains a list of the titles of all of the Emi
 
 > part b - In the `scrape all poems` section, what does `n_links <- nrow(poem_table)` do to help set up the loop to go through all the poems? Why might that be problematic?
 
-Solution:
+Solution: n_links records the number of links that the table contains and therefore the amount of iterations the code will need to go through.
 
 
 > part c - When scraping the text of one particular poem, the text is found on its webpage in a different way than the other poems. Which poem is problematic in this way? 
 
-Solution:
+Solution: 'I never lost as much but twice' is problematic because the normal link does not send you to the page with the poem text.
 
 
 > part d - What is reported as the poem text if an error occurs while the function is working through the loop?
 
-Solution:
+Solution: "Missing" is reported as the poem text if an error occurs.
 
 
 > part e - Finally, why is it important to end the file with a write_csv command? I.E. how is this useful? 
@@ -150,8 +150,6 @@ Section 12.1.2 walks through an example of how $k$-means clustering can identify
 Note: The $k$-means clustering algorithm starts by choosing $k$ points at random as initial guesses of where the cluster centroids might be. The `nstart` option specifies how many different configurations of initial guesses we want the algorithm to try, and the algorithm reports the results from the best initial configuration. It is generally recommended to specify `nstart` with a large value (e.g., 20 or 50). 
 -->
 
-Solution:
-
 <!-- Your solution will add the appropriate commands to look at the output, unless you just looked via the console. -->
 
 ```{r}
@@ -169,6 +167,8 @@ city_kmeans_results <- big_cities %>%
   kmeans(centers = 6, nstart = 30) 
 ```
 
+Solution: glimpse(big_cities)
+glimpse(city_kmeans_results)
 
 > part b - The code below reports on the class of the `city_kmeans_results` and the named elements we can refer to and select from that class. What type of object is `city_kmeans_results`? What named elements does the object contain and what information does each element give us? 
 
@@ -182,7 +182,7 @@ class(city_kmeans_results)
 names(city_kmeans_results)
 ```
 
-Solution:
+Solution: city_kmeans_results is of the 'kmeans' class. The named elements we can refer to from that class are cluster (A vector of integers that indicates which cluster each point is allocated to), centers (A matrix of the cluster centres), totss (The sum of squares), withinss (the within-cluster sum of squares for each cluster), tot.withinss (The total within cluster sum of squares), betweenss (the between cluster sum of squares), size (the number of points in each cluster), iter (the number of iterations), and ifault (an integer indicating possible algorithm problems).
 
 
 > part c - Where are the estimated centroids of the 6 clusters? How many cities were assigned to the first cluster? Which cluster contains the most cities?
@@ -195,7 +195,7 @@ city_kmeans_results$centers
 city_kmeans_results$size
 ```
 
-Solution:
+Solution: The estimated centroids are at ~75 long 27 lat, ~-94 long 31 lat, ~120 long 32 lat, ~-57 long ~15 lat, ~17 long -1 lat, and ~18 long 45 lat. That final location at ~18 long and 45 lat contains the most points at 988 cities.
 
 
 > part d - Run the code below to create a plot of the assigned clusters. What do you think Cluster 2 represents? 
@@ -220,15 +220,42 @@ ggplot(big_cities, aes(x = longitude, y = latitude)) +
   theme(legend.position = "none")
 ```
 
-Solution: 
+Solution: Cluster 2 represents the cities that cluster around the general longitude/latitude of the North America.
 
 
 > part e - In $k$-means clustering, the analyst specifies the number of clusters to create.  Update the `center` argument within the `kmeans()` function to identify 3 clusters instead of 6.  Create a plot like the one above, but coloring the points by these new cluster assignments.  How many cities are in Cluster 1 now?  What does Cluster 2 represent now?
 
-Solution:
+Solution: Cluster 1 now contains 1466 cities. Cluster 2 now represents the cities that cluster around the general longitude/latitude of both North and South America. 
 
 ```{r}
 # Be sure to set a seed for reproducibility
+big_cities2 <- world_cities %>%
+  arrange(desc(population)) %>%
+  head(4000) %>%
+  select(longitude, latitude)
+
+# Make sure to set seed for reproducibility!
+set.seed(15)
+city_kmeans_results2 <- big_cities2 %>% 
+  kmeans(centers = 3, nstart = 30) 
+
+big_cities2 <- big_cities2 %>% 
+  add_column(cluster = factor(city_kmeans_results2$cluster))
+
+# Make dataframe out of estimated cluster centroids
+city_cluster_centers2 <- city_kmeans_results2$centers %>%
+  data.frame() %>% 
+  add_column(cluster_number = 1:3)
+
+# Plot cluster assignments and centroids
+ggplot(big_cities2, aes(x = longitude, y = latitude)) +
+  geom_point(aes(color = cluster), alpha = 0.6)  + 
+  scale_color_brewer(palette = "Spectral") +
+  geom_label(data = city_cluster_centers2, 
+             aes(label = cluster_number), 
+             size = 3) + 
+  theme(legend.position = "none")
+```
 ```
 
 
