@@ -1,0 +1,42 @@
+---
+title: "Executive Summary Template"
+author: "YOUR GROUP NAME; Group A# or B#"
+output: 
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r include = FALSE}
+library(kableExtra)
+```
+
+<!--
+Change the title to "Executive Summary for YOUR TITLE", 
+and update the author field depending on your section, with your #
+-->
+
+## Insights into Topic
+
+<!-- What is your topic? Why was it interesting to you? What motivated it for you? -->
+
+## Data
+
+<!-- Describe your data. Where did it come from? What are some of the variables? Include a citation for the data here. You may not have room to describe ALL the variables. Give a reference for someone to look at - maybe this information is in your app in an information tab! -->
+
+## Shiny App
+
+<!-- What does your app allow someone to do with the data? What visuals are included and why? This is a high level discussion, not details about why you used certain visual cues or choose a certain color scheme. -->
+
+<!-- At least one image of the app is required to demonstrate its functionality. This can be in this section or the next, as you deem appropriate. Remember that figures can be resized. -->
+
+## Results
+
+<!-- What did you learn in regards to your topic of interest? -->
+
+
+
+
+
+
+<!-- Remember: This executive summary must be at most 2 pages long. Presenting information concisely is also a great skill for data scientists to have. The compiled .pdf of the executive summary should be submitted in your group repo for the project. -->

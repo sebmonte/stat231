@@ -1,0 +1,67 @@
+---
+title: "Shiny Proposal Template"
+output: 
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r include = FALSE}
+library(kableExtra)
+```
+
+<!-- Change the title to "Shiny Proposal for Group A# or B#", depending on your section, with your # -->
+
+<!-- For the Revised proposal, add "Revised" to the title -->
+
+Group name:  “The World Cup Winners” or “The Economists” 
+
+<!-- The group name will be used as the name of your group repo for both group projects. -->
+
+Title: Economic development over time and place, The accuracy of world cup predictions
+
+<!-- The tentative title of your shiny project -->
+
+# Purpose
+
+<!-- Describe the general topic/phenomena you want to explore, as well as some questions that you hope to address. -->
+
+One general topic we are interested in exploring is economic development and GDP. We are interested in how GDP has changed across different regions. We are also interested in how important world events corresponding to particular times periods (ie. WW2) changed GDP. We could potentially join the dataset we found on GDP with a dataset on other measures such as world happiness or government stability, and see how economic statistics relate to these other measures.
+
+Another topic we were interested in is data on the world cup. Questions we are interested in investigating is whether there is a home team advantage, how attendance and goals scored have changed over time, and whether the amount of goals scored is related to attendance. We also found a website that attempted to predict results of the world cup, and we were interested in comparing these predictions to the actual results.
+
+
+
+# Data 
+
+<!-- Identify one or more data sources that could be used in the project. What form is the data in (downloadable csv file? needs to be scraped from web?)? What do you imagine will be challenging about ingesting and/or wrangling the data? -->
+
+We have a CSV of the GDP of various countries over 50 years
+https://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG
+
+We could join this CSV with other economic/statistical information about countries over the past 50 years ie. a quality of government dataset or world happiness report dataset. The biggest difficulty in wrangling this data will be trying to align the dataset about GDP with the other datasets.
+
+We have a dataset on the world cup. It contains info about the matches, players, and results of world cups over the years. We also have a 2014 world cup prediction csv, which contains predictions about that world cup from another website. The biggest challenge in this dataset would also be aligning the data in the CSV about the world cup matches with the prediction csv, and making sure there is actually a way to confirm those predictions.
+
+Other links to possible csvs:
+https://www.stats.govt.nz/large-datasets/csv-files-for-download/
+https://www.kaggle.com/abecklas/fifa-world-cup?select=WorldCupMatches.csv
+https://data.world/fivethirtyeight/world-cup-predictions
+https://www.kaggle.com/ajaypalsinghlo/world-happiness-report-2021
+
+
+
+# Shiny app
+
+<!-- Describe some visualizations, tables, and/or other components you envision including in your Shiny app. What will the interactive components be? -->
+
+World cup:
+- People could investigate home team advantage/attendance by sorting the data by year or by team
+- Scatterplot of attendance vs year, and see if the world cup has gotten more popular
+- People could highlight specific points to see what host nation/world cup year they are looking at 
+
+Economic Development
+- People could sort by region, by specific country
+- People could pick out specific economic measures to chart on the plot
+- People could highlights or select specific points to see what country or region they are looking at 
+
