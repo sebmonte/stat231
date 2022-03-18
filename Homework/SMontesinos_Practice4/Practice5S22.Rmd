@@ -1,0 +1,242 @@
+---
+title: "Practice5"
+author: "Sebastian Montesinos"
+date: "Due by midnight, Friday, March 25"
+output: 
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r, setup, include=FALSE}
+library(tidyverse)
+library(mdsr)
+library(rvest)
+library(Lahman)
+library(GGally)
+
+# add other packages needed here!
+
+
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+```
+
+Reminder: Practice assignments may be completed working with other individuals.
+
+# Reading 
+
+The associated reading for the week is Chapter 19 and Section 12.1.
+
+# Practicing Academic Integrity
+
+If you worked with others or used resources outside of provided course material (anything besides our textbook, course materials in the repo, labs, R help menu) to complete this assignment, please acknowledge them below using a bulleted list. 
+
+<!-- ~~~~~~~~~~~~~~~~ YOU MAY BEGIN EDITING BELOW THIS LINE ~~~~~~~~~~~~~~~~ -->
+
+*I acknowledge the following individuals with whom I worked on this assignment:*
+
+Name(s) and corresponding problem(s)
+
+*
+
+*I used the following sources to help complete this assignment:*
+
+Source(s) and corresponding problem(s)
+
+* 
+
+
+
+\newpage
+
+
+<!-- PROBLEM 1 ---------------------------------------------------------------->
+
+#  1 - Justices of the Supreme Court of the United States
+
+> part a - Confirm that the following Wikipedia page allows automated scraping:
+
+https://en.wikipedia.org/wiki/List_of_justices_of_the_Supreme_Court_of_the_United_States
+
+<!-- You need to load needed packages or call functions with :: syntax! -->
+
+Solution:
+
+```{r}
+url <- "https://en.wikipedia.org/wiki/List_of_justices_of_the_Supreme_Court_of_the_United_States"
+
+
+```
+
+> part b - Scrape!
+
+Go to the [List of Justices of the Supreme Court of the United States](https://en.wikipedia.org/wiki/List_of_justices_of_the_Supreme_Court_of_the_United_States). Create a new R script called "scrape-justices.R", and scrape the table of justices. Use `janitor::clean_names()` to tidy the names of the columns (do not do any additional wrangling beyond this for now), then write the final data frame to a csv file called "justices.csv" in the "data" folder using the `write_csv()` function. Commit and push both files in addition to this Rmd file when ready.
+
+<!-- 
+Add your code from justices.R to the code chunk below.
+
+We do not want to re-run the code when we knit (we just want it to appear in the final pdf for the grader), so LEAVE eval = FALSE in the chunk below.
+-->
+
+Solution:
+
+```{r, eval = FALSE}
+
+```
+
+> part c - Load "justices.csv" into this file using the `read_csv()` function. Then, modify the code below as needed and run the code to create the variable `tenure_length` (a numeric variable containing each justice's time spent on the bench). Create a visualization to show the distribution of tenure length of U.S. Supreme Court judges.  Interpret the plot.
+
+Solution:
+
+```{r, fig.align = "center", eval = FALSE}
+# Remove this eval = FALSE before submitting!
+
+# Run after loading your justices.csv file
+justices <- justices %>%
+  # Remove extra line that comes in at end of table
+  filter(justice != "Justice") %>%
+  # Some justices served <1 year; add "0 years," to make separating easier
+  mutate(tenure_length = case_when(str_detect(tenure_length_d, "year") ~ tenure_length_d,
+                                   TRUE ~ paste0("0 years, ", tenure_length_d))) %>% 
+  separate(tenure_length, into = c("years_char", "days_char"),
+           sep = ", ") %>% 
+  mutate(tenure_years = parse_number(years_char) + (parse_number(days_char)/365)) %>%
+  # Make date_confirmed_vote into date variable
+  separate(date_confirmed_vote, into = c("date_confirmed", "vote"),
+           sep = "\\(") %>%
+  mutate(date_confirmed = lubridate::mdy(date_confirmed))
+
+```
+
+
+<!--
+Remember to knit, commit, and push as you go!
+-->
+
+
+\newpage
+
+
+<!-- PROBLEM 2 ---------------------------------------------------------------->
+
+# 2 - MDSR 12.6 (modified)
+
+"Baseball players are voted into the Hall of Fame by the members of the Baseball Writers of America Association.  Quantitative criteria are used by the voters, but they are also allowed wide discretion.  The following code identifies the position players who have been elected to the Hall of Fame and tabulates a few basic statistics, include their number of career hits (`tH`), home runs (`tHR`), runs batted in (`tRBI`), and stolen bases (`tSB`)." Only players with more than 1000 total hits are included as a way to obtain the position players only (not pitchers). 
+
+
+```{r, message = FALSE}
+hof <- Batting %>%
+  group_by(playerID) %>%
+  inner_join(HallOfFame, by = "playerID") %>%
+  filter(inducted == "Y" & votedBy == "BBWAA") %>%
+  summarize(tH = sum(H), tHR = sum(HR), tRBI = sum(RBI), tSB = sum(SB)) %>%
+  filter(tH > 1000)
+```
+
+
+* Use the `kmeans()` function to perform a cluster analysis on these players.
+* Explain your choice of $k$, the number of clusters. 
+* Describe the properties that seem common to each cluster in your solution.
+* Include at least one visual that helps explore the clusters found. 
+* Your solution should include some discussion of whether or not you chose to scale the variables and why. 
+* Remember that your solution must be reproducible. (Hint: this means you need to do something in your code.)
+
+
+Solution: 
+
+
+```{r}
+
+```
+
+
+
+
+
+
+
+<!-- Have you committed and/or pushed yet? -->
+
+
+\newpage
+
+<!-- PROBLEM 3 ---------------------------------------------------------------->
+
+# 3 - Trump Tweets
+
+David Robinson, Chief Data Scientist at DataCamp, wrote a blog post ["Text analysis of Trump's tweets confirms he writes only the (angrier) Android half"](http://varianceexplained.org/r/trump-tweets/).
+He provides a dataset with over 1,500 tweets from the account realDonaldTrump between 12/14/2015 and 8/8/2016.  We'll use this dataset to explore the tweeting behavior of @realDonaldTrump during this time period.
+
+First, read in the file. Note that there is a `TwitteR` package which provides an interface to the Twitter web API.  We'll use this R dataset David Robinson created using that package so that you don't have to set up Twitter authentication.  
+
+```{r}
+load(url("http://varianceexplained.org/files/trump_tweets_df.rda"))
+```
+
+> part a - Wrangling! There are a number of variables in the dataset we won't need. First, confirm that all the observations in the dataset are from the screen-name *realDonaldTrump*. Then, create a new dataset called `tweets` that only includes the variables `text`, `created` and `statusSource`.
+
+Solution:
+
+```{r}
+
+```
+
+> part b - Using the `statusSource` variable, compute the number of tweets from each source.  How many different sources are there?  How often are each used?
+
+Hint: You could answer the questions with a nice table printed to the screen. 
+
+Solution:
+
+```{r}
+
+```
+
+> part c - We're going to compare the language used between the Android and iPhone sources, so we only want to keep tweets coming from those sources.  Explain what the `extract()` function (from the **tidyverse** package) is doing below.  Include in your own words what each argument is doing. 
+
+
+```{r, eval = FALSE}
+# remove eval = FALSE when working on this!
+
+tweets <- tweets %>%
+  extract(col = statusSource, into = "source",
+          regex = "Twitter for (.*)<",
+          remove = FALSE) %>%
+  filter(source %in% c("Android", "iPhone"))
+```
+
+Solution: 
+
+> part d - How does the language of the tweets differ by source?  Create a word cloud for the top 50 words used in tweets sent from the Android.  Create a second word cloud for the top 50 words used in tweets sent from the iPhone.  How do these word clouds compare?  (Are there some common words frequently used from both sources? Are the most common words different between the sources?)
+
+Note: Don't forget to remove stop words before creating the word cloud.  Also remove the terms "https" and "t.co".
+
+Solution:
+
+
+```{r, fig.width = 8, fig.height = 8}
+
+```
+
+
+> part e - Consider the sentiment.  Compute the proportion of words among the tweets within each source classified as "angry" and the proportion of words classified as "joy"  based on the NRC lexicon.  How does the proportion of "angry" and "joy" words compare between the two sources?  What about "positive" and "negative" words?  
+
+Solution:
+
+
+```{r}
+
+```
+
+> part f - Lastly, based on your responses above, do you think there is evidence to support Robinson's claim that Trump only writes the Android half of the tweets from realDonaldTrump?  In 2-4 sentences, please explain.
+
+Solution:
+
+
+
+
+<!--
+Knit, commit, and push, including the final renamed pdf, to your repo. Then, upload the .pdf to Gradescope before the deadline. 
+-->
+
