@@ -2,6 +2,8 @@
 
 library(shiny)
 
+
+#Has several tab panels, groups the together into a single tabset panel
 ui <- fluidPage(title = "Random generator",
   tabsetPanel(              
     tabPanel(title = "Normal data",
