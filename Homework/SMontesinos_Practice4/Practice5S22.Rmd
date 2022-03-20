@@ -148,6 +148,20 @@ Solution:
 
 
 ```{r}
+set.seed(15)
+library(mclust)
+
+hof_clust <- hof %>%
+  column_to_rownames(var = "playerID") %>%
+  dist() %>%
+  kmeans(centers = 4, nstart = 50) 
+
+hof <- hof %>%
+  add_column(cluster = factor(hof_clust$cluster))
+
+hof %>%
+  ggplot(aes(x = tH, y = tHR)) +
+  geom_point(aes(color = cluster), alpha = .5)
 
 ```
 
