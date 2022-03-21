@@ -126,18 +126,24 @@ Solution:
 
 ```{r}
 
+# Grab text of each URL (i.e., poem title)
 url_text <- url %>%
-  read_html() %>%
-  html_elements("mw-content-text > div.mw-parser-output > table >tbdoy > tr > td > a") %>%
-  html_text()
+read_html() %>%
+html_elements("#mw-content-text > div.mw-parser-output > table > tbody > tr > td > a") %>%
+html_text()
+# Grab actual URL href
+url_href <- url %>%
+read_html() %>%
+html_elements("#mw-content-text > div.mw-parser-output > table > tbody > tr > td > a") %>%
+html_attr("href")
+# Combine text and link into a dataframe
+url_table <- tibble(title = url_text, href = url_href) %>%
+# Filter out non-https links
+filter(grepl("https:", url_href))
+# Join with original poem table
+poem_table <- poem_table %>%
+left_join(url_table)
 
-poem_links <- url %>%
-  read_html %>%
-  html_elements("mw-content-text > div.mw-parser-output > table >tbdoy > tr > td > a") %>%
-  html_attr("href") 
-
-url_table <- tibble(title = url_text, href = poem_links) %>%
-  filter(grepl("https:", poem_links))
 
 
   
@@ -180,20 +186,32 @@ Some potentially problematic or wonky poems:
 If you do get it set up for all the poems, when you are sure everything finally works, replace `poem_table[seq_len(n_links), ]` with `poem_table` to be able to run the code for all poems (but don't run it yet!).
 
 ```{r get-all-poems, eval = FALSE}
-# Identify number of iterations (start with 1, 5, 10, etc.)
-n_links <- _CODE_TO_SET_VALUE_
-  
-# Pre-allocate space in dataframe for poem text
-poem_tibble <- poem_table[seq_len(n_links), ] %>% 
+n_links <- nrow(poem_table)
+
+# Pre-allocate space for poem text
+poem_tibble <- poem_table %>% 
   mutate(text = "") 
 
 # Iterate through links to grab text
 for(i in seq_len(n_links)){
   
-  # Identify URL
-  link <- poem_tibble$_VARIABLE_CAPTURING_URL_[i]
+  # Identify url
+  link <- poem_table$href[i] 
   
-  # Scrape poem title and text 
+  # Fix some wonky links
+  ## Redirect to link with poem
+  if(!is.na(link) & 
+     link == "https://en.wikisource.org/wiki/I_never_lost_as_much_but_twice"){
+    link <- "https://en.wikisource.org/wiki/Poems_(Dickinson)/I_never_lost_as_much_but_twice,"
+  }
+  
+  ## Don't bother scraping; this is a subset of another poem
+  if(!is.na(link) &
+     link == "https://en.wikisource.org/wiki/The_earth_has_many_keys,"){
+    link <- NA # poem already exists in Further in Summer than the birds Version 1
+  }
+  
+  # Scrape poem text, using tryCatch() to handle errors
   poem_tibble$text[i] <- tryCatch(
     
     # Return "Missing" instead of poem text when error is thrown
@@ -201,8 +219,28 @@ for(i in seq_len(n_links)){
       return("Missing")
     },
     
-    # Scrape text otherwise
-    _CODE_TO_SCRAPE_DATA_
+    # Try to scrape poem text
+    
+    if(!is.na(link) &
+       link == "https://en.wikisource.org/wiki/The_Himmaleh_was_known_to_stoop"){
+      
+      # Scrape div p text
+      link %>% 
+        read_html() %>% 
+        html_elements("div p") %>% 
+        pluck(1) %>% 
+        html_text() %>% 
+        return()
+      
+    } else {
+      
+      link %>% 
+        read_html() %>% 
+        html_elements(".poem, .wst-block-center, div p") %>% 
+        html_text() %>% 
+        str_remove(fixed(".mw-parser-output .dropinitial{float:left;text-indent:0}.mw-parser-output .dropinitial .dropinitial-fl{float:left;position:relative;vertical-align:top;line-height:1}.mw-parser-output .dropinitial .dropinitial-initial{float:left;line-height:1em;text-indent:0}")) %>% 
+        return()
+    }
   )
 }
 ```
