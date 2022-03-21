@@ -83,7 +83,15 @@ We do not want to re-run the code when we knit (we just want it to appear in the
 Solution:
 
 ```{r, eval = FALSE}
+url <- "https://en.wikipedia.org/wiki/List_of_justices_of_the_Supreme_Court_of_the_United_States"
 
+justice_table <- url %>%
+  read_html() %>%
+  html_elements("#mw-content-text > div.mw-parser-output > table") %>%
+  purrr::pluck(2) %>%
+  html_table() %>% 
+  # Clean up variable names
+  janitor::clean_names()
 ```
 
 > part c - Load "justices.csv" into this file using the `read_csv()` function. Then, modify the code below as needed and run the code to create the variable `tenure_length` (a numeric variable containing each justice's time spent on the bench). Create a visualization to show the distribution of tenure length of U.S. Supreme Court judges.  Interpret the plot.
@@ -92,7 +100,7 @@ Solution:
 
 ```{r, fig.align = "center", eval = FALSE}
 # Remove this eval = FALSE before submitting!
-
+justices <- read_csv("justices.csv")
 # Run after loading your justices.csv file
 justices <- justices %>%
   # Remove extra line that comes in at end of table
@@ -153,11 +161,11 @@ library(mclust)
 
 hof_clust <- hof %>%
   column_to_rownames(var = "playerID") %>%
-  dist() %>%
   kmeans(centers = 4, nstart = 50) 
 
 hof <- hof %>%
-  add_column(cluster = factor(hof_clust$cluster))
+  add_column(cluster = factor(hof_clust$cluster)) 
+
 
 hof %>%
   ggplot(aes(x = tH, y = tHR)) +
@@ -194,7 +202,8 @@ load(url("http://varianceexplained.org/files/trump_tweets_df.rda"))
 Solution:
 
 ```{r}
-
+tweets <- trump_tweets_df %>%
+  select(text, created, statusSource)
 ```
 
 > part b - Using the `statusSource` variable, compute the number of tweets from each source.  How many different sources are there?  How often are each used?
