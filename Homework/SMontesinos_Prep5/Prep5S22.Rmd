@@ -55,7 +55,7 @@ Solution: "Missing" is reported as the poem text if an error occurs.
 
 > part e - Finally, why is it important to end the file with a write_csv command? I.E. how is this useful? 
 
-Solution:
+Solution:The write_csv allows us to store the scraped file so we do not have to redo the scraping every single time we reload the script. This is useful because scraping and writing files can take a while for very large amounts of data.
 
 
 <!-- Remember to commit and push as you go! -->

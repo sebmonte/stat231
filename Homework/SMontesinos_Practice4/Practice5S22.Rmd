@@ -94,9 +94,9 @@ justice_table <- url %>%
   janitor::clean_names()
 ```
 
-> part c - Load "justices.csv" into this file using the `read_csv()` function. Then, modify the code below as needed and run the code to create the variable `tenure_length` (a numeric variable containing each justice's time spent on the bench). Create a visualization to show the distribution of tenure length of U.S. Supreme Court judges.  Interpret the plot.
+> part c - Load "justices.csv" into this file using the `read_csv()` function. Then, modify the code below as needed and run the code to create the variable `tenure_years` (a numeric variable containing each justice's time spent on the bench). Create a visualization to show the distribution of tenure length of U.S. Supreme Court judges.  Interpret the plot.
 
-Solution:
+Solution: The histogram reveals that justices spend a wide variety of time on the supreme court bench. A large cluster of justices spend around 5-8 years on the bench, and another large cluster spent 14-15 years on the bench. 16-17 years appears to be the most common amount of time to spend on the bench. There are less justices who spend beyond 20 years on the bench but still quite a significant amount do.
 
 ```{r, fig.align = "center", eval = FALSE}
 # Remove this eval = FALSE before submitting!
@@ -116,6 +116,11 @@ justices <- justices %>%
            sep = "\\(") %>%
   mutate(date_confirmed = lubridate::mdy(date_confirmed))
 
+g <- ggplot(data = justices, aes(x = tenure_years)) +
+  geom_histogram(binwidth = 2) +
+  labs(title = "Distribution of Supreme Court Justice Tenure Length",
+       x = "Years of Tenure", y = "Number of Justices")
+g
 ```
 
 
