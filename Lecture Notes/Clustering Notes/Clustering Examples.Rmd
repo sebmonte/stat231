@@ -1,0 +1,261 @@
+---
+title: "Stat 231 - Clustering Examples"
+author: "A.S. Wagaman"
+output:
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+  html_document:
+    fig_height: 3
+    fig_width: 5
+  word_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+The text illustrates hierarchical clustering and k-means methods. k-means is very popular, so it will be our focus. (Again, you could explore more either in your final projects or in other stat courses.) Note that the kmeans function is actually in the default stats package loaded with base R, so you don't need to load any other package to use it. Here in the example, I illustrate another technique that requireds the `mclust' package. Other packages for clustering exist as well. 
+
+```{r, include=FALSE} 
+library(mclust)
+library(tidyverse)
+```
+
+# Clustering Example
+
+```{r}
+crabs <- read.table("https://awagaman.people.amherst.edu/stat240/crabs.txt", h = T)
+```
+
+For our example, we have data from Campbell & Mahon (1974). This is data on the morphology of rock crabs of genus Leptograpsus. There are 50 specimens of each sex of each of two color forms. The variables are:
+
+* sp  `species', coded B (blue form) or O (orange form)  
+* sex	coded M or F  
+* FL	frontal lip of carapace (mm)  
+* RW	rear width of carapace (mm)  
+* CL	length along the midline of carapace (mm)  
+* CW	maximum width of carapace (mm)  
+* BD	body depth (mm)  
+
+We will look for natural groups in the data and see if the natural groups correspond to sex or species differences. 
+
+Visualizing clustering solutions is challenging without some dimension reduction techniques, assuming more than 2 variables are used to create the clusters. While we will not cover these methods in depth, I encourage you to explore if you choose clustering as a method for your final projects. 
+
+# K-means Methods
+
+## Two variables
+
+We'll use a length and width variable to look for clusters of crabs. 
+
+```{r}
+ggplot(data = crabs, aes(x = CL, y = RW, color = sp, shape = sex)) +
+  geom_point() + 
+  scale_color_manual(values = c("blue", "orange")) +
+  labs(x = "Midline Carapace Length", 
+       y = "Carapace Rear Width",
+       color = "Species",
+       shape = "Sex")
+```
+
+What happens if we look for 2 clusters?
+
+```{r}
+set.seed(231)
+clustering_vars <- c("CL", "RW")
+crabs_km2 <- crabs %>% 
+  select(clustering_vars) %>% 
+  kmeans(centers = 2, nstart = 20)
+
+# Vector of cluster assignments
+crabs_km2$cluster
+
+# The centroids for the fit
+crabs_km2$centers
+
+# Add cluster assignment to the data frame
+crabs <- crabs %>%
+  mutate(clusters2 = factor(crabs_km2$cluster)) 
+
+# Visualize the cluster assignments and centroids
+ggplot(data = crabs, aes(x = CL, y = RW)) + 
+  geom_point(aes(color = clusters2)) +
+  coord_fixed() +
+  geom_point(data = data.frame(crabs_km2$centers),
+             aes(x = CL, y = RW),
+             pch = "x", size = 8) +
+  labs(x = "Midline Carapace Length", 
+       y = "Carapace Rear Width",
+       color = "Cluster assignment")
+```
+
+This solution is on the unscaled variables, which can have a BIG effect on the clustering solution. Scaling matters. Let's scale all the numeric variables in the data set (even though we are currently only using 2 of them), and try the 2 cluster solution again.
+
+```{r}
+# Standardize or scale() numeric variables (subtract mean and divide by SD)
+crabs <- crabs %>% 
+  mutate(across(where(is.numeric),  ~ scale(.)[,1], .names = "{.col}_scaled"))
+```
+
+
+```{r}
+set.seed(231)
+clustering_vars <- c("CL_scaled", "RW_scaled")
+crabs_km2s <- crabs %>% 
+  select(clustering_vars) %>% 
+  kmeans(centers = 2, nstart = 20)
+
+# Vector of cluster assignments
+crabs_km2s$cluster
+
+# The centroids for the fit
+crabs_km2s$centers
+
+# Add cluster assignment to the data frame
+crabs <- crabs %>%
+  mutate(clusters2s = factor(crabs_km2$cluster)) 
+
+# Visualize the cluster assignments and centroids
+ggplot(data = crabs, aes(x = CL_scaled, y = RW_scaled)) + 
+  geom_point(aes(color = clusters2s)) +
+  coord_fixed() +
+  geom_point(data = data.frame(crabs_km2s$centers),
+             aes(x = CL_scaled, y = RW_scaled),
+             pch = "x", size = 8) +
+  labs(x = "Midline Carapace Length, Scaled", 
+       y = "Carapace Rear Width, Scaled",
+       color = "Cluster assignment")
+```
+
+There isn't much change here because both measurement variables were on the same scale to begin with. However, scaling is VERY important to consider. 
+
+What about 4 clusters? 
+
+```{r}
+set.seed(231)
+
+crabs_km4s <- crabs %>% 
+  select(clustering_vars) %>% 
+  kmeans(centers = 4, nstart = 20)
+
+# Vector of cluster assignments
+crabs_km4s$cluster
+
+# The centroids for the fit
+crabs_km4s$centers
+
+# Add cluster assignment to the data frame
+crabs <- crabs %>%
+  mutate(clusters4s = factor(crabs_km4s$cluster)) 
+
+# Visualize the cluster assignments and centroids
+ggplot(data = crabs, aes(x = CL_scaled, y = RW_scaled)) + 
+  geom_point(aes(color = clusters4s)) +
+  coord_fixed() +
+  geom_point(data = data.frame(crabs_km4s$centers),
+             aes(x = CL_scaled, y = RW_scaled),
+             pch = "x", size = 8) +
+  labs(x = "Midline Carapace Length, Scaled", 
+       y = "Carapace Rear Width, Scaled",
+       color = "Cluster assignment")
+```
+
+The within group sum of squares (distance from points to the center of the cluster, summed over all points and then over all clusters) can be obtained for each solution. Generally, increasing the number of clusters will decrease the WGSS, but it's a tradeoff. 
+
+```{r}
+crabs_km2s$tot.withinss
+crabs_km4s$tot.withinss
+```
+
+
+We can examine the tradeoff using an elbow plot:
+
+```{r}
+elbow_plot <- data.frame(clusters = 1:10,
+                         within_ss = rep(NA, 10))
+
+set.seed(75)
+for (i in 1:10){
+  crabs_kms_out <- crabs %>% 
+    select(clustering_vars) %>% 
+    kmeans(centers = i, nstart = 20)
+  
+  elbow_plot$within_ss[i] <- crabs_kms_out$tot.withinss
+}
+
+# Construct elbow plot
+ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
+  geom_point() + 
+  geom_line() +
+  scale_x_continuous(breaks = 1:10) +
+  labs(x = "Number of clusters (k)", y = expression("Total W"[k]))
+```
+
+This can be used to help choose a value of $k$, which you want to do where the elbow is or where the plot starts to level off. 
+
+
+## All measurement variables
+
+Limiting the clustering to 2 variables means we lose a lot of the available data. So, let's expand our included variables.
+
+```{r}
+set.seed(231)
+crabs_kms <- crabs %>% 
+  select(ends_with("scaled")) %>% 
+  kmeans(centers = 4, nstart = 20)
+
+crabs <- crabs %>%
+  mutate(clusters4_scaled = factor(crabs_kms$cluster))
+```
+
+Visualizing the solution is hard without a dimension reduction technique (such as Principal Components Analysis, PCA), so we'll resort to a scatterplot matrix.
+
+```{r, fig.height = 6, fig.width = 6}
+# Scatterplot matrix of clusters based on scaled variables
+GGally::ggpairs(data = crabs, aes(color = clusters4_scaled),
+                columns = c("FL_scaled",
+                            "RW_scaled",
+                            "CL_scaled",
+                            "CW_scaled",
+                            "BD_scaled"),
+                upper = list(continuous = "blank")) +
+  labs(title = "4 Clusters on Scaled Variables for Crabs")
+```
+
+Unsurprisingly, as with a number of biological applications, the clusters being found are directly related to overall size of the biological specimen. 
+
+# Other Algorithms
+
+There are LOTS of other clustering algorithms. Here, I demo model-based approach. 
+
+For model-based clustering, here I try using just three of the variables in the crabs data set. This uses finite normal mixture modeling. The method doesn't need to standardize - it will choose models with different means and variances for the variables as needed on its own. 
+
+```{r, fig.height = 6, fig.width = 6}
+crabsub <- crabs %>% select(FL, RW, BD)
+mclustsol <- mclustBIC(crabsub)
+plot(mclustsol)
+```
+
+This plot shows the MANY different models in mclust and how they did with this data set. 
+
+```{r}
+summary(mclustsol)
+```
+
+Here, we see which algorithms had the best BIC (Bayesian Information Criterion) values. These are the models you might want to investigate further. 
+
+To try out the first solution, we can do:
+
+```{r}
+mod1 <- Mclust(crabsub, x = mclustsol)
+summary(mod1, parameters = TRUE)
+```
+
+This says that in the 3-D space we had, it found 2 clusters of roughly equal size. It shows us the group means and the variances in each cluster. 
+
+```{r}
+plot(mod1, what = "classification")
+```
+
+I chose only 3 variables so I could make the plot and it still be readable. We can see that it finds two groups that are fairly well separated along some of the projections. You can do this in higher dimensions, obviously, but the plot may not look at nice. 
+
+For more on mclust (and how I did this quickly), you can check out this site, which is the package vignette from R [here](https://cran.r-project.org/web/packages/mclust/vignettes/mclust.html).
+
