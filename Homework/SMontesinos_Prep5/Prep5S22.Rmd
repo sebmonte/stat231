@@ -40,7 +40,7 @@ Solution: The poem_table dataset contains a list of the titles of all of the Emi
 
 > part b - In the `scrape all poems` section, what does `n_links <- nrow(poem_table)` do to help set up the loop to go through all the poems? Why might that be problematic?
 
-Solution: n_links records the number of links that the table contains and therefore the amount of iterations the code will need to go through.
+Solution: n_links records the number of links that the table contains and therefore the amount of iterations the code will need to go through. However, the number of rows in the two tables do not match and so there will be a problem when it loops past that number. However, a trycatch is used in case this occurs.
 
 
 > part c - When scraping the text of one particular poem, the text is found on its webpage in a different way than the other poems. Which poem is problematic in this way? 

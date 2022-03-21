@@ -9,7 +9,10 @@ url <- "https://en.wikipedia.org/wiki/List_of_justices_of_the_Supreme_Court_of_t
 
 justice_table <- url %>%
   read_html() %>%
-  html_elements("div#content > div#bodyContent > div#mw-content-text > div#mw-parser-output > table") %>%
+  html_elements("#mw-content-text > div.mw-parser-output > table") %>%
+  pluck(2) %>%
   html_table() %>% 
   # Clean up variable names
   janitor::clean_names()
+
+write_csv(justice_table, "justices.csv")
