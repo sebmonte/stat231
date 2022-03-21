@@ -207,6 +207,9 @@ load(url("http://varianceexplained.org/files/trump_tweets_df.rda"))
 Solution:
 
 ```{r}
+
+tweets <- trump_tweets_df %>%
+  select(text, created, statusSource)
 tweets <- trump_tweets_df %>%
   select(text, created, statusSource)
 ```
@@ -218,7 +221,9 @@ Hint: You could answer the questions with a nice table printed to the screen.
 Solution:
 
 ```{r}
-
+tweets_count <- tweets %>%
+group_by(statusSource) %>%
+  summarise(n())
 ```
 
 > part c - We're going to compare the language used between the Android and iPhone sources, so we only want to keep tweets coming from those sources.  Explain what the `extract()` function (from the **tidyverse** package) is doing below.  Include in your own words what each argument is doing. 
