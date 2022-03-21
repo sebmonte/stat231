@@ -208,8 +208,12 @@ Solution:
 
 ```{r}
 
-tweets <- trump_tweets_df %>%
-  select(text, created, statusSource)
+#Confirming that all tweets are from Trump
+tweets_check <- trump_tweets_df %>%
+  group_by(screenName) %>%
+  summarise(n())
+
+#Selecting Relevant Variables
 tweets <- trump_tweets_df %>%
   select(text, created, statusSource)
 ```
@@ -221,9 +225,16 @@ Hint: You could answer the questions with a nice table printed to the screen.
 Solution:
 
 ```{r}
+
+#Looking at the different sources for the tweets
 tweets_count <- tweets %>%
 group_by(statusSource) %>%
-  summarise(n())
+  rename(source = statusSource) %>%
+  summarise("count" = n())
+
+knitr::kable(tweets_count, 
+             caption = "Source of Trump Tweets")
+
 ```
 
 > part c - We're going to compare the language used between the Android and iPhone sources, so we only want to keep tweets coming from those sources.  Explain what the `extract()` function (from the **tidyverse** package) is doing below.  Include in your own words what each argument is doing. 
