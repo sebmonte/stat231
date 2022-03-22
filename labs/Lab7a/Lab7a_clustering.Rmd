@@ -1,6 +1,6 @@
 ---
 title: "Lab 7a - Clustering"
-author: "YourNameGoesHere"
+author: "Sebastian Montesinos"
 date: "For class Tuesday, March 22"
 output:
   pdf_document:
@@ -81,7 +81,7 @@ ma_sample <- colleges %>%
 
 > part b - First, let's look at a scatterplot of Math SAT (25th percentile) vs Verbal SAT (25th percentile). Which schools are most similar in terms of these two variables? Do we need to standardize the variables in this case? Why or why not?
 
-Solution: 
+Solution: The schools that are the most similar seem to be the private, elite colleges while the public/non-elite colleges make up their own group. We do not need to standardize in this case the verbal and math sections of the SAT are on the same scale.
 
 ```{r}
 ggplot(data = ma_sample, aes(x = SAT_math25, y = SAT_verbal25)) +
@@ -116,10 +116,10 @@ ma_sample <- ma_sample %>%
 ggplot(data = ma_sample, aes(x = SAT_math25, y = SAT_verbal25)) + 
   geom_point(aes(color = clusters2)) +
   geom_text_repel(aes(label = institution, color = clusters2), size = 3) +
-  coord_fixed() +
-  geom_point(data = data.frame(ma_km2$centers),
-             aes(x = SAT_math25, y = SAT_verbal25),
-             pch = "x", size = 8) +
+   coord_fixed() +
+   geom_point(data = data.frame(ma_km2$centers),
+              aes(x = SAT_math25, y = SAT_verbal25),
+              pch = "x", size = 8) +
   labs(x = "Math SAT (25th percentile)",
        y = "Verbal SAT (25th percentile)",
        color = "Cluster assignment")
@@ -132,12 +132,38 @@ Important: We want to be able to COMPARE the clustering solutions. Thus, you can
 Solution: 
 
 ```{r}
+set.seed(231)
+clustering_vars <- c("SAT_math25", "SAT_verbal25")
+ma_km5 <- ma_sample %>% 
+  select(clustering_vars) %>% 
+  kmeans(centers = 5, nstart = 20)
 
+# Vector of cluster assignments
+ma_km5$cluster
+
+# The centroids for the fit
+ma_km5$centers
+
+# Add cluster assignment to the data frame
+ma_sample <- ma_sample %>%
+  mutate(clusters2 = factor(ma_km5$cluster)) 
+
+# Visualize the cluster assignments and centroids
+ggplot(data = ma_sample, aes(x = SAT_math25, y = SAT_verbal25)) + 
+  geom_point(aes(color = clusters2)) +
+  geom_text_repel(aes(label = institution, color = clusters2), size = 3) +
+   coord_fixed() +
+   geom_point(data = data.frame(ma_km5$centers),
+              aes(x = SAT_math25, y = SAT_verbal25),
+              pch = "x", size = 8) +
+  labs(x = "Math SAT (25th percentile)",
+       y = "Verbal SAT (25th percentile)",
+       color = "Cluster assignment")
 ```
 
 > part e - Which solution will have *smaller* total within-cluster variation?  Why?  Check your answer using the code below.
 
-Solution: 
+Solution: ma_km5 has smaller within-cluster variation because increasing the number of clusters decreases the WGSS, because when you have more clusters available the points will have more areas to be closer to.
 
 ```{r, eval = FALSE}
 ma_km2$tot.withinss
@@ -147,7 +173,7 @@ ma_km5$tot.withinss #name depends on what you called the second solution
 
 > part f - We can use an *elbow plot* to try to identify an optimal number of clusters $k$. Run the code below to create the elbow plot and identify an optimal number of clusters based on where the "elbow" bends (the point where the total within-cluster sum of squares starts to decrease linearly). What $k$ would you pick? 
 
-Solution: 
+Solution: I would pick a $k$ of 3 because this is the point at which adding more clusters barely decreases the WGSS.
 
 ```{r}
 elbow_plot <- data.frame(clusters = 1:10,

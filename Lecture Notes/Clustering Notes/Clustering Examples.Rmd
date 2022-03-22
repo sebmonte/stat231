@@ -60,9 +60,11 @@ What happens if we look for 2 clusters?
 
 ```{r}
 set.seed(231)
+#Assign clustering variables into vector to pass them into select
 clustering_vars <- c("CL", "RW")
 crabs_km2 <- crabs %>% 
   select(clustering_vars) %>% 
+#Takes a dataset as input, passing two wanted variables in
   kmeans(centers = 2, nstart = 20)
 
 # Vector of cluster assignments
@@ -73,6 +75,7 @@ crabs_km2$centers
 
 # Add cluster assignment to the data frame
 crabs <- crabs %>%
+#Factor needed to treat this as categorical
   mutate(clusters2 = factor(crabs_km2$cluster)) 
 
 # Visualize the cluster assignments and centroids
@@ -91,6 +94,7 @@ This solution is on the unscaled variables, which can have a BIG effect on the c
 
 ```{r}
 # Standardize or scale() numeric variables (subtract mean and divide by SD)
+#For any variable that is numeric, apply the scale function, and take the name of the original variable and add 'scaled'. subtracts mean and divides by SD
 crabs <- crabs %>% 
   mutate(across(where(is.numeric),  ~ scale(.)[,1], .names = "{.col}_scaled"))
 ```
@@ -161,6 +165,7 @@ ggplot(data = crabs, aes(x = CL_scaled, y = RW_scaled)) +
 The within group sum of squares (distance from points to the center of the cluster, summed over all points and then over all clusters) can be obtained for each solution. Generally, increasing the number of clusters will decrease the WGSS, but it's a tradeoff. 
 
 ```{r}
+#Tells us the tightness between a cluster and points in the cluster. More clusters = easier to put points closer to center, decreasing this value. 
 crabs_km2s$tot.withinss
 crabs_km4s$tot.withinss
 ```
