@@ -157,13 +157,18 @@ hof <- Batting %>%
 * Remember that your solution must be reproducible. (Hint: this means you need to do something in your code.)
 
 
-Solution: 
+Solution: I used an elbow graph to look at how the amount of clusters affected the WGSS. Since 4 clusters is the point at which adding more clusters barely decreases the WGSS, I chose 4 as the number of clusters to use. I also chose to scale my variables for this analysis. The quantitative magnitude of career hits and runs batted is much greater than that of home runs and stolen bases, meaning that without scaling the analysis would weigh these two measures more strongly. 
 
 
 ```{r}
 library(mclust)
 set.seed(200)
-clustering_vars <- c("tH", "tHR", "tRBI", "tSB")
+hof <- hof %>%
+    mutate(across(tH:tSB, ~ as.numeric(.)),
+         # Standardize or scale() numeric variables (subtract mean and divide by SD)
+         across(where(is.numeric),  ~ scale(.)[,1], .names = "{.col}_scaled"))
+
+clustering_vars <- c("tH_scaled", "tHR_scaled", "tRBI_scaled", "tSB_scaled")
 hof_clust <- hof %>% 
   select(clustering_vars)
 
@@ -191,11 +196,22 @@ hof_clust <- hof_clust %>%
   kmeans(centers = 4, nstart = 20)
 
 hof <- hof %>%
-  add_column(cluster = factor(hof_clust$cluster)) 
+  add_column(cluster = factor(hof_clust$cluster))  
+
+GGally::ggpairs(data = hof, 
+                aes(color = cluster),
+                columns = c("tH_scaled", 
+                            "tHR_scaled", 
+                            "tRBI_scaled", 
+                            "tSB_scaled"),
+                upper = list(continuous = "blank")) +
+  labs(title = "Clusters for Baseball Players")
 
 hof %>%
   ggplot(aes(x = tH, y = tHR)) +
   geom_point(aes(color = cluster), alpha = .5)
+
+
 
 ```
 
