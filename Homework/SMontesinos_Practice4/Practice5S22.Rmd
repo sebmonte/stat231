@@ -188,17 +188,10 @@ ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
 
 
 hof_clust <- hof_clust %>%
-  kmeans(centers = 2, nstart = 20)
-
-
-
-hof_clust <- hof %>%
-  column_to_rownames(var = "playerID") %>%
-  kmeans(centers = 4, nstart = 50) 
+  kmeans(centers = 4, nstart = 20)
 
 hof <- hof %>%
   add_column(cluster = factor(hof_clust$cluster)) 
-
 
 hof %>%
   ggplot(aes(x = tH, y = tHR)) +
