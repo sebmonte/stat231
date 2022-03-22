@@ -161,8 +161,36 @@ Solution:
 
 
 ```{r}
-set.seed(15)
 library(mclust)
+set.seed(200)
+clustering_vars <- c("tH", "tHR", "tRBI", "tSB")
+hof_clust <- hof %>% 
+  select(clustering_vars)
+
+#Set up elbow plot
+elbow_plot <- data.frame(clusters = 1:10,
+                         within_ss = rep(NA, 10))
+set.seed(75)
+for (i in 1:10){
+  hof_kms_out <- hof %>% 
+    select(clustering_vars) %>% 
+    kmeans(centers = i, nstart = 20)
+  
+  elbow_plot$within_ss[i] <- hof_kms_out$tot.withinss
+}
+
+# Construct elbow plot
+ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
+  geom_point() + 
+  geom_line() +
+  scale_x_continuous(breaks = 1:10) +
+  labs(x = "Number of clusters (k)", y = expression("Total W"[k]))
+
+
+hof_clust <- hof_clust %>%
+  kmeans(centers = 2, nstart = 20)
+
+
 
 hof_clust <- hof %>%
   column_to_rownames(var = "playerID") %>%
