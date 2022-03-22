@@ -234,7 +234,7 @@ glimpse(ma_sample2)
 
 > part b - Now implement $k$-means clustering with $k = 3$ clusters using the standardized variables. What schools are clustered together when using the standardized variables?  Are the clusters different if the unstandardized variables are used?
 
-Solution: 
+Solution: When using the standardized variables, the schools clustered together are different than when using the unstandardized variables. The standardized variables yield
 
 ```{r}
 # Clustering using standardized variables
@@ -271,7 +271,7 @@ ma_sample2 %>%
 
 Clustering methods don't just determine clusters based on individual variable values, but rather how these $p$ variables relate in $p$-dimensional space (e.g. clusters in $\mathbb{R}^5$ for this example). We are limited for now to 2D visualizations, however. We can examine a *scatterplot matrix* using the ggplot "add on" package, **GGally**. Run the code below to see the `ggpairs()` function in action. Consider both the density plots and the scatterplots.  What are the defining characteristics of each cluster?
 
-Solution: 
+Solution: One scaled group is defined by a low admittance rate, a low graduation debt, and a high SAT score. The second scaled group is defined by a high admittance rate, low SAT scores, and high debt upon graduation. The green group in the unscaled graph appears to be the elite colleges, since they have low admittance rates, high SAT scores, and low debt at graduation.
 
 ```{r, fig.width = 6, fig.height = 6}
 # Scatterplot matrix of clusters based on scaled variables
