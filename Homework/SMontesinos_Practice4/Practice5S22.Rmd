@@ -15,7 +15,11 @@ library(rvest)
 library(Lahman)
 library(GGally)
 
+
 # add other packages needed here!
+library(tidytext)
+library(wordcloud)
+library(textdata)
 
 
 knitr::opts_chunk$set(
@@ -207,9 +211,7 @@ GGally::ggpairs(data = hof,
                 upper = list(continuous = "blank")) +
   labs(title = "Clusters for Baseball Players")
 
-hof %>%
-  ggplot(aes(x = tH, y = tHR)) +
-  geom_point(aes(color = cluster), alpha = .5)
+
 
 
 
@@ -259,7 +261,7 @@ tweets <- trump_tweets_df %>%
 
 Hint: You could answer the questions with a nice table printed to the screen. 
 
-Solution:
+Solution: Answer in table.
 
 ```{r}
 
@@ -277,17 +279,20 @@ knitr::kable(tweets_count,
 > part c - We're going to compare the language used between the Android and iPhone sources, so we only want to keep tweets coming from those sources.  Explain what the `extract()` function (from the **tidyverse** package) is doing below.  Include in your own words what each argument is doing. 
 
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 # remove eval = FALSE when working on this!
 
 tweets <- tweets %>%
   extract(col = statusSource, into = "source",
+#Defines the string from which to extract the values
           regex = "Twitter for (.*)<",
+#Keeping original statustSource column in the data frame
           remove = FALSE) %>%
+#Keeps only rows where the source is Android or iPhone
   filter(source %in% c("Android", "iPhone"))
 ```
 
-Solution: 
+Solution: extract() is 
 
 > part d - How does the language of the tweets differ by source?  Create a word cloud for the top 50 words used in tweets sent from the Android.  Create a second word cloud for the top 50 words used in tweets sent from the iPhone.  How do these word clouds compare?  (Are there some common words frequently used from both sources? Are the most common words different between the sources?)
 
@@ -297,7 +302,34 @@ Solution:
 
 
 ```{r, fig.width = 8, fig.height = 8}
+tweet_words <- tweets %>%
+  unnest_tokens(output = word, input = text)
 
+data(stop_words)
+tweet_cloud <- tweet_words %>%
+  anti_join(stop_words, by = "word") %>%
+  count(word, sort = TRUE) %>%
+  filter(word == "https" | word == "t.co")
+
+ 
+mypal <- brewer.pal(10, "Paired")
+
+set.seed(231)
+tweet_cloud %>%
+  with(wordcloud(words = word, 
+                 freq = n,
+                 min.freq = 5,
+                 max.words = 50,
+                 # plot the words in a random order
+                 random.order = TRUE,
+                 # specify the range of the size of the words
+                 scale = c(2, 0.3),
+                 # specify proportion of words with 90 degree rotation
+                 rot.per = 0.15,
+                 # colors words from least to most frequent
+                 colors = mypal,
+                 # font family
+                 family = "sans"))
 ```
 
 
