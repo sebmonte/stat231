@@ -390,7 +390,7 @@ Solution: Sentences often change the meaning of the words therein, and so lookin
 
 > part e - We can calculate how many words used in the poems are not found in the lexicons using the code below.  List a few words that are not in the NRC lexicon that appear in the poems.  What proportion of unigrams observed within this corpora of Dickinson poems are *not* scored by the NRC lexicon?
 
-Solution: A few examples of words not in the NRC lexicon but in the poems are 'day', 'thee', and 'tis'.
+Solution: A few examples of words not in the NRC lexicon but in the poems are 'day', 'thee', and 'tis'. 78% of words in Dickinson's poems are not scored in the NRC lexicon.
 
 ```{r missed-words, eval = FALSE}
 # remove this eval = FALSE when compiling
@@ -399,6 +399,9 @@ Solution: A few examples of words not in the NRC lexicon but in the poems are 'd
 nrc_missed_words <- word_frequencies %>%
   anti_join(nrc_lexicon, by = "word")
 
+nrow(nrc_missed_words)/nrow(word_frequencies)
+
+
 ```
 
 > part f - With these (rather important!) drawbacks in mind, let's go ahead and view the top words by sentiment classified by the NRC lexicon. That is, create a figure of the top 10 words under each sentiment, facetted by sentiment, for the following sentiments: anger, anticipation, fear, joy, surprise, and trust.  Use code given in earlier chunks to guide you.
@@ -406,32 +409,43 @@ nrc_missed_words <- word_frequencies %>%
 Solution:
 
 ```{r}
-word_frequencies2 <- word_frequencies %>%
-  left_join(nrc_lexicon) %>%
-  drop_na(sentiment) %>%
-  filter(sentiment == "anger")
-
-
-word_frequencies2 %>%
-  count(n, sort = TRUE) %>% 
-  slice(1:10) %>%
-  ggplot(aes(x = reorder(word, n), y = n, 
-             color = word, fill = word)) +
-  geom_col() +
-  coord_flip() +
-  guides(color = "none", fill = "none") +
-  labs(x = NULL,
-       y = "Number of instances",
-       title = "The most common words in\nEmily Dickinson's poems")
+nrc_poems <- word_frequencies %>%
+inner_join(nrc_lexicon, by = "word") %>%
+filter(sentiment %in% c("anger", "anticipation",
+"fear", "joy",
+"surprise", "trust")) %>%
+arrange(sentiment, desc(n)) %>%
+group_by(sentiment) %>%
+slice(1:10)
+ggplot(data = nrc_poems, aes(x = reorder(word, n), y = n,
+fill = as.factor(n))) +
+geom_col(show.legend = FALSE) +
+coord_flip() +
+facet_wrap(~ sentiment, ncol = 2, scales = "free") +
+labs(x = NULL, y = "Frequency")
 ```
 
 
 > part g - How might you summarize the sentiment of this corpus using the AFINN lexicon?
 
-Solution:
+Solution: Dickinson's poems are positive overall as the total score of 1111 indicates more positive than negative words.
 
 ```{r afinn-sentiment}
-
+poems_words_all %>%
+inner_join(afinn_lexicon, by = "word") %>%
+summarize(total_score = sum(value))
+afinn_by_poem <- poems_words_all %>%
+inner_join(afinn_lexicon, by = "word") %>%
+group_by(title) %>%
+summarize(poem_score = sum(value)) %>%
+# arrange useful for viewing data set, not necessary to proceed with plot
+arrange(poem_score)
+ggplot(data = afinn_by_poem, aes(x = poem_score)) +
+geom_density(color = "purple",
+fill = "purple",
+alpha = 0.7) +
+labs(title = "Total Poem Score based on AFINN Lexicon",
+x = "Poem Score")
 ```
 
 \newpage
