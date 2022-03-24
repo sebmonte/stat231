@@ -1,6 +1,6 @@
 ---
 title: "Lab 7b - Text Analysis"
-author: "YourNameGoesHere"
+author: "Sebastian Montesinos"
 date: "For class Thursday, March 24"
 output:
   pdf_document:
@@ -167,10 +167,20 @@ poems_words %>%
 
 > part b - Run the same code but using the `poems_words_all` dataset. What do you notice about this graphic, and what does this tell us about the utility of removing stop words before analysis?
 
-Solution: 
+Solution: The graphic using poem_words_all ends up including a lot of small words like 'the' and 'a' that don't tell us anything interesting about the poems. Therefore, it is very useful to remove stop words if you want to run a more substantive analysis.
 
 ```{r}
-
+poems_words_all %>%
+  count(word, sort = TRUE) %>% 
+  slice(1:10) %>%
+  ggplot(aes(x = reorder(word, n), y = n, 
+             color = word, fill = word)) +
+  geom_col() +
+  coord_flip() +
+  guides(color = "none", fill = "none") +
+  labs(x = NULL,
+       y = "Number of instances",
+       title = "The most common words in\nEmily Dickinson's poems")
 ```
 
 # Recap
