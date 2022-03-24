@@ -355,7 +355,7 @@ The AFINN lexicon (Nielsen 2011) assigns words a score from -5 (negative sentime
 
 > part a - Check out the AFINN lexicon using the code below. What do you think of the scores?  What is the rating for the word "slick"?  Does "slick" always have a positive connotation (can you think of a sentence where "slick" has a negative connotation)?
 
-Solution:
+Solution: 'Slick' could imply that someone is devious or mendacious, so it might sometimes have a negative connotation.
 
 ```{r afinn-lex}
 # Type "Yes" to download if prompted
@@ -367,10 +367,10 @@ afinn_lexicon <- get_sentiments("afinn")
 
 Hint: it's *not* the same as the `afinn_lexicon` dataset.
 
-Solution:
+Solution: Each row in this dataset represents a word and then a qualitative measure of that words sentiment ie. 'trust' 'fear' or 'negative'.
 
 ```{r}
-
+nrc_lexicon <- get_sentiments("nrc")
 ```
 
 
@@ -378,13 +378,13 @@ The NRC lexicon categorizes words as yes/no for the following sentiment categori
 
 > part c - User (and Consumer!) Beware: Do you see any issues in applying these lexicons (developed fairly recently) to the Emily Dickinson poems?
 
-Solution:
+Solution: Emily Dickinson was writing a very long time ago and the connotation of words changes over time: words that were positive could become negative or vice-versa.
 
  
 
 > part d - The lexicons are based on unigrams.  Do you see any disadvantages of basing the sentiment on single words?
 
-Solution:
+Solution: Sentences often change the meaning of the words therein, and so looking only at specific words might mean one misses important context from the sentences those words are embedded in.
 
 
 
