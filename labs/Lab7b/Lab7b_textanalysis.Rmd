@@ -259,7 +259,22 @@ word_frequencies %>%
 Solution:
 
 ```{r}
-
+set.seed(231)
+word_frequencies %>%
+  with(wordcloud(words = word, 
+                 freq = n,
+                 min.freq = 1,
+                 max.words = 100,
+                 # plot the words in a random order
+                 random.order = TRUE,
+                 # specify the range of the size of the words
+                 scale = c(2, 0.3),
+                 # specify proportion of words with 90 degree rotation
+                 rot.per = 0.15,
+                 # colors words from least to most frequent
+                 colors = mypal,
+                 # font family
+                 family = "sans"))
 ```
 
 <!-- Remember to commit and push as you go! -->
@@ -274,7 +289,7 @@ Computing term frequency statistics** The `bind_tf_idf()` function will compute 
 
 > part a - Run the code below to generate the tf-idf statistics for our data. Note that we do not need to remove stop words. Why not?
 
-Solution:
+Solution: You don't need to remove the stop-words because the tf-idf statistics are taking inverses, meaning the stop words are going to be registered as unimportant.
 
 ```{r tf-stats}
 # Get remaining missing variable
@@ -296,7 +311,7 @@ poems_tfidf <- word_freqs_by_poem %>%
 Solution:
 
 ```{r}
-
+glimpse(poems_tfidf)
 ```
 
 > part c - Visualizing tf-idf. We can visualize the words with the highest 10 tf-idf values for a subset of the poems using the code below. *Change the seed* to get your own 4 randomly selected poems.
@@ -304,7 +319,7 @@ Solution:
 Solution:
 
 ```{r tf-idf-plot}
-set.seed(231) #change this!
+set.seed(220) #change this!
 poems_subset <- sample(poems$title, size = 4)
 
 top_tfidf <- poems_tfidf %>%
