@@ -390,7 +390,7 @@ Solution: Sentences often change the meaning of the words therein, and so lookin
 
 > part e - We can calculate how many words used in the poems are not found in the lexicons using the code below.  List a few words that are not in the NRC lexicon that appear in the poems.  What proportion of unigrams observed within this corpora of Dickinson poems are *not* scored by the NRC lexicon?
 
-Solution:
+Solution: A few examples of words not in the NRC lexicon but in the poems are 'day', 'thee', and 'tis'.
 
 ```{r missed-words, eval = FALSE}
 # remove this eval = FALSE when compiling
@@ -406,7 +406,23 @@ nrc_missed_words <- word_frequencies %>%
 Solution:
 
 ```{r}
+word_frequencies2 <- word_frequencies %>%
+  left_join(nrc_lexicon) %>%
+  drop_na(sentiment) %>%
+  filter(sentiment == "anger")
 
+
+word_frequencies2 %>%
+  count(n, sort = TRUE) %>% 
+  slice(1:10) %>%
+  ggplot(aes(x = reorder(word, n), y = n, 
+             color = word, fill = word)) +
+  geom_col() +
+  coord_flip() +
+  guides(color = "none", fill = "none") +
+  labs(x = NULL,
+       y = "Number of instances",
+       title = "The most common words in\nEmily Dickinson's poems")
 ```
 
 
