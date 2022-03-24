@@ -2,7 +2,9 @@
 title: "Practice5"
 author: "Sebastian Montesinos"
 date: "Due by midnight, Friday, March 25"
-output: 
+output:
+  html_document:
+    df_print: paged
   pdf_document:
     fig_height: 3
     fig_width: 5
@@ -292,7 +294,7 @@ tweets <- tweets %>%
   filter(source %in% c("Android", "iPhone"))
 ```
 
-Solution: extract() is 
+Solution: extract() pulls out something from a previously existing column and turns it into groups in a new column. In this case, we are pulling out the source as either 'iphone' or 'android' and turning that into a new column.
 
 > part d - How does the language of the tweets differ by source?  Create a word cloud for the top 50 words used in tweets sent from the Android.  Create a second word cloud for the top 50 words used in tweets sent from the iPhone.  How do these word clouds compare?  (Are there some common words frequently used from both sources? Are the most common words different between the sources?)
 
@@ -306,16 +308,43 @@ tweet_words <- tweets %>%
   unnest_tokens(output = word, input = text)
 
 data(stop_words)
-tweet_cloud <- tweet_words %>%
-  anti_join(stop_words, by = "word") %>%
-  count(word, sort = TRUE) %>%
-  filter(word == "https" | word == "t.co")
+tweet_cloud_iphone <- tweet_words %>%
+  filter(source == "iPhone") %>%
+  anti_join(stop_words, 
+            by = "word") %>%
+  count(word, 
+        sort = TRUE) %>%
+  filter(word != "https" & word != "t.co")
+
+tweet_cloud_android <- tweet_words %>%
+  filter(source == "Android") %>%
+  anti_join(stop_words, 
+            by = "word") %>%
+  count(word, 
+        sort = TRUE) %>%
+  filter(word != "https" & word != "t.co")
 
  
 mypal <- brewer.pal(10, "Paired")
 
 set.seed(231)
-tweet_cloud %>%
+tweet_cloud_iphone %>%
+  with(wordcloud(words = word, 
+                 freq = n,
+                 min.freq = 5,
+                 max.words = 50,
+                 # plot the words in a random order
+                 random.order = TRUE,
+                 # specify the range of the size of the words
+                 scale = c(2, 0.3),
+                 # specify proportion of words with 90 degree rotation
+                 rot.per = 0.15,
+                 # colors words from least to most frequent
+                 colors = mypal,
+                 # font family
+                 family = "sans"))
+
+tweet_cloud_android %>%
   with(wordcloud(words = word, 
                  freq = n,
                  min.freq = 5,
@@ -339,6 +368,26 @@ Solution:
 
 
 ```{r}
+nrc_lexicon <- get_sentiments("nrc")
+
+
+nrc_tweets_android <- tweet_words %>%
+  filter(source == "Android") %>%
+  anti_join(stop_words, 
+            by = "word") %>%
+  inner_join(nrc_lexicon, by = "word") %>%
+  group_by(sentiment) %>%
+  summarise(n = n(), proportion = n/)
+
+nrc_tweets_iphone <- tweet_words %>%
+  filter(source == "iPhone") %>%
+  anti_join(stop_words, 
+            by = "word") %>%
+  inner_join(nrc_lexicon, by = "word") %>%
+  group_by(sentiment) %>%
+  summarise(n = n())
+  
+
 
 ```
 
