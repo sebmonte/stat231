@@ -3,11 +3,11 @@ title: "Practice5"
 author: "Sebastian Montesinos"
 date: "Due by midnight, Friday, March 25"
 output:
-  html_document:
-    df_print: paged
   pdf_document:
     fig_height: 3
     fig_width: 5
+  html_document:
+    df_print: paged
 ---
 
 ```{r, setup, include=FALSE}
@@ -104,7 +104,7 @@ justice_table <- url %>%
 
 Solution: The histogram reveals that justices spend a wide variety of time on the supreme court bench. A large cluster of justices spend around 5-8 years on the bench, and another large cluster spent 14-15 years on the bench. 16-17 years appears to be the most common amount of time to spend on the bench. There are less justices who spend beyond 20 years on the bench but still quite a significant amount do.
 
-```{r, fig.align = "center", eval = FALSE}
+```{r, fig.align = "center", eval = TRUE}
 # Remove this eval = FALSE before submitting!
 justices <- read_csv("justices.csv")
 # Run after loading your justices.csv file
@@ -163,7 +163,7 @@ hof <- Batting %>%
 * Remember that your solution must be reproducible. (Hint: this means you need to do something in your code.)
 
 
-Solution: I used an elbow graph to look at how the amount of clusters affected the WGSS. Since 4 clusters is the point at which adding more clusters barely decreases the WGSS, I chose 4 as the number of clusters to use. I also chose to scale my variables for this analysis. The quantitative magnitude of career hits and runs batted is much greater than that of home runs and stolen bases, meaning that without scaling the analysis would weigh these two measures more strongly. 
+Solution: I used an elbow graph to look at how the amount of clusters affected the WGSS. Since 4 clusters is the point at which adding more clusters barely decreases the WGSS, I chose 4 as the number of clusters to use. I also chose to scale my variables for this analysis. The quantitative magnitude of career hits and runs batted is much greater than that of home runs and stolen bases, meaning that without scaling the analysis would weigh these two measures more strongly. The analysis revealed that one cluster (represented by the green in the graph) is marked by low career hits, home runs, and runs batted. A second cluster (the red) has very high career hits but low home runs, and high stolen bases. The blue cluster is high on every measure except stolen bases. Finally, the purple cluster is middling on all the measures and low on stolen bases.
 
 
 ```{r}
@@ -204,6 +204,8 @@ hof_clust <- hof_clust %>%
 hof <- hof %>%
   add_column(cluster = factor(hof_clust$cluster))  
 
+
+#Construct comparison cluster plot
 GGally::ggpairs(data = hof, 
                 aes(color = cluster),
                 columns = c("tH_scaled", 
@@ -364,21 +366,31 @@ tweet_cloud_android %>%
 
 > part e - Consider the sentiment.  Compute the proportion of words among the tweets within each source classified as "angry" and the proportion of words classified as "joy"  based on the NRC lexicon.  How does the proportion of "angry" and "joy" words compare between the two sources?  What about "positive" and "negative" words?  
 
-Solution:
+Solution: The proportion of words classed as angry and joy on the android were approximately 9% and 6% respectively, versus approximately 8% each on iphone. Approximately 16% of tweets were positive on the android and 18% were negative, compared to approximately 13% negative and 21.5% positive on the iphone.
 
 
 ```{r}
 nrc_lexicon <- get_sentiments("nrc")
 
 
+#Group by number of tweets in each sentiment category
 nrc_tweets_android <- tweet_words %>%
   filter(source == "Android") %>%
   anti_join(stop_words, 
             by = "word") %>%
   inner_join(nrc_lexicon, by = "word") %>%
   group_by(sentiment) %>%
-  summarise(n = n(), proportion = n/)
+  summarise(n = n())
 
+#Compute the total amount of tweets on iphone (3975)
+total_words_android <- nrc_tweets_android %>%
+  summarise(total_words = sum(n))
+
+#Calculate proportion of tweets in each valence category
+nrc_tweets_android <- nrc_tweets_android %>%
+  mutate(proportion = n/3975)
+
+#Group by number of tweets in each sentiment category
 nrc_tweets_iphone <- tweet_words %>%
   filter(source == "iPhone") %>%
   anti_join(stop_words, 
@@ -386,14 +398,28 @@ nrc_tweets_iphone <- tweet_words %>%
   inner_join(nrc_lexicon, by = "word") %>%
   group_by(sentiment) %>%
   summarise(n = n())
+
+#Compute the total amount of tweets on iphone (1939)
+total_words_iphone <- nrc_tweets_iphone %>%
+  summarise(total_words = sum(n))
+
+#Calculate proportion of tweets in each valence category
+nrc_tweets_iphone <- nrc_tweets_iphone %>%
+  mutate(proportion = n/1939)
   
+knitr::kable(nrc_tweets_iphone, 
+             caption = "Proportion of Trump Tweet sentiments on iphone")
+
+knitr::kable(nrc_tweets_android, 
+             caption = "Proportion of Trump Tweet sentiments on android")
+
 
 
 ```
 
 > part f - Lastly, based on your responses above, do you think there is evidence to support Robinson's claim that Trump only writes the Android half of the tweets from realDonaldTrump?  In 2-4 sentences, please explain.
 
-Solution:
+Solution: There is some evidence for Robinson's claim, given that the overall valence of tweets from the android was more negative than the overall valence of tweets from the iphone. Additionally, the tweet cloud reveals that the most common words tweeted from the iphone were slogans like 'make america great again' and 'trump2016' while tweets from the iphone often contained the terms 'crooked' and 'hillary'. Thus, it appears that tweets from the android were on the whole more negative and combative, suggesting that it was Trump tweteing from the android and his team tweeting from an iphone.
 
 
 
