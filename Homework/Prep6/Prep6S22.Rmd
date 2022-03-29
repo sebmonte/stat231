@@ -120,15 +120,21 @@ Solution:
 
 ```{r}
 
+p <- ggplot(data = karatedata, aes(x = kdegree, 
+                                   color = faction)) +
+  geom_density(size = 1) 
+p
 ```
 
 
 > part b - Identify the individuals with the top 5 highest degree values. Do they include "John A" and "Mr Hi"?
 
-Solution:
+Solution: The individuals with the highest degree values are John A, Mr Hi, Actor 33, Actor 3, and Actor 2. They do include the two names individuals.
 
 ```{r}
-
+karatedata %>%
+  arrange(desc(kdegree)) %>%
+  head(5)
 ```
 
 > part c - Determine the eigenvector centrality of all vertices. Identify the individuals with the top 5 eigenvector centrality values. Do they include "John A" and "Mr Hi"?
@@ -138,7 +144,9 @@ Hint: The igraph command is eigen_centrality.
 Solution:
 
 ```{r}
-
+karategraph <- ggraph(g)
+karatedata %>%
+  mutate(e_centrality = eigen_centrality(kdegree))
 ```
 
 > part d - We investigated k-means as a method of clustering observations to find natural groups. Clustering can be performed on networks, though very different methods are needed to do so. Run the code below to perform a clustering analysis on this network. Then use the provided output to assess whether the clusters found match the provided factions assigned in the network by the researcher who studied the karate club. What did you find? Describe the findings in a few sentences. 
@@ -163,7 +171,7 @@ karatedata <- karatedata %>%
 mosaic::tally(clusters ~ faction, data = karatedata)
 ```
 
-Solution:
+Solution: The KMeans analysis grouped the data in a similar way to original researcher, but used many more clusters. In the KMeans analysis the individuals from faction 2 largely went to clusters 2 and 5 and the individuals from faction 1 largely went to clusters 1 and 3. Therefore, though the KMeans analysis still preserved the original grouping generally, it complicated it by futher dividing each faction into a number of new clusters.
 
 
 
