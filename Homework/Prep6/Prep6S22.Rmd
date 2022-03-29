@@ -1,6 +1,6 @@
 ---
 title: "Prep6"
-author: "YourNameGoesHere"
+author: "Sebastian Montesinos"
 date: "Due by midnight, Monday April 4"
 output: 
   pdf_document:
@@ -41,7 +41,7 @@ plot(g)
 
 > part a - How many vertices does the graph, g, have? How many edges?
 
-Solution:
+Solution: The graph has 10 vertices and 12 edges.
 
 ```{r}
 
@@ -51,15 +51,15 @@ Solution:
 
 Hint: More than one path may have a length equal to the diameter. Remember that diameter is not the longest path possible. It is the longest of all the shortest paths. To identify a path, list the vertices involved such as 1-2-3 (this is not an actual path in this graph).
 
-Solution:
+Solution: One path with this diameter would be from 8-5-9-2-7-10.
 
 ```{r}
-
+diameter(g, weights = NA)
 ```
 
 > part c - Compute the degree for vertex 7 without using an R command. Explain what this number represents.
 
-Solution:
+Solution: The degree of vertex 7 is 5. This number represents the number of edges connected to a vertex.
 
 
 > part d - Looking at the plot of the graph, identify a vertex triple - three vertices which are connected by edges. Is your selected vertex triple closed - i.e. is it a triangle? 
@@ -68,7 +68,7 @@ This is asking you to find a set of vertices that could form a triangle - at lea
 
 You can list your triple with node numbers. E.G. 1-2-8 (not an actual triple in this graph). The idea would be that 1-2 is an edge and 2-8 is an edge. If 1-8 is also an edge, this would be a triangle. 
 
-Solution:
+Solution: 10-7-4 is a vertex triple as all three vertices are connected by edges. This triple is also closed since 10-7, 7-4, and 10-4 are all edges, making it a triangle.
 
 
 
@@ -77,15 +77,15 @@ Solution:
 
 No computations necessary here - you don't need to solve this formally - just think through it and give a guess. If you really want, you could look up a formal definition for a random walk on a graph. Basically, at any vertex, you have an equal probability of going to any vertices it has an edge to. For example, in this graph, if you were at vertex 3, you'd have a 50% chance of going to vertex 1 and 50% chance of going to vertex 7. 
 
-Solution:
+Solution: I would estimate that vertex 7 would be the most likely one for you to visit, followed by vertex 9 and 4. I'd predict this because these vertices are connected to many other vertices and so there's a high probability you'd travel to them on any given random selection of a new path.
 
 
 > part f - Compute betweenness centrality for all vertices. Identify the top 3 vertices in terms of betweeness. How do these vertices relate to those you listed in part e?
 
-Solution:
+Solution: The top three vertices in terms of betweeness are 7, then 9, then 2. I was right that two of these three vertices, 7 and 9, would be in the top 3.
 
 ```{r}
-
+centralization.betweenness(g)
 ```
 
 
