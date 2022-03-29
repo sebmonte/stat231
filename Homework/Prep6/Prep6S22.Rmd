@@ -1,0 +1,175 @@
+---
+title: "Prep6"
+author: "YourNameGoesHere"
+date: "Due by midnight, Monday April 4"
+output: 
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r, setup, include=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(igraph) # may need to install once
+library(igraphdata) # may need to install once
+
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+```
+
+Reminder: Prep assignments are to be completed individually. Upload a final copy of the .Rmd and renamed .pdf to your private repo, and submit the renamed pdf to Gradescope. 
+
+# Reading
+
+The associated reading for the week is Chapter 20 on Networks. 
+
+Note: There is no practice set this week (no Practice6), as you will be finishing the Shiny project for Thursday's class. The next practice, Practice7, will include one network related question, so you'll see that the following week. 
+
+\newpage
+
+# 1 - Basic Graph Concepts with a Toy Graph
+
+Use the following generated graph to answer the questions that follow. Do NOT change the seed.
+
+```{r}
+set.seed(231)
+g <- erdos.renyi.game(n = 10, p = 0.3)
+plot(g)
+```
+
+> part a - How many vertices does the graph, g, have? How many edges?
+
+Solution:
+
+```{r}
+
+```
+
+> part b - Compute the diameter of the graph. Then identify a path with that length. 
+
+Hint: More than one path may have a length equal to the diameter. Remember that diameter is not the longest path possible. It is the longest of all the shortest paths. To identify a path, list the vertices involved such as 1-2-3 (this is not an actual path in this graph).
+
+Solution:
+
+```{r}
+
+```
+
+> part c - Compute the degree for vertex 7 without using an R command. Explain what this number represents.
+
+Solution:
+
+
+> part d - Looking at the plot of the graph, identify a vertex triple - three vertices which are connected by edges. Is your selected vertex triple closed - i.e. is it a triangle? 
+
+This is asking you to find a set of vertices that could form a triangle - at least 2 of the 3 potential edges should be there. Determining the fraction of actual triangles out of possible triangles is a measure of what is called the clustering present in the network. 
+
+You can list your triple with node numbers. E.G. 1-2-8 (not an actual triple in this graph). The idea would be that 1-2 is an edge and 2-8 is an edge. If 1-8 is also an edge, this would be a triangle. 
+
+Solution:
+
+
+
+
+> part e - Imagine you have to walk along this graph. Walking around, what vertices are you most likely to visit often if you move around randomly? (What vertices help connect others a lot?)
+
+No computations necessary here - you don't need to solve this formally - just think through it and give a guess. If you really want, you could look up a formal definition for a random walk on a graph. Basically, at any vertex, you have an equal probability of going to any vertices it has an edge to. For example, in this graph, if you were at vertex 3, you'd have a 50% chance of going to vertex 1 and 50% chance of going to vertex 7. 
+
+Solution:
+
+
+> part f - Compute betweenness centrality for all vertices. Identify the top 3 vertices in terms of betweeness. How do these vertices relate to those you listed in part e?
+
+Solution:
+
+```{r}
+
+```
+
+
+
+<!-- Remember to commit and push as you go! -->
+
+\newpage
+
+
+# 2 - Exploring a Social Network 
+
+For this question, we'll explore a famous social network example known as "Zachary's Karate Club". This is information about a Karate club from 1970-1972 that split into 2 factions/groups based on a rift between members denoted "A" for "John A" and "H" for "Mr Hi" in the data set (these are not real names). Let's investigate a little bit!
+
+```{r}
+# Visualize the network
+# Igraph default plot, may not be "pretty"
+data(karate)
+plot(karate)
+```
+
+> part a - Plot and describe the degree distribution of the karate network.
+
+Hint: ggplot2 requires data to be in a data.frame to plot, so the code below will get you the degree distribution in data set to use, along with faction information for later use.
+
+```{r}
+faction <- get.vertex.attribute(karate)$Faction
+kdegree <- degree(karate)
+karatedata <- data.frame(kdegree, faction)
+```
+
+Solution:
+
+```{r}
+
+```
+
+
+> part b - Identify the individuals with the top 5 highest degree values. Do they include "John A" and "Mr Hi"?
+
+Solution:
+
+```{r}
+
+```
+
+> part c - Determine the eigenvector centrality of all vertices. Identify the individuals with the top 5 eigenvector centrality values. Do they include "John A" and "Mr Hi"?
+
+Hint: The igraph command is eigen_centrality. 
+
+Solution:
+
+```{r}
+
+```
+
+> part d - We investigated k-means as a method of clustering observations to find natural groups. Clustering can be performed on networks, though very different methods are needed to do so. Run the code below to perform a clustering analysis on this network. Then use the provided output to assess whether the clusters found match the provided factions assigned in the network by the researcher who studied the karate club. What did you find? Describe the findings in a few sentences. 
+
+Note: This clustering analysis may not find just 2 clusters. 
+
+```{r, warning = FALSE, message = FALSE}
+# run clustering on karate network
+# this is just one example clustering algorithm for a network
+kclusters <- leading.eigenvector.community(karate)
+# number of clusters
+length(kclusters)
+# size of each cluster
+sizes(kclusters)
+
+#how to plot the solution
+plot(kclusters, karate) 
+
+# Get cluster memberships to compare to faction
+karatedata <- karatedata %>%
+  mutate(clusters = as.numeric(membership(kclusters)))
+mosaic::tally(clusters ~ faction, data = karatedata)
+```
+
+Solution:
+
+
+
+
+
+
+<!--
+Remember to do the final commit + push, this time including your renamed pdf, and upload to Gradescope.
+-->
