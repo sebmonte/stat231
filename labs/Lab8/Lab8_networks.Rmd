@@ -210,7 +210,7 @@ The plot of this network is much clearer than a plot of the entire network. Let'
 
 > part a - Recalling that `Y2000` represents female migration in 2000, is this an edge or vertex attribute? (Adjust question in your mind if you choose differently!)
 
-Solution:
+Solution: This would be an edge attribute.
 
 
 
@@ -234,7 +234,7 @@ ggplot(data = migration_sub_network,
 
 > part b - We could, instead, map edge color to the migration flow size. Which do you think is the more effective visual cue in this case?
 
-Solution: 
+Solution: In this case I think the first solution that adjusts the thickness of the lines is more effective, the colors in this case are too similar and it's harder to see the overall trends.
 
 ```{r, fig.align = "center", fig.height = 3.5}
 # Adjust based on your choices again
@@ -252,7 +252,7 @@ ggplot(data = migration_sub_network,
 
 > part c- Run the code below to see the same plot with a different color scheme. Is this more or less effective (or about the same)? 
 
-Solution:
+Solution: In my case this solution is about the same, but I would guess that in general it would be less effective because there's many more colors and so more convoluted to follow.
 
 ```{r, fig.align = "center", fig.height = 3.5}
 ggplot(data = migration_sub_network,
