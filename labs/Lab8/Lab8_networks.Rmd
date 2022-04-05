@@ -1,6 +1,6 @@
 ---
 title: "Lab 8 - Networks"
-author: "YourNameGoesHere"
+author: "Sebastian Montesinos"
 date: "For class Tuesday, April 5"
 output:
   pdf_document:
@@ -101,7 +101,7 @@ edge_attr(migration_igraph, name = "Y2000") %>%
 
 > part a - How many nodes are in this network? How many edges? 
  
-Solution: 
+Solution:  There are 226 nodes in this network, and 13805 edges.
 
 
 
@@ -162,8 +162,8 @@ Solution:
 # Change these countries to ones of interest to you!
 
 # Really, change the countries
-mysubset <- c("BRA", "USA", "NAM", "LVA", "ITA", "JAM", "HUN",
-              "GRL", "FJI", "NIC")
+mysubset <- c("GRC", "TUR", "SYR", "LBY", "ITA", "MKD", "USA",
+              "EGY", "DEU", "MAR")
 
 migration_sub <- migration_flows_choice %>%
  filter(destcode %in% mysubset, 
@@ -179,6 +179,20 @@ Solution:
 # you need to construct the network before you can plot it
 # call the igraph version migration_sub_igraph
 # call the ggnetwork version migration_sub_network
+migration_sub_igraph <- graph_from_data_frame(migration_sub,
+           directed = TRUE)
+summary(migration_igraph)
+
+migration_sub_network <- ggnetwork(migration_sub_igraph)
+head(migration_network)
+
+ggplot(data = migration_sub_network, aes(x = x, y = y, 
+          xend = xend, yend = yend)) +
+ geom_edges(arrow = arrow(type = "closed", length = unit(8, "pt")),
+    color = "lightgray") +
+ geom_nodes() +
+ geom_nodelabel(aes(label = name)) +
+ theme_blank()
 
 
 ```
