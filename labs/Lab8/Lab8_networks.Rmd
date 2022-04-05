@@ -333,19 +333,29 @@ got <- read_csv("data/storm-of-swords.csv")
 
 > part a - Think about the text as data: Suppose, instead of the formatted data above, we had the entire text of the novel. List some of the steps (in English or pseudocode) required to wrangle the data into the form above.
 
-Solution: 
+Solution: First, we would need to find the location of all the occurrences of the names we are interested in examining. Next, we would need to 
 
 
 
 > part b - How many GoT characters (nodes) and character interactions (edges) are in this network? 
 
-Solution:
+Solution: There are 107 nodes and 352 edges.
 
 ```{r}
 # Create igraph object called got_igraph
-
+got_igraph <- graph_from_data_frame(got,
+           directed = FALSE)
+summary(got_igraph)
 
 # Identify number of nodes and edges
+# Get descriptions and counts of vertices
+V(got_igraph) # not necessarily useful to print
+vcount(got_igraph)
+
+# Get descriptions and counts of edges
+E(got_igraph) # not necessarily useful to print
+ecount(got_igraph)
+
 
 ```
 
@@ -355,10 +365,10 @@ This proportion is referred to as the "density" of a graph, which is a measure o
 
 Note: The number of *possible* edges in an undirected graph is ${V \choose 2} = \frac{V(V-1)}{2}$.
 
-Solution:
+Solution: The density of this graph is .031, indicating that it is not very dense at all compared to the proportion of possible edges that there could be.
 
 ```{r}
-
+igraph::edge_density(got_igraph)
 ```
 
 > part d - The function `is_connected()` returns "TRUE" if a graph is connected and "FALSE" otherwise. Is this graph connected? And if so, what does that mean? How would you be able to tell that the graph was connected by looking at Figure 2 in the [*Network of Thrones*](https://www-jstor-org.ezproxy.amherst.edu/stable/10.4169/mathhorizons.23.4.18) paper?
