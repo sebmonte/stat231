@@ -280,7 +280,7 @@ Let's consider some centrality statistics for the migration network of your chos
 
 > part a - Based on *degree centrality*, which country(countries) were most central to the migration network of your chosen countries in 2000? Does the answer differ depending on whether we consider all edges (total degree), or only outgoing edges (out-degree; how many destinations were there from that origin country?) or only incoming edges (in-degree; how many origins were there to that destination country?)?
 
-Solution:
+Solution: The most central countries to the migration network were Germany, Italy, Turkey, and the USA. When you look only at outgoing edges, this widens to include Turkey and Greece, and when you look only at incoming edges it widens to include Turkey and Syria.
 
 ```{r}
 igraph::degree(migration_sub_igraph) 
@@ -293,7 +293,7 @@ igraph::degree(migration_sub_igraph, mode = "in")
 
 > part b - The `degree()` function only counts the number of edges of each node, but it does not account for the varying weights of those edges. We can use the `strength()` function to compute the weighted degrees instead. Do the same countries stand out as having high degree centrality after considering the weighted edges?
 
-Solution:
+Solution: After considering weighted edges, the USA clearly stands out as having the highest degree centrality, followed by Italy and Germany. However, when considering only outgoing edges, Germany and Italy are highest, while when considering oncoming edges, the USA and Turkey are the highest.
 
 
 ```{r}
