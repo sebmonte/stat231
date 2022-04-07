@@ -1,6 +1,6 @@
 ---
 title: "Prep7"
-author: "YourNameGoesHere"
+author: "Sebastian Montesinos"
 date: "Due by midnight, Monday April 11"
 output: 
   pdf_document:
@@ -13,7 +13,7 @@ library(tidyverse)
 library(kableExtra)
 
 # Add other necessary packages here
-
+library(sf)
 
 knitr::opts_chunk$set(
   tidy=FALSE,     # display code as typed
@@ -38,15 +38,15 @@ The chapter introduces a number of spatial data specific terms.
 
 > part a - What are two examples of spatial data structure formats? 
 
-Solution:
+Solution: Two spatial data structures are shapefiles and KML.
 
 > part b - What does `EPSG` stand for in `EPSG codes`? Why is it important to know the `EPSG` number, if applicable for your map?
 
-Solution:
+Solution: EPSG stands for European Petroleum Survey Group, and the codes provide a shorthand for the type of projection/gps system being used for your map.
 
 > part c - What is the primary package used in the textbook to work with spatial data?
 
-Solution:
+Solution: The primary package used in the textbook is sf, which provides a set of tidyverse-friendly functions for spatial data.
 
 > part d - What term/concept did you find hardest to understand from the reading?
 
