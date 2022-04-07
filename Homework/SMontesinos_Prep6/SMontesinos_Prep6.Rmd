@@ -144,9 +144,12 @@ Hint: The igraph command is eigen_centrality.
 Solution:
 
 ```{r}
-karategraph <- ggraph(g)
+karatedata <- karatedata %>%
+  mutate(e_centrality = eigen_centrality(karate)$vector) %>%
+  arrange(desc(e_centrality)) 
+
 karatedata %>%
-  mutate(e_centrality = eigen_centrality(kdegree))
+  head(5)
 ```
 
 > part d - We investigated k-means as a method of clustering observations to find natural groups. Clustering can be performed on networks, though very different methods are needed to do so. Run the code below to perform a clustering analysis on this network. Then use the provided output to assess whether the clusters found match the provided factions assigned in the network by the researcher who studied the karate club. What did you find? Describe the findings in a few sentences. 

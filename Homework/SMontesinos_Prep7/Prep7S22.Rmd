@@ -1,0 +1,187 @@
+---
+title: "Prep7"
+author: "YourNameGoesHere"
+date: "Due by midnight, Monday April 11"
+output: 
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r, setup, include=FALSE}
+library(tidyverse)
+library(kableExtra)
+
+# Add other necessary packages here
+
+
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+```
+
+Reminder: Prep assignments are to be completed individually. Upload a final copy of the .Rmd and renamed .pdf to your private repo, and submit the renamed pdf to Gradescope. 
+
+# Reading
+
+The associated reading for the week is Chapter 17. The focus is on working with Spatial data, which basically means, making maps and showing appropriate data on them. 
+
+We will also be introducing the final project this week on Thursday. Remember to submit your reflection due at the same time as this Prep from the Shiny project using the Google form linked on Moodle!
+
+Note: The practice set this week contains one question on networks to cover the material from last week. 
+
+\newpage
+
+# 1 - Spatial data basics
+
+The chapter introduces a number of spatial data specific terms. 
+
+> part a - What are two examples of spatial data structure formats? 
+
+Solution:
+
+> part b - What does `EPSG` stand for in `EPSG codes`? Why is it important to know the `EPSG` number, if applicable for your map?
+
+Solution:
+
+> part c - What is the primary package used in the textbook to work with spatial data?
+
+Solution:
+
+> part d - What term/concept did you find hardest to understand from the reading?
+
+Solution:
+
+
+
+
+
+
+\newpage
+
+# 2 - Reproducing a map
+
+Section 17.1 introduces *shapefiles*, and includes an example of working with a shapefile to re-create Snow's cholera map. This exercise mostly follows along with the text code.  
+
+> Setup
+
+Load the **sf** package in the `setup` code chunk. Verify your working directory is the folder *this* .Rmd file is in. Then, create a *data* subfolder in this directory.
+
+> part a - Run the code below line-by-line to understand what each part is doing. You can use *command + enter* or *ctrl + enter* to run one selected or highlighted set of code at a time.  Confirm that you get a figure similar to that of Figure 17.3 in the textbook.  
+
+<!-- Only need to run this code one time interactively, so setting eval = FALSE so we don't run it again every time we knit -->
+
+```{r download-files, eval = FALSE}
+# Download SnowGIS_SHP zip file
+download.file("http://rtwilson.com/downloads/SnowGIS_SHP.zip",
+              destfile = "data/SnowGIS_SHP.zip")
+
+# Unzip file in same folder
+unzip(zipfile = "data/SnowGIS_SHP.zip",
+      exdir = "data")
+```
+
+```{r}  
+# Create filepath to unzipped files so we don't need to re-type
+data_path <- "data/SnowGIS_SHP"
+
+# List files in SnowGIS_SHP
+list.files(data_path)
+
+# List layers
+st_layers(data_path)
+
+# Load second layer
+cholera_deaths <- st_read(data_path, layer = "Cholera_Deaths")
+
+class(cholera_deaths)
+head(cholera_deaths)
+
+# Context-less plot
+ggplot(cholera_deaths) + 
+  geom_sf()
+```
+
+Solution:
+
+<!--
+Did you get a map like displayed in Figure 17.3? Write a sentence above. 
+-->
+
+
+> part b - Now use the **ggspatial** package to overlay the London street map. Make sure you (install then) load the **ggspatial** package in the `setup` code chunk before running the code. What is wrong with this map? 
+
+```{r}
+ggplot(cholera_deaths) + 
+  annotation_map_tile(type = "osm", zoomin = 0) + 
+  geom_sf(aes(size = Count), alpha = 0.7)
+```
+
+Solution:
+
+
+
+> part c - Set the coordinates from the cholera data as the `espg:27700` coordinate system using `st_set_crs()`, then transform them to the `espg:4326` system using `st_transform()`, and finally plot the new, correctly projected data. What does "crs" stand for in this code?
+
+```{r}
+cholera_latlong <- cholera_deaths %>% 
+  st_set_crs(27700) %>% 
+  st_transform(4326)
+
+ggplot(cholera_latlong) + 
+  annotation_map_tile(type = "osm", zoomin = 0) + 
+  geom_sf(aes(size = Count), alpha = 0.7)
+```
+
+Solution:
+
+
+> part d - Repeat the layer loading and coordinate transformation procedure to add the water pumps to the plot. Looking at your plot, do you agree that the water pump on Broad Street seems to have been the problem for this outbreak?
+
+```{r}
+pumps_latlong <- st_read(data_path, layer = "Pumps") %>% 
+  st_set_crs(27700) %>% 
+  st_transform(4326)
+
+ggplot(cholera_latlong) + 
+  annotation_map_tile(type = "osm", zoomin = 0) + 
+  geom_sf(aes(size = Count), alpha = 0.7) +
+  geom_sf(data = pumps_latlong, size = 3, color = "red")
+```
+
+Solution:
+
+
+
+> part e - Finally, try out the code below to create a dynamic map using the **leaflet** package (install and load as before!). Zoom in and out of the map to confirm that (1) there is a death in the middle of Hopkins Street, and (2) there is a pump near the intersection of Broadwick Street and Lexington Street. What seem to be the main types of businesses along the modern day Kingly street?
+
+<!--
+Dynamic plot will not knit to pdf so set `eval = FALSE`
+-->
+
+```{r, eval = FALSE}
+# create dynamic map
+leaflet() %>% 
+  addTiles() %>%
+  addCircleMarkers(data = cholera_latlong,
+                   radius =  ~ Count,
+                   color = "navy",
+                   stroke = FALSE,
+                   fillOpacity = 0.7) %>% 
+  addCircleMarkers(data = pumps_latlong,
+                   radius = 6,
+                   color = "red",
+                   stroke = FALSE,
+                   fillOpacity = 0.7)
+```
+
+Solution:
+
+<!--
+Be sure to answer the question about business here, since we can't print the dynamic map.
+-->
+
+
+<!--
+Remember to do the final commit + push, this time including your renamed pdf, and upload to Gradescope.
+-->

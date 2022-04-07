@@ -1,0 +1,269 @@
+---
+title: "Practice7"
+author: "YourNameGoesHere"
+date: "Due by midnight, Friday, April 15"
+output: 
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r, setup, include=FALSE}
+library(tidyverse)
+library(kableExtra)
+
+library(igraph)
+library(ggnetwork)
+
+library(pdxTrees)
+library(leaflet)
+
+# add other packages needed here!
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+```
+
+Reminder: Practice assignments may be completed working with other individuals.
+
+# Reading 
+
+The associated reading for the week is Chapter 17 on Spatial Data. In addition, this practice has one question from Chapter 20 on Networks based on previous material.  
+
+# Practicing Academic Integrity
+
+If you worked with others or used resources outside of provided course material (anything besides our textbook, course materials in the repo, labs, R help menu) to complete this assignment, please acknowledge them below using a bulleted list. 
+
+<!-- ~~~~~~~~~~~~~~~~ YOU MAY BEGIN EDITING BELOW THIS LINE ~~~~~~~~~~~~~~~~ -->
+
+*I acknowledge the following individuals with whom I worked on this assignment:*
+
+Name(s) and corresponding problem(s)
+
+*
+
+*I used the following sources to help complete this assignment:*
+
+Source(s) and corresponding problem(s)
+
+* 
+
+
+\newpage
+
+
+<!-- PROBLEM 1 ---------------------------------------------------------------->
+
+# 1 - Dolphins
+
+A pod of dolphins has been studied for years in New Zealand to try to understand their social interactions. While the whole network is available (you can plot it if you like) it’s hard to visualize. We took a “snowball sample” starting with the dolphin called “Notch”. We took all the dolphins he was connected to, and then all the dolphins they were connected to, and found this induced subgraph. (This is a snowball sample with 3 waves, with one originating vertex). 
+
+```{r}
+dolphins <- read_graph("https://awagaman.people.amherst.edu/stat240/dolphins.gml", format = "gml")
+
+# focus on Notch - vertex 27
+# take snowball sample by finding neighbors sequentially
+myvert1 <- neighbors(dolphins, 27)
+myvert2 <- neighbors(dolphins, myvert1)
+myvert3 <- neighbors(dolphins, myvert2)
+
+# put set of all needed vertices together
+# duplicates do not need removed
+combined <- c(27, myvert1, myvert2, myvert3)
+
+# create sub-graph
+dolphin_Notch <- induced_subgraph(dolphins, combined, impl = "copy_and_delete")
+plot(dolphin_Notch)
+```
+
+> part a - Improve the visualization of the Notch-based subgraph by plotting it using ggplot2.
+
+Solution:
+
+```{r}
+
+```
+
+
+> part b - Notch was used to generate this graph, but is Notch the most central dolphin in the network? To help answer this question, compute the degree of each node. Which dolphins have the 3 largest degrees? Share their names and associated degree values in a nice table.
+
+If there are ties for the top 3, include the tied dolphins. 
+
+Solution:
+
+<!-- To get you started, code is provided that puts the dolphin id and names (label) in a data set that you can add variables to. -->
+
+```{r}
+# Put id and label in a data set for later use
+id <- get.vertex.attribute(dolphin_Notch)$id
+label <- get.vertex.attribute(dolphin_Notch)$label
+dolphin_data <- data.frame(id, label) 
+
+# find degrees
+
+
+# make a table
+
+```
+
+
+
+> part c - Based on the snowball sampling methodology, what is the furthest any dolphin could be from Notch in this network? What is the furthest apart any two dolphins could be as a result? No code is necessary to answer this.
+
+Solution:
+
+
+
+
+> part d - What is the diameter of this network? Interpret the value you obtain. 
+
+Solution:
+
+
+```{r}
+
+```
+
+
+> part e - Notch was used to generate the network, but is Notch on many of the shortest paths between dolphins? Compute the betweenness centrality of each node. Use a nice table to show which dolphins have the top 3 betweenness centrality values. 
+
+If there are ties for the top 3, include the tied dolphins.
+
+Solution:
+
+```{r}
+
+```
+
+
+> part f - Run a network clustering algorithm of your choice on the dolphin_Notch network. Plot the results including the cluster membership using ggplot2. How many clusters were found?
+
+<!-- 
+Prep6 showed you code for using leading.eigenvector.community as the clustering algorithm, 
+while Lab8 showed you code for using Louvain's algorithm (modularity based). Either one is fine, or you
+can explore other options provided in igraph.
+-->
+
+Solution:
+
+```{r}
+
+```
+
+
+> part g - Create an induced subgraph for a dolphin of your choice from the original network, using a snowball sample with TWO waves. Plot the network nicely using ggplot2. 
+
+Solution:
+
+```{r}
+
+```
+
+
+<!-- Commit and push - the usual reminder. -->
+
+\newpage
+
+<!-- PROBLEM 2 ---------------------------------------------------------------->
+
+# 2 - Mapping spatial data
+
+Reproduce the map you created in Lab 9's Part 3 - `Your turn` - where you made your own map.
+
+In 2-4 sentences, interpret the visualization.  What stands out as the central message?  Note: You shouldn't say what colors are representing what feature; this is obvious to the viewer, assuming there's an appropriate legend and title. (Add one if you don't have one!) Rather, share what information you extract from the visualization.
+
+Be sure to load all appropriate packages in the setup chunk above. 
+
+<!--
+Example: 
+
+Not ideal: "In this map, I've colored the countries by GDP, with green representing low values and red representing high values."
+
+More ideal: "From the choropleth below, we can see that the percent change in GDP per capita  between 1957-2007 varies greatly across countries in Central America.  In particular, Panama and Costa Rica stand out as having GDPs per capita that increased by over 200% across those 50 years.  In contrast, Nicaragua's GDP per capita decreased by a small percentage during that same time span."
+-->
+
+Solution:
+
+```{r}
+
+```
+
+<!-- Commit and push. Is your map appropriately scaled in the .pdf? Change figure size as needed! -->
+
+\newpage
+
+<!-- PROBLEM 3 ---------------------------------------------------------------->
+# 3 - Leaflet - Based on MDSR 17.2
+
+In this final problem, we'll explore making an interactive map with leaflet. (You can revisit the last question on the lab for assistance with this as well.) We will use the package *pdxTrees* to access a data set which contains information on trees in Portland parks (be sure to install this package). 
+
+```{r}
+# loads data set
+tree_data <- get_pdxTrees_parks()
+```
+
+```{r, eval = FALSE}
+# shows all common names for trees
+unique(tree_data$Common_Name)
+```
+
+
+> part a - Pick three common names and make a new data set for those trees. 
+
+Note: Don't select Douglas-Fir, Norway Maple, or Western Redcedar (~ 1000 or more each). These have too many observations and we want the map to be readable.  
+
+Solution:
+
+```{r}
+# Example with just 2 - Use other common names!
+my_trees <- tree_data %>%
+  filter(Common_Name == "Pin Oak" | Common_Name == "Oregon Ash")
+```
+
+We are going to create a leaflet map that plots the trees by Common_Name and allows you to pick between which ones you want to view (either, both, or neither), using circles to mark them on the map.
+
+> part b - The example code below runs for the demo with 2 Common_Names. Adapt this for your Common_names, and be sure to add the third you chose! Feel free to change colors, etc. as you like. 
+
+Solution:
+
+<!-- Remember leaflet maps will not print to screen, so this chunk needs eval = FALSE. -->
+
+```{r, eval = FALSE}
+leaflet(my_trees) %>% 
+  addTiles() %>%
+  addCircleMarkers(data = filter(my_trees, Common_Name == "Oregon Ash"),
+                   group = "Oregon Ash",
+                   lng = ~ Longitude,
+                   lat = ~ Latitude,
+                   color = "blue") %>%
+  addCircleMarkers(data = filter(my_trees, Common_Name == "Pin Oak"),
+                   group = "Pin Oak",
+                   lng = ~ Longitude,
+                   lat = ~ Latitude,
+                   color = "white") %>%
+  addLayersControl(overlayGroups = c("Oregon Ash", "Pin Oak"),
+                  options = layersControlOptions(collapsed = FALSE))
+
+```
+
+> part c - Write a few sentences about what you learned from your map.
+
+<!-- 
+Example:
+The demo map with only 2 types of trees shows me there are more Pin Oaks than Oregon Ash trees in Portland Parks. The Oregon Ash trees seem more densely concentrated - there are several locations with a cluster of trees and then none in a wide range around that. It does seem there are places I could go see both types of tree, if I wanted to. 
+-->
+
+Solution:
+
+
+
+
+
+
+<!-- There is much more that could be done with the leaflet map. For example, we could use addMarkers to use popups to label the park names. We could set a color scheme based on another variable (like mature status) to color the circles (then we wouldn't have separate colors by Common_name). -->
+
+
+<!--
+Knit, commit, and push, including the final renamed pdf, to your repo. Then, upload the .pdf to Gradescope before the deadline. Wondering why this practice was shorter than the last? Keep working on your calendar query project!
+-->
+

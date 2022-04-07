@@ -365,23 +365,23 @@ This proportion is referred to as the "density" of a graph, which is a measure o
 
 Note: The number of *possible* edges in an undirected graph is ${V \choose 2} = \frac{V(V-1)}{2}$.
 
-Solution: The density of this graph is .031, indicating that it is not very dense at all compared to the proportion of possible edges that there could be.
+Solution: The density of this graph is .062, indicating that it is not very dense at all compared to the proportion of possible edges that there could be.
 
 ```{r}
-igraph::edge_density(got_igraph)
+edge_density(got_igraph)
 ```
 
 > part d - The function `is_connected()` returns "TRUE" if a graph is connected and "FALSE" otherwise. Is this graph connected? And if so, what does that mean? How would you be able to tell that the graph was connected by looking at Figure 2 in the [*Network of Thrones*](https://www-jstor-org.ezproxy.amherst.edu/stable/10.4169/mathhorizons.23.4.18) paper?
 
-Solution:
+Solution: This graph is connected, meaning there is path between every single pair of vertices.
 
 ```{r}
-
+is_connected(got_igraph)
 ```
 
 > part e - Use the code below to compute the diameter of the network. Interpret the value.
 
-Solution:
+Solution: The diameter is 6, which indicates that the longest geodesic between any two characters is 6 characters away.
 
 ```{r}
 diameter(got_igraph, directed = FALSE)
@@ -406,9 +406,16 @@ got_stats <- data.frame(name = vertex_attr(got_igraph, "name"),
 
 > part a - Who are the five characters with highest degree? Highest weighted degree? Verify that these values (look like they) match those in Figure 3 of the [*Network of Thrones*](https://www-jstor-org.ezproxy.amherst.edu/stable/10.4169/mathhorizons.23.4.18) paper. 
 
-Solution:
+Solution: Tyrion, Jon, Sansa, Jaime, and Robb are the characters with the highest degree. Tyrion, Jon, Sansa, Jaime, and Bran are the characters with the highest weighted degree. These values do match figure 3.
 
 ```{r}
+got_stats %>%
+arrange(desc(degree)) %>%
+head(5)
+
+got_stats %>%
+arrange(desc(strength)) %>%
+head(5)
 
 ```
 
@@ -416,7 +423,7 @@ Solution:
 
 You can answer this without knowing any of the GoT story. 
 
-Solution:
+Solution: Degree counts how many characters are interacted with, not how many interactions occur. Robb has more interactions with Bran, but Bran interacts with the individuals he does interact with many more times.
 
 ```{r}
 # may not need this chunk
@@ -424,11 +431,15 @@ Solution:
 
 > part c - Now consider the (unweighted) betweenness measure of centrality. In the code below, we use the `betweenness()` function to calculate the unweighted betweenness of the nodes, and add this statistics to the `got_stats` data frame using `add_column()`. Verify that the top ranked characters match those shown in Figure 3 of the *Network of Thrones* paper.
 
-Solution:
+Solution: Jon, Robert, Tyrion, Daenerys, and Robb are the top ranked characters on betweenness centrality.
 
 ```{r, }
 got_stats <- got_stats %>% 
  add_column(betweenness = betweenness(got_igraph, weights = NA))
+
+got_stats %>%
+arrange(desc(betweenness)) %>%
+head(5)
 ```
 
 
@@ -438,7 +449,7 @@ Example: Consider the page ranks of Catelyn and Hodor. Both are connected to Bra
 
 > part d - Use the provided code to add two variables to the `got_stats` dataframe: one with the unweighted eigenvector centrality, and a second with the unweighted page rank. Which characters score in the top 5 according to the page rank measure?
 
-Solution:
+Solution: Tyrion, Rob, Sansa, and Daenerys are in the top 5 using the page rank measure.
 
 ```{r, eval = FALSE}
 got_stats <- got_stats %>% 
@@ -453,6 +464,8 @@ got_stats <- got_stats %>%
 
 > part e - How can a character like Daenerys have such a high page rank, and a high rank for betweenness, but a low degree? (You can use Figure 2 in the *Network of Thrones* paper to visualize the structure.)
 
+Daenerys interacts only with a certain small set of characters, and is far away from other characters in the novel. However, since she is the only connection to many of these characters, she acts to connect them together to a wider network of characters.
+
 
 ```{r}
 # you may or may not need the code chunk
@@ -466,9 +479,21 @@ Solution:
 
 ```{r}
 # Add page rank as a vertex attribute
-
-
+got_igraph <- set_vertex_attr(got_igraph, name = "pagerank", value = got_stats$pagerank)
+# Make into ggnetwork object
+got_network <- ggnetwork(got_igraph)
+set.seed(231)
 # Graph network
+ggplot(data = got_network,
+aes(x = x, y = y, xend = xend, yend = yend)) +
+geom_edges(color = "lightgray", curvature = 0.2) +
+# for whatever reason, this will not compile without the $ syntax
+# which it actively discourages
+geom_nodes(aes(size = got_network$pagerank)) +
+geom_nodelabel_repel(aes(label = name)) +
+labs(size = "Page Rank") +
+theme_blank()
+
 
 ```
 
@@ -484,7 +509,7 @@ In *Network of Thrones*, the authors use the Louvain algorithm, which is a hiera
 
 > part a - Run the code below to implement Louvain clustering and compute the modularity. What value did you obtain?
 
-Solution:
+Solution: The modularity is .4896.
 
 ```{r}
 # Identify clusters using Louvain algorithm
@@ -497,7 +522,8 @@ modularity(got_cl)
 
 > part b - After clustering, we can determine how many nodes are in each detected cluster (i.e., how many characters are in each detected community). How many communities are there, and how many characters are there in each community?
 
-Solution:
+Solution: There are 6 communities,  The 1st has 25 characters, 2nd has 37, third has only 8, fourth has 15, 5th has 
+8, and the 6th has 14.
 
 ```{r}
 communities(got_cl)
@@ -516,11 +542,24 @@ Solution:
 ```{r fig.height = 6.5}
 # Get community membership
 got_membership <- membership(got_cl)
-
 # Add community membership as vertex attribute
-
-
+got_igraph <- set_vertex_attr(got_igraph,
+name = "membership",
+value = got_membership)
+got_network <- ggnetwork(got_igraph) %>%
+mutate(membership = factor(membership))
 # Create a plot
+set.seed(231) # may not be needed
+got_network %>%
+ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+geom_edges(color = "gray50", curvature = 0.2) +
+# for whatever reason, this will not compile without the $ syntax
+# which it actively discourages
+geom_nodes(aes(size = got_network$pagerank, color = membership)) +
+geom_nodelabel_repel(aes(label = name, color = membership)) +
+labs(size = "Page Rank") +
+guides(color = "none") +
+theme_blank()
 
 ```
 
