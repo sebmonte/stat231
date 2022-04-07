@@ -14,6 +14,8 @@ library(kableExtra)
 
 # Add other necessary packages here
 library(sf)
+library(ggspatial)
+library(raster)
 
 knitr::opts_chunk$set(
   tidy=FALSE,     # display code as typed
@@ -117,7 +119,7 @@ ggplot(cholera_deaths) +
   geom_sf(aes(size = Count), alpha = 0.7)
 ```
 
-Solution:
+Solution: The coordinates in the ggspatial package and choleradeaths are not in the same units.
 
 
 
