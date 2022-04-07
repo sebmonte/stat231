@@ -102,7 +102,7 @@ ggplot(cholera_deaths) +
   geom_sf()
 ```
 
-Solution:
+Solution: The map generated is like the one displayed in 17.3
 
 <!--
 Did you get a map like displayed in Figure 17.3? Write a sentence above. 
