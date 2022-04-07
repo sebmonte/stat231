@@ -135,7 +135,7 @@ ggplot(cholera_latlong) +
   geom_sf(aes(size = Count), alpha = 0.7)
 ```
 
-Solution:
+Solution: 'crs' stands for coordinate reference system, a method for keeping track of geographic locations that comes in multiple forms.
 
 
 > part d - Repeat the layer loading and coordinate transformation procedure to add the water pumps to the plot. Looking at your plot, do you agree that the water pump on Broad Street seems to have been the problem for this outbreak?
@@ -151,7 +151,7 @@ ggplot(cholera_latlong) +
   geom_sf(data = pumps_latlong, size = 3, color = "red")
 ```
 
-Solution:
+Solution: This plot shows nearly all the deaths concentrated near people at the broad street water pump, so I agree that this pump seems to have been the problem for the outbreak.
 
 
 
