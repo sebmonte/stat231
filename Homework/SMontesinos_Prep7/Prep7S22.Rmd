@@ -16,6 +16,7 @@ library(kableExtra)
 library(sf)
 library(ggspatial)
 library(raster)
+library(leaflet)
 
 knitr::opts_chunk$set(
   tidy=FALSE,     # display code as typed
@@ -52,7 +53,7 @@ Solution: The primary package used in the textbook is sf, which provides a set o
 
 > part d - What term/concept did you find hardest to understand from the reading?
 
-Solution:
+Solution: The idea of coordinate reference systems (CRS) and how to pick/use one when creating a map in R.
 
 
 
@@ -177,7 +178,7 @@ leaflet() %>%
                    fillOpacity = 0.7)
 ```
 
-Solution:
+Solution: The main businesses on modern-day Kingsly street seem to be restaurants and department stores.
 
 <!--
 Be sure to answer the question about business here, since we can't print the dynamic map.
