@@ -81,6 +81,14 @@ plot(dolphin_Notch)
 Solution:
 
 ```{r}
+dolphin_network <- ggnetwork(dolphin_Notch)
+ggplot(data = dolphin_network, aes(x = x, y = y,
+                                   xend = xend, yend = yend)) +
+  geom_edges(arrow = arrow(type = "closed", length = unit(8, "pt")),
+              color = "lightgray") +
+geom_nodes() +
+geom_nodelabel(aes(label = label)) +
+theme_blank()
 
 ```
 
@@ -100,9 +108,14 @@ label <- get.vertex.attribute(dolphin_Notch)$label
 dolphin_data <- data.frame(id, label) 
 
 # find degrees
-
+dolphin_data <- dolphin_data %>%
+  mutate(degree = degree(dolphin_Notch)) %>%
+  arrange(desc(degree)) 
 
 # make a table
+dolphin_data %>%
+  head(5) %>%
+  kable()
 
 ```
 
