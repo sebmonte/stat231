@@ -1,6 +1,6 @@
 ---
 title: "Practice7"
-author: "YourNameGoesHere"
+author: "Sebastian Montesinos"
 date: "Due by midnight, Friday, April 15"
 output: 
   pdf_document:
