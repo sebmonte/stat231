@@ -115,7 +115,7 @@ dolphin_data <- dolphin_data %>%
 # make a table
 dolphin_data %>%
   head(5) %>%
-  kable()
+  kable(booktabs = TRUE)
 
 ```
 
@@ -130,11 +130,11 @@ Solution:
 
 > part d - What is the diameter of this network? Interpret the value you obtain. 
 
-Solution:
+Solution: The diameter of this network is 3, meaning that 3 is the length of the longest geodesic between any pair of vertices in the network.
 
 
 ```{r}
-
+diameter(dolphin_Notch)
 ```
 
 
@@ -145,7 +145,14 @@ If there are ties for the top 3, include the tied dolphins.
 Solution:
 
 ```{r}
-
+dolphin_data <- dolphin_data %>%
+  mutate(betweenness = betweenness(dolphin_Notch, weights = NA))
+  
+dolphin_data %>%
+  arrange(desc(betweenness)) %>%
+  select(id, label, betweenness) %>%
+  head(4) %>%
+  kable(booktabs = TRUE)
 ```
 
 
@@ -160,7 +167,21 @@ can explore other options provided in igraph.
 Solution:
 
 ```{r}
+dolphin_cl <- cluster_louvain(dolphin_Notch)
+dolphin_membership <- membership(dolphin_cl)
+dolphin_Notch <- set_vertex_attr(dolphin_Notch,
+                                 name = "membership",
+                                 value = dolphin_membership)
+dolphin_network <- ggnetwork(dolphin_Notch) %>%
+  mutate(membership = factor(membership))
 
+set.seed(230)
+dolphin_network %>%
+  ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+geom_edges(color = "gray50", curvature = 0.2) +
+geom_nodelabel_repel(aes(label = label, color = membership)) +
+guides(color = "none") +
+theme_blank()
 ```
 
 
