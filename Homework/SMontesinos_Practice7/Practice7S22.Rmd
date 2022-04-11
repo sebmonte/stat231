@@ -123,7 +123,7 @@ dolphin_data %>%
 
 > part c - Based on the snowball sampling methodology, what is the furthest any dolphin could be from Notch in this network? What is the furthest apart any two dolphins could be as a result? No code is necessary to answer this.
 
-Solution:
+Solution: The furthest any dolphin could be from notch is 3, since the connections from notch are done 3 times over. The furthest apart any two could be from Notch is 6, since on each side 3 is the farthest they could spread from notch (3 x 2).
 
 
 
@@ -191,6 +191,23 @@ theme_blank()
 Solution:
 
 ```{r}
+myvert4 <- neighbors(dolphins, 28)
+myvert5 <- neighbors(dolphins, myvert4)
+
+combined2 <- c(28, myvert4, myvert5)
+
+# create sub-graph
+dolphin_28 <- induced_subgraph(dolphins, combined2, impl = "copy_and_delete")
+plot(dolphin_28)
+
+dolphin_network2 <- ggnetwork(dolphin_28)
+ggplot(data = dolphin_network2, aes(x = x, y = y,
+                                   xend = xend, yend = yend)) +
+  geom_edges(arrow = arrow(type = "closed", length = unit(8, "pt")),
+              color = "lightgray") +
+geom_nodes() +
+geom_nodelabel(aes(label = label)) +
+theme_blank()
 
 ```
 
