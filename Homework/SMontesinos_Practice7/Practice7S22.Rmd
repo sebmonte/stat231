@@ -180,7 +180,7 @@ dolphin_network %>%
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
 geom_edges(color = "gray50", curvature = 0.2) +
 geom_nodelabel_repel(aes(label = label, color = membership)) +
-geom_nodes +
+geom_nodes(aes(color = membership)) +
 guides(color = "none") +
 theme_blank()
 ```
