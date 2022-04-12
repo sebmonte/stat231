@@ -391,6 +391,30 @@ Solution:
 
 ```{r your-map}
 
+
+us_states <- maps::map("state",
+                    plot = FALSE, fill = TRUE) %>% 
+  st_as_sf()
+
+data(hate_crimes)
+hate_crimes <- hate_crimes %>%
+  mutate(state = str_to_lower(state))
+
+joined_map <- us_states %>%
+  right_join(hate_crimes, by = c("ID" = "state"))
+
+
+
+
+ggplot(joined_map) +
+  geom_sf(aes(fill = avg_hatecrimes_per_100k_fbi)) +
+  scale_fill_viridis(option = "magma", direction = -1) +
+  theme_void() +
+  labs(fill = "",
+       color = "",
+       title = "",
+       subtitle = "") +
+  theme(legend.position = "bottom")
 ```
 
 
