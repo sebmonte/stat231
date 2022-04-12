@@ -103,7 +103,14 @@ ggplot(data = world_map) +
 Solution:
 
 ```{r}
+nz_map <- maps::map("nz", plot = FALSE, fill = TRUE) %>% 
+  st_as_sf()
 
+head(nz_map)
+
+ggplot(data = nz_map) +
+  geom_sf(fill = "lightgrey", color = "white") +
+  theme_void()
 ```
 
 > part d - The **maps** package also allows us to plot counties (and states) within the US. Run the code below to get a county-level map for Massachusetts.
@@ -131,6 +138,20 @@ Solution:
 
 ```{r}
 
+state_df <- map_data("usa") 
+
+us_counties <- maps::map("county",
+                    plot = FALSE, fill = TRUE) %>% 
+  st_as_sf()
+
+us_states <- maps::map("state",
+                    plot = FALSE, fill = TRUE) %>% 
+  st_as_sf()
+
+ggplot() +
+  geom_sf(data = us_counties, fill = "lightgrey", color = "white") +
+  geom_sf(data = us_states, fill = NA, color = "black") +
+  theme_void()
 ```
 
 
