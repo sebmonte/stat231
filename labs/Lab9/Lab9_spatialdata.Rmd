@@ -158,7 +158,7 @@ ggplot() +
 ```{r, echo = FALSE}
 # cleaning environment of everything but state map information before continuing
 rm(county_df, 
-   county_map, # edit as needed if you named objects differently
+   us_counties, # edit as needed if you named objects differently
    ma_map,
    nz_map,
    world_map,
@@ -247,7 +247,7 @@ I called my state-level mapping data `state_map`. You should update the code bel
 ```{r}
 # Peek at data
 head(college_plan_summary)
-head(state_map)
+head(us_states)
 
 # State objects should appear in your Environment pane
 data(state) 
@@ -261,7 +261,7 @@ state_info <- data.frame(Region = state.region,
 head(state_info)
 
 # Join datasets from the left starting with the sf object ()
-college_plans_map <- state_map %>% 
+college_plans_map <- us_states %>% 
   left_join(state_info) %>% 
   left_join(college_plan_summary)
 
@@ -289,8 +289,11 @@ Solution:
 ```{r}
 ggplot(college_plans_map, aes(fill = proportion_in_person)) +
   geom_sf() +
-  scale_fill_viridis(option = "magma", direction = -1) +
-  theme_void()
+ ## scale_fill_viridis(option = "magma", direction = -1) +
+  theme_void() +
+  scale_color_brewer(type = "seq", palette = 1) +
+  labs(title = "Proportion of Colleges with in-Person teaching by State",
+         legend = "Proportion in person")
 ```
   
 Instead of summarizing the college plans across institutions in a given state, we may want to plot a point for every college and add a visual cue to indicate each individual college plan (e.g., color the points by plan category). This requires getting spatial data for each institution, and then adding a layer to our graph. This information is not included in the Chronicle dataset, so we need to find it from somewhere else.  The National Center for Education Statistics collects detailed location information for all of the higher education institutions in the US, and makes the data publicly available through [IPEDS](https://nces.ed.gov/ipeds/datacenter/Data.aspx). 
