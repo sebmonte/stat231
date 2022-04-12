@@ -410,10 +410,10 @@ ggplot(joined_map) +
   geom_sf(aes(fill = avg_hatecrimes_per_100k_fbi)) +
   scale_fill_viridis(option = "magma", direction = -1) +
   theme_void() +
-  labs(fill = "",
-       color = "",
-       title = "",
-       subtitle = "") +
+  labs(fill = "Average Hatecrimes per 100k people",
+       color = "Hate Crimes",
+       title = "Proportion of Hate Crimes According to the FBI by state",
+       subtitle = "2013-2014") +
   theme(legend.position = "bottom")
 ```
 
