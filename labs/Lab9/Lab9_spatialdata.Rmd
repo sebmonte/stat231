@@ -1,6 +1,6 @@
 ---
 title: "Lab 9 - Spatial Data"
-author: "YourNameGoesHere"
+author: "Sebastian Montesinos"
 date: "For class the week of April 12"
 output:
   pdf_document:
