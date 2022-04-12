@@ -11,12 +11,13 @@ output:
 ```{r, setup, include=FALSE}
 library(tidyverse)
 library(kableExtra)
-
+library(sf)
 library(igraph)
 library(ggnetwork)
-
+library(fivethirtyeight)
 library(pdxTrees)
 library(leaflet)
+library(viridis)
 
 # add other packages needed here!
 knitr::opts_chunk$set(
@@ -234,10 +235,32 @@ Not ideal: "In this map, I've colored the countries by GDP, with green represent
 More ideal: "From the choropleth below, we can see that the percent change in GDP per capita  between 1957-2007 varies greatly across countries in Central America.  In particular, Panama and Costa Rica stand out as having GDPs per capita that increased by over 200% across those 50 years.  In contrast, Nicaragua's GDP per capita decreased by a small percentage during that same time span."
 -->
 
-Solution:
+Solution: The choropleth below shows that hatecrimes per capita varies significantly across states in the US. Massachussetts, North Dakota, Washington, and Kentucky stand out as the states with the highest proportion of hate crimes. In contrast, states such as Wyoming, Pennsylvania, and Georgia have some of the lowest rates of hate crimes.
 
 ```{r}
+us_states <- maps::map("state",
+                    plot = FALSE, fill = TRUE) %>% 
+  st_as_sf()
 
+data(hate_crimes)
+hate_crimes <- hate_crimes %>%
+  mutate(state = str_to_lower(state))
+
+joined_map <- us_states %>%
+  right_join(hate_crimes, by = c("ID" = "state"))
+
+
+
+
+ggplot(joined_map) +
+  geom_sf(aes(fill = avg_hatecrimes_per_100k_fbi)) +
+  scale_fill_viridis(option = "magma", direction = -1) +
+  theme_void() +
+  labs(fill = "Average Hatecrimes per 100k people",
+       color = "Hate Crimes",
+       title = "Proportion of Hate Crimes According to the FBI by state",
+       subtitle = "2013-2014") +
+  theme(legend.position = "bottom")
 ```
 
 <!-- Commit and push. Is your map appropriately scaled in the .pdf? Change figure size as needed! -->
@@ -269,7 +292,7 @@ Solution:
 ```{r}
 # Example with just 2 - Use other common names!
 my_trees <- tree_data %>%
-  filter(Common_Name == "Pin Oak" | Common_Name == "Oregon Ash")
+  filter(Common_Name == "Silver Maple" | Common_Name == "Elm Hybrid" | Common_Name == "Giant Sequoia" )
 ```
 
 We are going to create a leaflet map that plots the trees by Common_Name and allows you to pick between which ones you want to view (either, both, or neither), using circles to mark them on the map.
@@ -283,17 +306,22 @@ Solution:
 ```{r, eval = FALSE}
 leaflet(my_trees) %>% 
   addTiles() %>%
-  addCircleMarkers(data = filter(my_trees, Common_Name == "Oregon Ash"),
-                   group = "Oregon Ash",
+  addCircleMarkers(data = filter(my_trees, Common_Name == "Silver Maple"),
+                   group = "Silver Maple",
                    lng = ~ Longitude,
                    lat = ~ Latitude,
                    color = "blue") %>%
-  addCircleMarkers(data = filter(my_trees, Common_Name == "Pin Oak"),
-                   group = "Pin Oak",
+  addCircleMarkers(data = filter(my_trees, Common_Name == "Elm Hybrid"),
+                   group = "Elm Hybrid",
                    lng = ~ Longitude,
                    lat = ~ Latitude,
                    color = "white") %>%
-  addLayersControl(overlayGroups = c("Oregon Ash", "Pin Oak"),
+    addCircleMarkers(data = filter(my_trees, Common_Name == "Giant Sequoia"),
+                   group = "Giant Sequoia",
+                   lng = ~ Longitude,
+                   lat = ~ Latitude,
+                   color = "yellow") %>%
+  addLayersControl(overlayGroups = c("Silver Maple", "Elm Hybrid", "Giant Sequoia"),
                   options = layersControlOptions(collapsed = FALSE))
 
 ```
