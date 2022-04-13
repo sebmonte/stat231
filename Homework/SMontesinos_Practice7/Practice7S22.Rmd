@@ -173,12 +173,16 @@ dolphin_membership <- membership(dolphin_cl)
 dolphin_Notch <- set_vertex_attr(dolphin_Notch,
                                  name = "membership",
                                  value = dolphin_membership)
+#Creating Network
 dolphin_network <- ggnetwork(dolphin_Notch) %>%
   mutate(membership = factor(membership))
 
+#Seed for reproducibility
 set.seed(230)
+#Creating graph
 dolphin_network %>%
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+#Adding edges and nodes
 geom_edges(color = "gray50", curvature = 0.2) +
 geom_nodelabel_repel(aes(label = label, color = membership)) +
 geom_nodes(aes(color = membership)) +
@@ -199,9 +203,11 @@ combined2 <- c(28, myvert4, myvert5)
 
 # create sub-graph
 dolphin_28 <- induced_subgraph(dolphins, combined2, impl = "copy_and_delete")
-plot(dolphin_28)
+
 
 dolphin_network2 <- ggnetwork(dolphin_28)
+
+#Plotting subgraph with ggplot
 ggplot(data = dolphin_network2, aes(x = x, y = y,
                                    xend = xend, yend = yend)) +
   geom_edges(arrow = arrow(type = "closed", length = unit(8, "pt")),
@@ -238,20 +244,24 @@ More ideal: "From the choropleth below, we can see that the percent change in GD
 Solution: The choropleth below shows that hatecrimes per capita varies significantly across states in the US. Massachussetts, North Dakota, Washington, and Kentucky stand out as the states with the highest proportion of hate crimes. In contrast, states such as Wyoming, Pennsylvania, and Georgia have some of the lowest rates of hate crimes.
 
 ```{r}
+#Getting state location data
 us_states <- maps::map("state",
                     plot = FALSE, fill = TRUE) %>% 
   st_as_sf()
 
+#Getting hate crimes data
 data(hate_crimes)
 hate_crimes <- hate_crimes %>%
+#Making sure state names match in both
   mutate(state = str_to_lower(state))
 
+#Joining state data to hate crimes data
 joined_map <- us_states %>%
   right_join(hate_crimes, by = c("ID" = "state"))
 
 
 
-
+#Creating plot
 ggplot(joined_map) +
   geom_sf(aes(fill = avg_hatecrimes_per_100k_fbi)) +
   scale_fill_viridis(option = "magma", direction = -1) +
@@ -290,7 +300,7 @@ Note: Don't select Douglas-Fir, Norway Maple, or Western Redcedar (~ 1000 or mor
 Solution:
 
 ```{r}
-# Example with just 2 - Use other common names!
+#Choosing 3 trees
 my_trees <- tree_data %>%
   filter(Common_Name == "Silver Maple" | Common_Name == "Elm Hybrid" | Common_Name == "Giant Sequoia" )
 ```
@@ -333,7 +343,7 @@ Example:
 The demo map with only 2 types of trees shows me there are more Pin Oaks than Oregon Ash trees in Portland Parks. The Oregon Ash trees seem more densely concentrated - there are several locations with a cluster of trees and then none in a wide range around that. It does seem there are places I could go see both types of tree, if I wanted to. 
 -->
 
-Solution:
+Solution: This map with 3 trees shows me that there are many more giant sequoias than silver maples and elm hybrids in Portland parks. Additionally, the range that the sequoias cover is great than that of the elm hybrids and silver maple. There ranges all over lap though, there are places you could see all three types of trees at once.
 
 
 
