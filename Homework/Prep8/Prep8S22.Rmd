@@ -154,13 +154,15 @@ ggplot(data = violation_scores, aes(x = score)) +
   annotate(
     "text", x = 10, y = 15000, 
     label = "'A' grade: score of 13 or less"
-  )
+  ) +
+  labs(title = "Distribution of health violation scores in NYC restaurants in 2015", 
+       y = "Number of violation scores given")
 ```
 
 
 > part c - In this data set, a score of 13 or below was an "A" grade for the restaurant. Looking at the plot you generated, is there anything suspicious about the transition point?
 
-Solution:
+Solution: Yes, the transition point is right at the cut-off between an A grade and a B grade, suggesting there could be a bias towards keeping people within the criteria for an A grade.
 
 
 
@@ -185,7 +187,7 @@ random_flip <- 1:1000 %>%
 head(random_flip, 3)
 ```
 
-Solution:
+Solution: 1000 simulations were performed.
 
 
 > part e - To present the results of the simulation, the next plot was produced. Improve the plot by adding: a title, the observed value of restaurants with a score of 14 (add on to the existing label), and making a better y-axis label. 
@@ -198,9 +200,12 @@ ggplot(data = random_flip, aes(x = heads)) +
   geom_vline(xintercept = scores["14"], col = "red") + 
   annotate(
     "text", x = 2155, y = 75, 
-    label = "observed", hjust = "left"
+    label = "observed (2155)", hjust = "left"
   ) + 
-  labs(x = "Number of restaurants with scores of 14 (if equal probability)") 
+  labs(x = "Number of restaurants with scores of 14 (if equal probability)", 
+       y = "Number of Simulations conducted",
+       title = "Observed vs expected number of restaurants with scores of 14", 
+       subtitle = "if a 13 and 14 were equally likely") 
 ```
 
 
@@ -208,7 +213,7 @@ ggplot(data = random_flip, aes(x = heads)) +
 
 Hint: This is an example of a permutation test. Be sure you are clear on what hypothesis was being tested. 
 
-Solution:
+Solution: The hypothesis being tested is whether the amount of restaurants given a 13 score vs a 14 score was equally likely to obtain. The plot illustrates the number of restaurants we would expect with a score of 14 on this assumption. Since we can see that the number of restaurants that actually received a 14 was far below this distribution, we can conclude that there was not an equal chance of receiving a 14 vs a 13: instead, inspectors were likely biased towards granting a 13.
 
 
 
