@@ -1,0 +1,215 @@
+---
+title: "Prep8"
+author: "YourNameGoesHere"
+date: "Due by midnight, Monday April 18"
+output: 
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r, setup, include=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(purrr)
+library(mdsr)
+
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+```
+
+Reminder: Prep assignments are to be completed individually. Upload a final copy of the .Rmd and renamed .pdf to your private repo, and submit the renamed pdf to Gradescope. 
+
+# Reading
+
+The associated reading for the week is Chapters 7 and 13 on Iteration and Simulation, respectively. 
+
+Note: There is no practice set this week, so that you can focus on completing the final project proposal due Friday by midnight (submitted in your group repos). 
+
+Practice 9 next week will contain question(s) pertinent to this material and next week's material on SQL. 
+
+\newpage
+
+# 1 - Iteration Basics
+
+One of the key concepts in Chapter 7 is that R is designed to work with vectors. A number of functions benefit from this. This means there may be ways to write code more effectively than without using vectors. There are other ways to iterate as well, and iteration is a key concept in simulations. Let's look at a few ideas from the chapter (and your previous Computer science knowledge). 
+
+> part a - What is the difference between a *for* and a *while* loop, conceptually?
+
+Solution:
+
+> part b - What does the following code from the textbook demonstrate?
+
+```{r}
+# you may need to install the bench package
+x <- 1:1e5
+bench::mark(
+  exp(x),
+  map_dbl(x, exp)
+)
+rm(x)
+```
+
+Solution:
+
+
+
+
+> part c - At times, we've had to use the *across* function. Suppose you have a data set (mydataset) where the last 5 variables (named myvar1, myvar2, ..., myvar5) are being interpreted by R as characters but they are actually numeric. Write a command to have across help fix this. 
+
+Hint: You may need other wrangling commands too!
+
+Solution:
+
+```{r, eval = FALSE}
+# example code not evaluated as there is no data set, leave eval = FALSE
+
+```
+
+
+
+> part d - Describe the uses of *map()* and its variants from the *purrr* package.
+
+Solution:
+
+
+
+
+> part e - The following code to generate some uniform random numbers can be re-written to be more effective. What is the more effective code?
+
+Hint: Remember you can get help about functions by typing ?functionname in the console.
+
+Solution:
+
+```{r}
+# Keep this value
+num <- 100
+
+# Original code
+x <- rep(0, num)
+set.seed(231)
+for(i in 1:num){
+  x[i] <- runif(1)
+}
+
+# More effective code (provided by you)
+set.seed(231)
+
+
+
+```
+
+Generating random values is very important for many simulation ideas. So, let's head to our simulation question!
+
+<!-- Remember to commit and push as you go! -->
+
+\newpage
+
+
+# 2 - Simulation
+
+Chapter 13 looks at several different types of simulations. Some are based on actual data sets - to help understand the variability in data, while others involve theoretical situations which are then used to generate data. 
+
+If you have taken or are planning to take Probability (Stat 360), the simulation in 13.4.1 about Joan and Sally can be solved with probability concepts, OR you can use a simulation. 
+
+For this problem, we'll look at the simulation in 13.4.3, since we've seen that data set before (a long time back). The following code chunks all come from the text, and we'll explore what each one does as you run them. 
+
+The data set is the Restaurant Health Violations data set from NYC. 
+
+> part a - Explain what the provided code chunk below does. This has nothing to do with simulation, yet. You can answer this by writing sentences, or adding comments to the code. 
+
+```{r}
+minval <- 7
+maxval <- 19
+violation_scores <- Violations %>%
+  filter(lubridate::year(inspection_date) == 2015) %>%
+  filter(score >= minval & score <= maxval) %>%
+  select(dba, score)
+```
+
+Solution:
+
+
+
+
+Hint: Being able to describe what the chunk above does in a sentence or two can help you as you work to describe the wrangling process for your final projects. 
+
+
+
+> part b - Improve the plot generated below to have a title and better name for the y-axis variable. 
+
+Be sure you understand what is being plotted!
+
+Solution:
+
+```{r}
+ggplot(data = violation_scores, aes(x = score)) + 
+  geom_histogram(binwidth = 0.5) + 
+  geom_vline(xintercept = 13, linetype = 2) + 
+  scale_x_continuous(breaks = minval:maxval) + 
+  annotate(
+    "text", x = 10, y = 15000, 
+    label = "'A' grade: score of 13 or less"
+  )
+```
+
+
+> part c - In this data set, a score of 13 or below was an "A" grade for the restaurant. Looking at the plot you generated, is there anything suspicious about the transition point?
+
+Solution:
+
+
+
+
+
+(This is the motivation for the simulation.)
+
+> part d - The next code chunk let's you look at the actual distribution of scores (to see the counts), and then performs a simulation to imagine what would happen if the score values of 13 and 14 were equally likely, and see how many values were returned as "14s" (heads). How many such simulations were performed?
+
+```{r}
+# Look at distribution of actual scores
+scores <- mosaic::tally(~score, data = violation_scores)
+scores
+
+# Imagine if 13 and 14 were equally likely
+mean(scores[c("13", "14")])
+set.seed(231)
+random_flip <- 1:1000 %>%
+  map_dbl(~mosaic::nflip(scores["13"] + scores["14"])) %>%
+  enframe(name = "sim", value = "heads")
+# Look at some results
+head(random_flip, 3)
+```
+
+Solution:
+
+
+> part e - To present the results of the simulation, the next plot was produced. Improve the plot by adding: a title, the observed value of restaurants with a score of 14 (add on to the existing label), and making a better y-axis label. 
+
+Solution:
+
+```{r}
+ggplot(data = random_flip, aes(x = heads)) + 
+  geom_histogram(binwidth = 10) + 
+  geom_vline(xintercept = scores["14"], col = "red") + 
+  annotate(
+    "text", x = 2155, y = 75, 
+    label = "observed", hjust = "left"
+  ) + 
+  labs(x = "Number of restaurants with scores of 14 (if equal probability)") 
+```
+
+
+> part f - What does the plot illustrate? In other words, what do we learn from the simulation? Be sure you can explain this based on the plot (don't just take the answer from the text).
+
+Hint: This is an example of a permutation test. Be sure you are clear on what hypothesis was being tested. 
+
+Solution:
+
+
+
+
+<!--
+Remember to do the final commit + push, this time including your renamed pdf, and upload to Gradescope.
+-->
