@@ -638,7 +638,7 @@ If you are not familiar with this test procedure, that's okay. Think of it as te
 
 > part a - Before beginning to code, think about the last simulation we carried out. What steps need to be added/removed/modified in that simulation to carry out this simulation?
 
-Solution:
+Solution: 1) Modify the above code to pull statistically significant variables. 2) Code to t a model that includes each of the predictors in the bivariate models 3) Extract the p value from the test for that model
 
 
 
@@ -647,8 +647,27 @@ Solution:
 Solution:
 
 ```{r}
-
-
+#Generate 100 predictors from multivariate Normal distribution
+xs <- MASS::mvrnorm(n = n_obs, mu = rep(0, n_x), Sigma = diag(n_x)) %>%
+data.frame()
+# Generate outcome (independent of the 100 predictors)
+dat <- xs %>%
+mutate(y = rnorm(n = n_obs, mean = 0, sd = 1))
+# Fit 100 different bivariate models (one model for each predictor)
+# and extract p-values
+pvalues <- rep(NA, n_x)
+for (j in 1:n_x){
+# Fit model
+mod <- lm(formula = paste0("y ~ X", j), data = dat)
+# Extract p-value using base R method
+pvalues[j] <- (summary(mod)$coeff)[paste0("X", j), "Pr(>|t|)"]
+}
+# Grab predictors with significant p-values and paste together
+sig_predictors <- paste(paste0("X", which(pvalues < 0.05)), collapse = " + ")
+# Fit overall model
+mod_overall <- lm(formula = paste("y ~ ", sig_predictors), data = dat)
+# Extract overall p-value
+broom::glance(mod_overall)$p.value
 ```
 
 > part c - Now incorporate your code above into a `for()` loop to iterate through 1000 simulations. Be sure to save the p-values from the overall F-tests.
@@ -657,18 +676,75 @@ Solution:
 
 <!-- You probably want to use cache = TRUE here -->
 
-```{r}
+```{r, cache = TRUE}
 
-
+set.seed(231)
+n_sim <- 1000
+# Number of observations in each random sample
+n_obs <- 250
+# Number of predictor variables
+n_x <- 100
+#############################################
+# Simulate! #
+# (repeat many times and summarize results) #
+#############################################
+# Initialize vector for storing the overall p-values
+pvalues_overall <- rep(NA, n_sim)
+for(i in 1:n_sim){
+# Generate 100 predictors from multivariate Normal distribution
+xs <- MASS::mvrnorm(n = n_obs, mu = rep(0, n_x), Sigma = diag(n_x)) %>%
+data.frame()
+# Generate outcome (independent of the 100 predictors)
+dat <- xs %>%
+mutate(y = rnorm(n = n_obs, mean = 0, sd = 1))
+# Fit 100 different bivariate models (one model for each predictor)
+# and extract p-values
+pvalues <- rep(NA, n_x)
+for (j in 1:n_x){
+# Fit model
+mod <- lm(formula = paste0("y ~ X", j), data = dat)
+# Extract p-value (base R is faster in this case)
+pvalues[j] <- (summary(mod)$coeff)[paste0("X", j), "Pr(>|t|)"]
+}
+# Find indices of pvalues that are less than 0.05
+sig_indices <- which(pvalues < 0.05)
+# If there are no significant predictors, set overall p-value to NA
+# Otherwise, fit overall model and grab overall p-value
+if(length(sig_indices) == 0){
+# cannot fit final regression model
+pvalues_overall[i] <- NA
+} else{
+# Grab predictors with significant p-values and paste together
+sig_predictors <- paste(paste0("X", sig_indices), collapse = " + ")
+# Fit overall model
+mod_overall <- lm(formula = paste("y ~ ", sig_predictors), data = dat)
+# Extract overall p-value
+pvalues_overall[i] <- broom::glance(mod_overall)$p.value}}
 ```
 
 > part d - Create a histogram or density plot of the sampling distribution of the p-values from the overall test. What do you notice about the distribution?  What proportion of the overall tests are significant at the 0.05 level?  What about the 0.01 level?  What about the 0.001 level? What does this tell you about the credibility of this approach to model-building, and thus one of the (many) problems with p-hacking? Do you think this is ethical?
 
 <!-- Asking you to do the plot AFTER the simulation helps keep them in separate code chunks. -->
 
-Solution:
+Solution: The majority of p values are less than .01, 98.7% where less than .05, and 75.8% were less than .0001. Thus, even when there is no association between predictors and the outcome using this process would result in a very statistically significant model. This is definitely not ethical, since none of the predictors are actually associated yet this process indicates that they are!
 
 ```{r}
+p <- ggplot(data = data.frame(pvalues_overall), aes(x = pvalues_overall)) +
+geom_density()
+
+data.frame(pvalues_overall) %>%
+filter(!is.na(pvalues_overall)) %>%
+mutate(sig05 = ifelse(pvalues_overall < 0.05, 1, 0),
+sig001 = ifelse(pvalues_overall < 0.001, 1, 0),
+sig0001 = ifelse(pvalues_overall < 0.0001, 1, 0)) %>%
+summarize(# proportion of overall tests significant at 0.05 level
+prop05 = sum(sig05)/n_sim,
+# proportion of overall tests significant at 0.001 level
+prop001 = sum(sig001)/n_sim,
+# proportion of overall tests significant at 0.0001 level
+prop0001 = sum(sig0001)/n_sim)
+
+p
 
 ```
 
