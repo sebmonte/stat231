@@ -329,7 +329,7 @@ summarize(mvn_matrix, cor = cor(X1, X2))
 
 > part c - Bivariate Normal distribution: Marginal distributions. In addition to exploring the joint distribution, we can explore the marginal distribution of each variable. Based on the parameters (mean and covariance matrix) we used to generate the multivariate Normal distribution, each marginal distribution should be a Normal distribution. Does it look like this holds?
 
-Solution:
+Solution: Yes, they look like marginal distributions.
 
 ```{r}
 # Plot marginal distribution of X1 
@@ -343,7 +343,7 @@ ggplot(mvn_matrix, aes(x = X2)) +
 
 > part d - Example: Simulating a sampling distribution of the sample mean. Run the code below to create an empirical sampling distribution of the sample mean for 1000 samples of size 250. What happens to the sampling distribution when the sample size (`n_obs`) goes down to 100? 50? 25?
 
-Solution:
+Solution: The range of possible sample means goes up as the sample size goes down.
 
 ```{r sampling-distrn}
 set.seed(2021)
@@ -352,7 +352,7 @@ set.seed(2021)
 n_sim <- 1000
 
 # Number of observations in each random sample
-n_obs <- 250
+n_obs <- 50
 
 # Initialize empty vector to store results
 means <- rep(NA, n_sim)
@@ -390,7 +390,7 @@ First, let's carry out a simulation that just looks at the distribution of the p
 
 > part a - If we use a significance level of $\alpha = 0.05$ to conduct each test, what proportion of p-values do we expect will be statistically significant (i.e., what proportion of times will we falsely reject the null hypothesis)? Are our simulated results in line with what we expected?
 
-Solution:
+Solution: We expect that 5% of p values will be significant, and we do indeed find that our simulated results place the proportion at about 5%.
 
 <!--
 Note that this is *not* the most efficient code, but is used to help make the concept of the simulation (and its steps) clearer. 
@@ -497,7 +497,7 @@ Remember R won't re-execute the chunk as long as you don't change anything in th
 
 I suggest reviewing the code and trying to determine what every step is doing before running it. It will take a few minutes to run. 
 
-Solution:
+Solution: The probability of falsely rejecting the null for the first predictor is .048. The probability of falsely rejecting the null for the other 99 predictors is around .05. Out of 1000 simulations, we found that the probability of at least one being significant is .987, so this is why running a regression with 100 predictors is a problem: you will falsely find significance where there is none.
 
 ```{r build-up, cache = TRUE}
 # Set the seed for reproducibility
