@@ -1,0 +1,267 @@
+---
+title: "Practice9"
+author: "Sebastian Montesinos"
+date: "Due by midnight, Friday, April 29"
+output: 
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r, setup, include=FALSE}
+library(tidyverse)
+library(mdsr)
+library(RMySQL)
+
+# add other packages needed here!
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+```
+
+Reminder: Practice assignments may be completed working with other individuals.
+
+# Reading 
+
+The associated reading for the material on the Practice is Chapter 7 on Iteration, Chapter 13 on Simulation, and Chapter 15 on SQL.
+
+This is our final practice assignment!
+
+# Practicing Academic Integrity
+
+If you worked with others or used resources outside of provided course material (anything besides our textbook, course materials in the repo, labs, R help menu) to complete this assignment, please acknowledge them below using a bulleted list. 
+
+<!-- ~~~~~~~~~~~~~~~~ YOU MAY BEGIN EDITING BELOW THIS LINE ~~~~~~~~~~~~~~~~ -->
+
+*I acknowledge the following individuals with whom I worked on this assignment:*
+
+Name(s) and corresponding problem(s)
+
+*
+
+*I used the following sources to help complete this assignment:*
+
+Source(s) and corresponding problem(s)
+
+* 
+
+
+
+\newpage
+
+
+<!-- PROBLEM 1 ---------------------------------------------------------------->
+
+# 1 - Iteration
+
+The code below performs an operation that can be run with much more efficient code.
+Provide the more efficient code, and explain what makes it more efficient. 
+
+```{r}
+# Original Code
+x <- 1:10
+
+y <- rep(0, 10)
+for(i in 1:10){
+  y[i]= x[i]^2
+}
+y
+```
+
+
+Solution: Many functions are r are vectorized, meaning they automatically run themselves across all values inside of a vector. Thus, using a for loop is inefficient since you are iterating over the same vector over and over again. This code below is more efficient since it takes advantage of the fact that the function to square values is already vectorized.
+
+```{r}
+# More efficient code
+x <- 1:10 # you'll still want this part
+
+y <- x^2
+y
+
+```
+
+
+<!--
+Remember to knit, commit, and push as you go!
+-->
+
+
+\newpage
+
+<!-- PROBLEM 2 ---------------------------------------------------------------->
+
+# 2 - Simulation - Based on MDSR Exercise 13.8  
+
+What is the impact of the violation of the constant variance assumption for linear regression models? To investigate, we will repeatedly generate data from two "true" models:
+
+(1) where the constant variance assumption is met: $y_i$ ~ $N(\mu_i, \sigma)$, and 
+(2) where the constant variance assumption is violated: $y_i$ ~ $N(\mu_i, \sigma_i)$
+
+, where $\mu_i = -1 + 0.5*X_{1i} + 1.5*X_{2i}$, $\sigma$=1 in (1), $\sigma_i=1+X_{2i}$ in (2), and where $X_1$ is a binary predictor (meaning it takes the values of 0 and 1) and $X_2$ is Uniform(0,5).
+
+Code to get you started with the simulation, including fitting the models, is given below. It contains NO iterations yet, but tries to help define useful values and show you how to generate the data. (Note that in (2) the standard deviation is dependent upon $X_2$'s value, which is random; i.e., thus the constant variance assumption is violated.  This means that the Y's are *not* generated from a distribution with the same variance in (2).)
+
+For each simulation/underlying model, fit the linear regression model and display the distribution of 1,000 estimates of the $\beta_1$ parameter, the slope of $X_1$.  Then, write a paragraph addressing the following questions.
+
+* Does the distribution of the $beta_1$ parameter estimates follow a normal distribution in both cases? 
+* Is it centered around $\beta_1$ in both cases?
+* How does the variability in the distributions compare (variance in $\hat{\beta}_1$ when the constant variance assumption is met vs. when it is violated)?
+
+Solution:   
+
+```{r}
+# Goal: repeatedly generate data, fit the model,
+# and extract the beta1 coefficient (1,000 times)
+# for both models (1) and (2)
+
+# set seed for reproducibility
+set.seed(231)
+
+# number of simulations
+n_sim <- 1000
+
+# number of observations in each sample
+n_obs <- 250
+
+# set needed values for data generation
+rmse <- 1
+x1 <- rep(c(0,1), each=n_obs/2)
+x2 <- runif(n_obs, min=0, max=5)
+beta0 <- -1
+beta1 <- 0.5
+beta2 <- 1.5
+
+# Generate data
+# for model 1, where constant var assumption is met (sd is constant value, rmse)
+y1 <- beta0 + beta1*x1 + beta2*x2 + rnorm(n=n_obs, mean=0, sd=rmse)
+# for model 2, where constant var assumption is violated (sd depends on x2)
+y2 <- beta0 + beta1*x1 + beta2*x2 + rnorm(n=n_obs, mean=0, sd=rmse + x2)
+  
+# Fit the linear regression model
+# for model 1
+mod1 <- lm(y1 ~ x1 + x2)
+# for model 2
+mod2 <- lm(y2 ~ x1 + x2)
+
+# Example to get beta_1 estimate from one model
+summary(mod1)$coeff["x1","Estimate"]
+```
+
+<!-- The chunk above is most, but not all of what you'd need for a single iteration of extracting the desired estimate from both models. One strategy would be to finish working out what is needed for a single iteration, including saving values you will need later, and then move to trying to iterate it 1000 times. It may help to write out steps like we had in lab before trying to code anything! -->
+
+
+<!-- Keep the simulation in a different chunk than the visual, so you don't keep re-running the simulation while you work on your figures. -->
+
+
+```{r}
+# target visualization: sampling distribution of \hat{beta}_1
+#                 (histogram or density plot of \beta_1 estimates), by model
+# target summary numbers: mean and sd/variance of beta_1 estimates, by model
+
+# create target visualization
+
+# create target summaries
+```
+
+
+\newpage
+
+<!-- PROBLEM 3 ---------------------------------------------------------------->
+
+# 3 - SQL with Airline Flights
+
+```{r}
+# dbConnect_scidb is accessible from the mdsr package
+aircon <- dbConnect_scidb("airlines")
+
+# remember can use SHOW and EXPLAIN commands to explore what tables are available
+# through this connection, and what variables/fields are in each table
+dbGetQuery(aircon, "SHOW TABLES")
+dbGetQuery(aircon, "EXPLAIN airports")
+# can view first few obs of a table to see what the fields look like 
+dbGetQuery(aircon, "SELECT * 
+                   FROM airports
+                   LIMIT 0,5")
+```
+
+> part a - Identify what years of data are available in the `flights` table of the airlines database using SQL code. (You can use R code to check it, if you wish).
+
+Optional: you can also count the number of flights per year, as this will show the years available, and perhaps give you a different way to think about getting the desired information. 
+
+Note: This is a different version of the data used in the prep. The years are different! Be sure you are using the correct connection. 
+
+Solution: 
+
+```{sql connection=aircon}
+
+```
+
+> part b - How many domestic flights flew into Dallas-Fort Worth (DFW) on May 14, 2010?  Use SQL to compute this number. (You can use R code to check it, if you wish.) 
+
+Solution:
+
+```{sql connection=aircon}
+
+```
+
+> part c - Among the flights that flew into Dallas-Fort Worth (DFW) on May 14, 2010, compute (using SQL) the number of flights and the average arrival delay time for each airline carrier.  Among these flights, how many carriers had an average arrival delay of 60 minutes or longer? (Again, you can use R code to check it, if you wish.)
+
+Solution:
+
+```{sql connection=aircon}
+
+```
+
+
+
+
+\newpage
+
+<!-- PROBLEM 4 ---------------------------------------------------------------->
+
+# 4 - A data science inspired haiku
+
+Question and examples borrowed from Prof. Horton
+
+Haiku is one of the most important forms of traditional Japanese poetry.
+Haiku is today, a 17-syllable verse form consisting of three metrical
+units of 5, 7 and 5 syllables, respectively.  Some examples:
+
+Freeway overpass--
+
+Blossoms in graffiti on
+
+fog-wrapped June mornings
+
+```
+
+```
+
+
+Gravity is lost
+
+Floating out of captain's chair
+
+Bang head on ceiling
+
+
+```
+
+```
+The applications of haiku to data science have, as yet, not been
+fully exploited.  Your task is to write a haiku poem inspired by the
+material in the course.
+
+SOLUTION:
+
+
+
+
+
+
+<!--
+That's it! That's the last question on the last practice assignment of the class! Woohoo! You did it!
+One last time, knit, commit, and push, including the final renamed pdf, to your repo. Then, upload the .pdf to Gradescope before the deadline. 
+-->
+
+

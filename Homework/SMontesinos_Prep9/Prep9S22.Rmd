@@ -1,0 +1,139 @@
+---
+title: "Prep9"
+author: "YourNameGoesHere"
+date: "Due by midnight, Monday April 25"
+output: 
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+```{r, setup, include=FALSE}
+library(tidyverse)
+library(kableExtra)
+
+library(mdsr)
+library(RMySQL)
+
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+```
+
+Reminder: Prep assignments are to be completed individually. Upload a final copy of the .Rmd and renamed .pdf to your private repo, and submit the renamed pdf to Gradescope. 
+
+# Reading
+
+It's our FINAL prep!
+
+The associated reading for the week is Chapter 15 on SQL. 
+
+Practice 9 will contain questions about SQL and last week's content on iteration and simulation (Chapters 7 and 13). 
+
+\newpage
+
+# 1 - Chapter Basics
+
+> part a - In your own words, explain what a relational database is, and why using one may be better than using a `flat file`.
+
+Solution:
+
+> part b - What R package have we been using all semester that was structured to be similar to SQL?
+
+Hint: We have usually not loaded this package directly, but it has been loaded when we load `tidyverse`. 
+
+Solution:
+
+
+> part c - What two arguments are required for a SQL `select` query to run?
+
+Hint: Many arguments can be provided in a `select` query. This is asking about the required two that a `select` query will not run without. 
+
+Solution:
+
+
+> part d - Comparing R and SQL, based on the arguments in the reading, which is better for data analysis? Which is better for data management?
+
+Solution:
+
+
+<!-- Remember to commit and push as you go! -->
+
+\newpage
+
+# 2 - Airline Flights in SQL
+
+Learning SQL requires having a SQL server set up to access. Run the code below to get access to a server with the airline flights data. Then, use the provided code below to get a sense of the data and address a few questions. 
+
+```{r}
+# SQL commands
+con <- dbConnect(MySQL(), host = "mysql-research.amherst.edu",
+                user = "statuser", password = "statuserpass",
+                dbname = "airline")
+```
+
+> part a - How many tables are present? 
+
+```{r}
+query1 <- "SHOW TABLES"
+
+dbGetQuery(con, query1)
+```
+
+Solution: There are ??? tables. 
+
+
+> part b - What variables are present in the flights data? List some that may be of interest to you to explore.
+
+```{r}
+query2 <- "DESCRIBE flights"
+
+dbGetQuery(con, query2)
+```
+
+Solution: Some variables included are ...
+
+
+> part c - How many flights went from Hartford (BDL) to Chicago (ORD) in 2009?
+
+```{r}
+query3 <- "SELECT COUNT(*) as N  
+  FROM flights 
+  WHERE dest = 'ORD' AND year = 2009 AND origin = 'BDL'
+"
+
+dbGetQuery(con, query3)
+```
+
+Solution: ??? flights went from Hartford to Chicago in 2009. 
+
+
+> part d - Your turn! How many flights went from Chicago to Hartford in 2009? 
+
+Solution:
+
+```{r}
+
+```
+
+
+> part e - Use more date info. How many domestic flights flew into Portland, Oregon (PDX) on May 14, 2008? 
+
+Solution:
+
+```{r}
+
+```
+
+> part f - Design your own query. You can continue pulling from flights or use another table. Explain what you wanted the query to show (i.e. what question is it helping to answer?) and then provide an answer. 
+
+Solution:
+
+```{r}
+
+```
+
+
+<!--
+Yay! That's the last prep for the class. You made it! Remember to do the final commit + push, this time including your renamed pdf, and upload to Gradescope. 
+-->
