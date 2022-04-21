@@ -36,7 +36,7 @@ Practice 9 will contain questions about SQL and last week's content on iteration
 
 > part a - In your own words, explain what a relational database is, and why using one may be better than using a `flat file`.
 
-Solution:
+Solution: Flat files are one dimensional, consisting of just a single sheet with columns and rows. The problem with these files is that computers are limited in their RAM and so cannot work with really big versions of these files at once. Relational databases contain all their data stored separately on a disk but can have different parts of their data accessed at once, meaning we can utilize very large databases without needing the entire portion of those files to take up RAM.
 
 > part b - What R package have we been using all semester that was structured to be similar to SQL?
 
@@ -49,7 +49,7 @@ Solution:
 
 Hint: Many arguments can be provided in a `select` query. This is asking about the required two that a `select` query will not run without. 
 
-Solution:
+Solution: SELECT and FROM.
 
 
 > part d - Comparing R and SQL, based on the arguments in the reading, which is better for data analysis? Which is better for data management?
