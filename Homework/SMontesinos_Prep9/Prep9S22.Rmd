@@ -1,6 +1,6 @@
 ---
 title: "Prep9"
-author: "YourNameGoesHere"
+author: "Sebastian"
 date: "Due by midnight, Monday April 25"
 output: 
   pdf_document:
@@ -54,7 +54,7 @@ Solution: SELECT and FROM.
 
 > part d - Comparing R and SQL, based on the arguments in the reading, which is better for data analysis? Which is better for data management?
 
-Solution:
+Solution: R appears to be better for data analysis, allowing for a huge amount of functions to use on small pieces of data. SQL is better for data management, as it allows you to access large amount of data efficiently.
 
 
 <!-- Remember to commit and push as you go! -->
