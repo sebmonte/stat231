@@ -67,9 +67,7 @@ Learning SQL requires having a SQL server set up to access. Run the code below t
 
 ```{r}
 # SQL commands
-con <- dbConnect(MySQL(), host = "mysql-research.amherst.edu",
-                user = "statuser", password = "statuserpass",
-                dbname = "airline")
+con <- dbConnect_scidb("airlines")
 ```
 
 > part a - How many tables are present? 
@@ -80,7 +78,7 @@ query1 <- "SHOW TABLES"
 dbGetQuery(con, query1)
 ```
 
-Solution: There are ??? tables. 
+Solution: There are 4 tables. 
 
 
 > part b - What variables are present in the flights data? List some that may be of interest to you to explore.
@@ -91,29 +89,34 @@ query2 <- "DESCRIBE flights"
 dbGetQuery(con, query2)
 ```
 
-Solution: Some variables included are ...
+Solution: Some variables included are dest (flight destination)
+,origin (flight origin), arr_delay (arrival delay), and day.
 
-
-> part c - How many flights went from Hartford (BDL) to Chicago (ORD) in 2009?
+> part c - How many flights went from Hartford (BDL) to Chicago (ORD) in 2012?
 
 ```{r}
 query3 <- "SELECT COUNT(*) as N  
   FROM flights 
-  WHERE dest = 'ORD' AND year = 2009 AND origin = 'BDL'
+  WHERE dest = 'ORD' AND year = 2012 AND origin = 'BDL'
 "
 
 dbGetQuery(con, query3)
 ```
 
-Solution: ??? flights went from Hartford to Chicago in 2009. 
+Solution: 2897 flights went from Hartford to Chicago in 2012. 
 
 
 > part d - Your turn! How many flights went from Chicago to Hartford in 2009? 
 
-Solution:
+Solution: 2927 flights went from Chicago to Hartford in 2012. 
 
 ```{r}
+query4 <- "SELECT COUNT(*) as N  
+  FROM flights 
+  WHERE dest = 'BDL' AND year = 2012 AND origin = 'ORD'
+"
 
+dbGetQuery(con, query4)
 ```
 
 
@@ -122,7 +125,12 @@ Solution:
 Solution:
 
 ```{r}
+query5 <- "SELECT COUNT(*) as N  
+  FROM flights 
+  WHERE day = 14 AND year = 2009 AND month = 5
+"
 
+dbGetQuery(con, query5)
 ```
 
 > part f - Design your own query. You can continue pulling from flights or use another table. Explain what you wanted the query to show (i.e. what question is it helping to answer?) and then provide an answer. 
