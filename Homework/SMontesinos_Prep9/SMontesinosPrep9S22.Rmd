@@ -42,7 +42,7 @@ Solution: Flat files are one dimensional, consisting of just a single sheet with
 
 Hint: We have usually not loaded this package directly, but it has been loaded when we load `tidyverse`. 
 
-Solution:
+Solution: The DBI package.
 
 
 > part c - What two arguments are required for a SQL `select` query to run?
@@ -120,14 +120,14 @@ dbGetQuery(con, query4)
 ```
 
 
-> part e - Use more date info. How many domestic flights flew into Portland, Oregon (PDX) on May 14, 2008? 
+> part e - Use more date info. How many domestic flights flew into Portland, Oregon (PDX) on May 14, 2012? 
 
-Solution:
+Solution: 150 flights flew into Portland on May 14, 2012.
 
 ```{r}
 query5 <- "SELECT COUNT(*) as N  
   FROM flights 
-  WHERE day = 14 AND year = 2009 AND month = 5
+  WHERE day = 14 AND year = 2012 AND dest = 'PDX' and month = 5
 "
 
 dbGetQuery(con, query5)
@@ -135,10 +135,15 @@ dbGetQuery(con, query5)
 
 > part f - Design your own query. You can continue pulling from flights or use another table. Explain what you wanted the query to show (i.e. what question is it helping to answer?) and then provide an answer. 
 
-Solution:
+Solution: I wanted to figure out how many flights going into Hartford in the year 2012 were delayed by more than 60 minutes. The query shows that there are 1126 of these flights.
 
 ```{r}
+query6 <- "SELECT COUNT(*) as N  
+  FROM flights 
+  WHERE dep_delay > 60 AND year = 2012 AND dest = 'BDL'
+"
 
+dbGetQuery(con, query6)
 ```
 
 

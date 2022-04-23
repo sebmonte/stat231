@@ -145,6 +145,11 @@ mod2 <- lm(y2 ~ x1 + x2)
 
 # Example to get beta_1 estimate from one model
 summary(mod1)$coeff["x1","Estimate"]
+summary(mod2)$coeff["x2","Estimate"]
+
+
+
+
 ```
 
 <!-- The chunk above is most, but not all of what you'd need for a single iteration of extracting the desired estimate from both models. One strategy would be to finish working out what is needed for a single iteration, including saving values you will need later, and then move to trying to iterate it 1000 times. It may help to write out steps like we had in lab before trying to code anything! -->
@@ -193,15 +198,15 @@ Note: This is a different version of the data used in the prep. The years are di
 Solution: 
 
 ```{sql connection=aircon}
-
+dbGetQuery(aircon, "SELECT count(*) FROM flights GROUP BY year")
 ```
 
 > part b - How many domestic flights flew into Dallas-Fort Worth (DFW) on May 14, 2010?  Use SQL to compute this number. (You can use R code to check it, if you wish.) 
 
-Solution:
+Solution: 754 flights.
 
 ```{sql connection=aircon}
-
+dbGetQuery(aircon, "SELECT COUNT(*) as N  FROM flights WHERE day = 14 AND year = 2010 AND month = 5 AND dest = 'DFW' ")
 ```
 
 > part c - Among the flights that flew into Dallas-Fort Worth (DFW) on May 14, 2010, compute (using SQL) the number of flights and the average arrival delay time for each airline carrier.  Among these flights, how many carriers had an average arrival delay of 60 minutes or longer? (Again, you can use R code to check it, if you wish.)
