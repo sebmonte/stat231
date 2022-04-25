@@ -123,6 +123,10 @@ n_sim <- 1000
 # number of observations in each sample
 n_obs <- 250
 
+betas_overall <- rep(NA, n_sim)
+betas_overall2 <- rep(NA, n_sim)
+
+for(i in 1:n_sim){
 # set needed values for data generation
 rmse <- 1
 x1 <- rep(c(0,1), each=n_obs/2)
@@ -144,10 +148,13 @@ mod1 <- lm(y1 ~ x1 + x2)
 mod2 <- lm(y2 ~ x1 + x2)
 
 # Example to get beta_1 estimate from one model
-summary(mod1)$coeff["x1","Estimate"]
-summary(mod2)$coeff["x2","Estimate"]
+beta1 <- summary(mod1)$coeff["x1","Estimate"]
+beta2 <- summary(mod2)$coeff["x1","Estimate"]
 
+betas_overall[i] <- beta1
+betas_overall2[i] <- beta2
 
+}
 
 
 ```
@@ -163,6 +170,15 @@ summary(mod2)$coeff["x2","Estimate"]
 #                 (histogram or density plot of \beta_1 estimates), by model
 # target summary numbers: mean and sd/variance of beta_1 estimates, by model
 
+#Plot for beta1
+ggplot(data = data.frame(betas_overall), 
+       aes(x = betas_overall)) +
+  geom_density()
+
+#Plot for beta2
+ggplot(data = data.frame(betas_overall2), 
+       aes(x = betas_overall2)) +
+  geom_density()
 # create target visualization
 
 # create target summaries
