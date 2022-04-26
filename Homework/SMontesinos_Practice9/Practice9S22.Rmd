@@ -179,9 +179,10 @@ ggplot(data = data.frame(betas_overall),
 ggplot(data = data.frame(betas_overall2), 
        aes(x = betas_overall2)) +
   geom_density()
-# create target visualization
 
 # create target summaries
+mosaic::fav_stats(betas_overall)
+mosaic::fav_stats(betas_overall2)
 ```
 
 
