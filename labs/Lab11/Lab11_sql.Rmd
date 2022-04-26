@@ -149,7 +149,7 @@ class(PI_Info_sql)
 
 > part a - The functions in **dplyr** are designed to translate automatically to SQL commands, but this is not true for other packages we've worked with. With this in mind, do you expect either block of code below to work? Why or why not?
  
-Solution:
+Solution: No because not all of the commands below will get automatically translated into SQL commands, since they are not all from dplyr.
  
 ```{r, eval = FALSE}
 # Block 1
@@ -197,7 +197,7 @@ Syntax highlighting is an incredibly useful tool for quickly identifying errors 
 
 > part a - The R code chunk below shows a query using `dbGetQuery()` in R. The second code chunk shows the exact same query but in a SQL code chunk. Can you identify what the code is doing?
 
-Solution:
+Solution: Groups by the session and looks for the average number of females per number of session, the average age per number of sessions, and the amount of patients who had that number of sessions.
 
 **R code chunk**
 ```{r}
@@ -225,7 +225,7 @@ If you've kept the default all semester, you probably won't have issues with thi
 
 > part b - The textbook tells us that the SQL equivalent of **dplyr**'s `filter()` is `WHERE`, but there is a similar SQL command called `HAVING`. When should you use `WHERE` vs. `HAVING`? You can use the code chunks below to help explain.
 
-Solution:
+Solution: WHERE will filter the result BEFORE you do any grouping and sort by certain variables, while HAVING while filter after the resulting dataframe has occurred ie. after grouping_by.
 
 ```{sql, connection = con}
 SELECT  SessionTotal, COUNT(SessionTotal) as n,
@@ -250,7 +250,12 @@ HAVING avg_age < 25
 Solution:
 
 ```{sql, connection = con}
-
+SELECT  SessionTotal, COUNT(SessionTotal) as n,
+        AVG(Sex = 'Female') as prop_fem,
+        AVG(AgeFirstMeasurement) as avg_age
+FROM Subjects
+GROUP BY SessionTotal
+HAVING avg_age < 25 AND n > 10
 ```
 
 \newpage
@@ -265,12 +270,20 @@ Create a figure that displays `Frequency` on the x-axis and `Absorbance` on the 
 
 Solution:
 
-```{sql, connection = con, output.var = "..."}
+```{sql, connection = con, output.var = table_graph}
+SELECT Frequency,
+Absorbance,
+Ear
+FROM Measurements
+WHERE Identifier = "Rosowski_2012" AND SubjectNumber = 3
 
 ```
 
 ```{r}
-
+ggplot(data = table_graph, aes(x = Frequency,
+                               y = Absorbance,
+                               color = Ear)) +
+  geom_line()
 ```
 
 
@@ -279,20 +292,37 @@ Solution:
 Solution:
 
 ```{r}
+result_table <- dbGetQuery(con, "SELECT Frequency,Absorbance,Ear
+FROM Measurements
+WHERE Identifier = 'Rosowski_2012' AND SubjectNumber = 3") %>%
+  collect()
 
+
+ggplot(data = result_table, aes(x = Frequency,
+                               y = Absorbance,
+                               color = Ear)) +
+  geom_line()
 ```
 
 
 > part c - Approach 3: In an R code chunk, query the entire `Measurements` table using `tbl()`, use **dplyr** verbs instead of SQL commands to subset the data as desired, then convert the output to an R data frame by piping to `collect()`, then make the visual. Why do we want to use **dplyr** verbs *before* instead of *after* converting to an R data frame?
 
-Solution:
+Solution: 
 
 ```{r}
+dplyr_table <- tbl(con, "Measurements") %>%
+  filter(Identifier == "Rosowski_2012", SubjectNumber == 3) %>%
+  collect()
 
+ggplot(data = dplyr_table, aes(x = Frequency,
+                               y = Absorbance,
+                               color = Ear)) +
+  geom_line()
 ```
 
 > part d - Which approach do you prefer? Why?
 
+I prefer the first approach because I can work entirely in SQL without having to think about converting formats as R will do this for me if I should specify things in the chunk.
 
 
 
