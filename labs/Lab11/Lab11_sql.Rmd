@@ -174,10 +174,10 @@ class(PI_Info_sql)
 class(PI_Info_df)
 
 # Doesn't work (SQL table)
-PI_Info_sql %>%
-   separate(Identifier, into = c("Author", "Year"), 
-            sep = "_", remove = FALSE) %>%
-   select(Identifier, Author, Year)
+## PI_Info_sql %>%
+   ## separate(Identifier, into = c("Author", "Year"), 
+            ## sep = "_", remove = FALSE) %>%
+   ## select(Identifier, Author, Year)
 
 # Works (R dataframe)
 PI_Info_df %>%
