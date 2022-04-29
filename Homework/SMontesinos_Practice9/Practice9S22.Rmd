@@ -107,7 +107,7 @@ For each simulation/underlying model, fit the linear regression model and displa
 * Is it centered around $\beta_1$ in both cases?
 * How does the variability in the distributions compare (variance in $\hat{\beta}_1$ when the constant variance assumption is met vs. when it is violated)?
 
-Solution:   
+Solution: The distribution of the beta_1 parameter does follow a normal distribution in both cases, and this normal distribution is centered around beta_1. However, the variability differs: when you violate the constant variance assumption, the variability goes way up, resulting in a greater standard deviation. As long as constant variance assumption is not violated, the variability remains regular.
 
 ```{r}
 # Goal: repeatedly generate data, fit the model,
@@ -173,11 +173,17 @@ betas_overall2[i] <- beta2
 #Plot for beta1
 ggplot(data = data.frame(betas_overall), 
        aes(x = betas_overall)) +
-  geom_density()
+  geom_density() +
+  labs(title = "Distribution with constant variance",
+       x = "Betas", 
+       y = "Frequency")
 
 #Plot for beta2
 ggplot(data = data.frame(betas_overall2), 
        aes(x = betas_overall2)) +
+      labs(title = "Distribution with constant variance violated",
+           x = "Betas", 
+           y = "Frequency") +
   geom_density()
 
 # create target summaries
@@ -231,7 +237,7 @@ dbGetQuery(aircon, "SELECT COUNT(*) as N  FROM flights WHERE day = 14 AND year =
 Solution:
 
 ```{sql connection=aircon}
-
+dbGetQuery(aircon, "SELECT carrier, COUNT(*) as n, AVG(arr_delay) as avg_arr_delay FROM flights WHERE day = 14 AND year = 2010 AND month = 5 AND dest = 'DFW' GROUP BY carrier HAVING avg_arr_delay > 60")
 ```
 
 
