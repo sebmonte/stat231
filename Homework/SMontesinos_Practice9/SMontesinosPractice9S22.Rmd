@@ -6,6 +6,8 @@ output:
   pdf_document:
     fig_height: 3
     fig_width: 5
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ```{r, setup, include=FALSE}
@@ -218,10 +220,10 @@ Optional: you can also count the number of flights per year, as this will show t
 
 Note: This is a different version of the data used in the prep. The years are different! Be sure you are using the correct connection. 
 
-Solution: 
+Solution: 2010 to 2017.
 
 ```{sql connection=aircon}
-dbGetQuery(aircon, "SELECT count(*) FROM flights GROUP BY year")
+SELECT count(*) as N, year FROM flights GROUP BY year
 ```
 
 > part b - How many domestic flights flew into Dallas-Fort Worth (DFW) on May 14, 2010?  Use SQL to compute this number. (You can use R code to check it, if you wish.) 
@@ -229,15 +231,21 @@ dbGetQuery(aircon, "SELECT count(*) FROM flights GROUP BY year")
 Solution: 754 flights.
 
 ```{sql connection=aircon}
-dbGetQuery(aircon, "SELECT COUNT(*) as N  FROM flights WHERE day = 14 AND year = 2010 AND month = 5 AND dest = 'DFW' ")
+SELECT COUNT(*) as N  FROM flights WHERE day = 14 AND year = 2010 AND month = 5 AND dest = 'DFW'
 ```
 
 > part c - Among the flights that flew into Dallas-Fort Worth (DFW) on May 14, 2010, compute (using SQL) the number of flights and the average arrival delay time for each airline carrier.  Among these flights, how many carriers had an average arrival delay of 60 minutes or longer? (Again, you can use R code to check it, if you wish.)
 
-Solution:
+Solution: 5 carriers had an average arrival delay of 60 minutes or longer.
 
 ```{sql connection=aircon}
-dbGetQuery(aircon, "SELECT carrier, COUNT(*) as n, AVG(arr_delay) as avg_arr_delay FROM flights WHERE day = 14 AND year = 2010 AND month = 5 AND dest = 'DFW' GROUP BY carrier HAVING avg_arr_delay > 60")
+SELECT carrier, 
+COUNT(*) as n, 
+AVG(arr_delay) 
+as avg_arr_delay 
+FROM flights WHERE day = 14 AND year = 2010 AND month = 5 AND dest = 'DFW' 
+GROUP BY carrier 
+HAVING avg_arr_delay > 60
 ```
 
 
@@ -280,7 +288,15 @@ The applications of haiku to data science have, as yet, not been
 fully exploited.  Your task is to write a haiku poem inspired by the
 material in the course.
 
-SOLUTION:
+SOLUTION: 
+
+Displaying data
+
+Is hard - pick graphics with care
+
+Maintain clarity
+
+
 
 
 
