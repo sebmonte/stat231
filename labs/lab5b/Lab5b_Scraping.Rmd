@@ -102,13 +102,11 @@ url <- "https://en.wikipedia.org/wiki/List_of_Emily_Dickinson_poems"
 paths_allowed(url)
 poem_table <- url %>%
   read_html() %>%
-  html_element("table") %>%
+  html_element("#mw-content-text > div.mw-parser-output > table") %>%
   html_table() %>%
-  select("First Line (often used as title)")
-  
-poem_table <- janitor::clean_names(poem_table)
+  janitor::clean_names() %>%
+  select(title = first_line_often_used_as_title)
 
-glimpse(poem_table)
 
 ```
 
